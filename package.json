@@ -1,0 +1,28 @@
+{
+  "name": "thapar-elective-ai-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Enterprise B2B SaaS Full-Stack MERN + Python ML Elective Recommendation & Automated Seat Counseling Platform for Thapar Institute of Engineering & Technology (TIET)",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace=backend && npm run build --workspace=frontend",
+    "build:backend": "npm run build --workspace=backend",
+    "build:frontend": "npm run build --workspace=frontend",
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "start:backend": "npm run start --workspace=backend",
+    "seed:atlas": "npm run seed:atlas --workspace=backend",
+    "typecheck": "npm run typecheck --workspace=backend && npm run typecheck --workspace=frontend",
+    "lint": "npm run lint --workspace=backend && npm run lint --workspace=frontend"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "author": "ThaparElectiveAI Engineering",
+  "license": "UNLICENSED"
+}
+

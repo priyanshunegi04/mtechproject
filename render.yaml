@@ -1,0 +1,89 @@
+# ============================================================================
+# ThaparElectiveAI — Render Cloud Infrastructure-as-Code Blueprint (render.yaml)
+# ============================================================================
+services:
+  # 1. Python 3.11 FastAPI ML Microservice (Connected to MongoDB Atlas)
+  - type: web
+    name: thapar-elective-ml-service
+    runtime: docker
+    rootDir: ml-service
+    dockerfilePath: ./Dockerfile
+    region: singapore
+    plan: standard
+    healthCheckPath: /api/v1/ml/health
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: WORKERS
+        value: 2
+      - key: MONGODB_URI
+        sync: false
+      - key: MONGODB_DB_NAME
+        value: thapar_elective_ai
+      - key: ML_SERVICE_API_KEY
+        sync: false
+      - key: ALLOWED_ORIGINS
+        sync: false
+      - key: AUTO_TRAIN_ON_STARTUP
+        value: "true"
+
+  # 2. Node.js 20 + Express + TypeScript Backend REST API
+  - type: web
+    name: thapar-elective-backend
+    runtime: docker
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    region: singapore
+    plan: standard
+    healthCheckPath: /api/health/ready
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 8080
+      - key: MONGODB_URI
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: ML_SERVICE_URL
+        sync: false
+      - key: ML_SERVICE_API_KEY
+        sync: false
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: ALLOWED_INSTITUTIONAL_DOMAIN
+        value: thapar.edu
+      - key: FRONTEND_ORIGIN
+        sync: false
+
+  # 3. React 18 + Vite Enterprise SaaS Web Portal
+  - type: web
+    name: thapar-elective-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_BASE_URL
+        sync: false
+      - key: VITE_INSTITUTION_NAME
+        value: Thapar Institute of Engineering & Technology (TIET)
+      - key: VITE_INSTITUTION_DOMAIN
+        value: thapar.edu
+      - key: VITE_CURRICULUM_SCHEME_YEAR
+        value: "2026"

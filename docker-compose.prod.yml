@@ -1,0 +1,95 @@
+# ============================================================================
+# ThaparElectiveAI — Production Cloud Container Orchestration
+# STRICT ZERO-LOCALHOST DB POLICY: Connects exclusively to remote MongoDB Atlas
+# (mongodb+srv://) and remote Managed Redis (rediss://)
+# ============================================================================
+
+services:
+  ml-service:
+    build:
+      context: ./ml-service
+      dockerfile: Dockerfile
+    container_name: thapar-elective-ml-service
+    restart: unless-stopped
+    environment:
+      APP_ENV: production
+      PORT: 8000
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      WORKERS: ${ML_WORKERS:-2}
+      MONGODB_URI: ${MONGODB_URI:?MONGODB_URI must be set to a remote mongodb+srv:// Atlas URI}
+      MONGODB_DB_NAME: ${MONGODB_DB_NAME:-thapar_elective_ai}
+      MONGODB_MAX_POOL_SIZE: ${ML_MONGODB_MAX_POOL_SIZE:-30}
+      MONGODB_MIN_POOL_SIZE: ${ML_MONGODB_MIN_POOL_SIZE:-5}
+      ML_SERVICE_API_KEY: ${ML_SERVICE_API_KEY:?ML_SERVICE_API_KEY is required}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS}
+      AUTO_TRAIN_ON_STARTUP: ${AUTO_TRAIN_ON_STARTUP:-true}
+    ports:
+      - "8000:8000"
+    networks:
+      - thapar-cloud-net
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 2G
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: thapar-elective-backend
+    restart: unless-stopped
+    depends_on:
+      - ml-service
+    environment:
+      NODE_ENV: production
+      PORT: 8080
+      LOG_LEVEL: ${BACKEND_LOG_LEVEL:-info}
+      MONGODB_URI: ${MONGODB_URI:?MONGODB_URI must be set to a remote mongodb+srv:// Atlas URI}
+      MONGODB_MAX_POOL_SIZE: ${BACKEND_MONGODB_MAX_POOL_SIZE:-50}
+      MONGODB_MIN_POOL_SIZE: ${BACKEND_MONGODB_MIN_POOL_SIZE:-10}
+      REDIS_URL: ${REDIS_URL:?REDIS_URL must be set to a remote rediss:// managed Redis URI}
+      REDIS_CACHE_TTL_SECONDS: ${REDIS_CACHE_TTL_SECONDS:-900}
+      ML_SERVICE_URL: ${ML_SERVICE_URL:-http://ml-service:8000}
+      ML_SERVICE_API_KEY: ${ML_SERVICE_API_KEY:?ML_SERVICE_API_KEY is required}
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:?JWT_ACCESS_SECRET is required}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:?JWT_REFRESH_SECRET is required}
+      ALLOWED_INSTITUTIONAL_DOMAIN: ${ALLOWED_INSTITUTIONAL_DOMAIN:-thapar.edu}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:?CORS_ALLOWED_ORIGINS is required}
+    ports:
+      - "8080:8080"
+    networks:
+      - thapar-cloud-net
+    deploy:
+      resources:
+        limits:
+          cpus: "1.5"
+          memory: 1G
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:?VITE_API_BASE_URL must be set to the public cloud API URL}
+        VITE_INSTITUTION_NAME: "Thapar Institute of Engineering & Technology (TIET)"
+        VITE_INSTITUTION_DOMAIN: "thapar.edu"
+        VITE_CURRICULUM_SCHEME_YEAR: "2026"
+    container_name: thapar-elective-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+    networks:
+      - thapar-cloud-net
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+
+networks:
+  thapar-cloud-net:
+    driver: bridge
+

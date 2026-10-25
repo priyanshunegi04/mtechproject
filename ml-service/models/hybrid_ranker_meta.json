@@ -1,0 +1,393 @@
+{
+  "model_version": "tiet-hybrid-v1.0.202610251734",
+  "trained_at": "2026-10-25T17:34:22.524775+00:00",
+  "dataset_counts": {
+    "total_courses": 74,
+    "elective_focus_baskets": 12,
+    "professional_electives": 50,
+    "generic_electives": 10,
+    "historical_students": 3500,
+    "historical_enrollments": 17500
+  },
+  "evaluation_metrics": {
+    "rmse": 0.5174,
+    "mae": 0.364,
+    "grade_r2": 0.7612,
+    "workload_rmse": 0.7995,
+    "workload_mae": 0.6377,
+    "precision_at_3": 0.92,
+    "ndcg_at_5": 0.8169
+  },
+  "basket_cutoff_stats": {
+    "EF_BASKET_01": {
+      "estimated_cutoff_cgpa": 7.36,
+      "mean_admitted_cgpa": 8.1,
+      "demand_multiplier": 0.89,
+      "seat_capacity": 120
+    },
+    "EF_BASKET_02": {
+      "estimated_cutoff_cgpa": 7.28,
+      "mean_admitted_cgpa": 8.12,
+      "demand_multiplier": 1.15,
+      "seat_capacity": 120
+    },
+    "EF_BASKET_03": {
+      "estimated_cutoff_cgpa": 7.19,
+      "mean_admitted_cgpa": 8.08,
+      "demand_multiplier": 0.77,
+      "seat_capacity": 120
+    },
+    "EF_BASKET_04": {
+      "estimated_cutoff_cgpa": 7.44,
+      "mean_admitted_cgpa": 8.29,
+      "demand_multiplier": 0.84,
+      "seat_capacity": 120
+    },
+    "EF_BASKET_05": {
+      "estimated_cutoff_cgpa": 7.2,
+      "mean_admitted_cgpa": 8.12,
+      "demand_multiplier": 0.9,
+      "seat_capacity": 120
+    },
+    "EF_BASKET_06": {
+      "estimated_cutoff_cgpa": 7.48,
+      "mean_admitted_cgpa": 8.29,
+      "demand_multiplier": 0.91,
+      "seat_capacity": 120
+    },
+    "EF_BASKET_07": {
+      "estimated_cutoff_cgpa": 7.33,
+      "mean_admitted_cgpa": 8.18,
+      "demand_multiplier": 1.72,
+      "seat_capacity": 120
+    },
+    "EF_BASKET_08": {
+      "estimated_cutoff_cgpa": 7.44,
+      "mean_admitted_cgpa": 8.19,
+      "demand_multiplier": 0.89,
+      "seat_capacity": 120
+    },
+    "EF_BASKET_09": {
+      "estimated_cutoff_cgpa": 7.39,
+      "mean_admitted_cgpa": 8.16,
+      "demand_multiplier": 0.84,
+      "seat_capacity": 120
+    },
+    "EF_BASKET_10": {
+      "estimated_cutoff_cgpa": 7.48,
+      "mean_admitted_cgpa": 8.18,
+      "demand_multiplier": 1.09,
+      "seat_capacity": 120
+    },
+    "EF_BASKET_11": {
+      "estimated_cutoff_cgpa": 7.54,
+      "mean_admitted_cgpa": 8.3,
+      "demand_multiplier": 0.89,
+      "seat_capacity": 120
+    },
+    "EF_BASKET_12": {
+      "estimated_cutoff_cgpa": 7.47,
+      "mean_admitted_cgpa": 8.24,
+      "demand_multiplier": 1.1,
+      "seat_capacity": 120
+    }
+  },
+  "course_cutoff_stats": {
+    "UES103": {
+      "estimated_cutoff_cgpa": 6.58,
+      "seat_capacity": 120
+    },
+    "UMA022": {
+      "estimated_cutoff_cgpa": 6.65,
+      "seat_capacity": 120
+    },
+    "UMA023": {
+      "estimated_cutoff_cgpa": 6.7,
+      "seat_capacity": 120
+    },
+    "UCS301": {
+      "estimated_cutoff_cgpa": 6.8,
+      "seat_capacity": 120
+    },
+    "UCS303": {
+      "estimated_cutoff_cgpa": 6.78,
+      "seat_capacity": 120
+    },
+    "UTA018": {
+      "estimated_cutoff_cgpa": 6.62,
+      "seat_capacity": 120
+    },
+    "UCS405": {
+      "estimated_cutoff_cgpa": 6.75,
+      "seat_capacity": 120
+    },
+    "UMA021": {
+      "estimated_cutoff_cgpa": 6.83,
+      "seat_capacity": 120
+    },
+    "UCS415": {
+      "estimated_cutoff_cgpa": 6.9,
+      "seat_capacity": 120
+    },
+    "UCS310": {
+      "estimated_cutoff_cgpa": 6.67,
+      "seat_capacity": 120
+    },
+    "UCS414": {
+      "estimated_cutoff_cgpa": 6.72,
+      "seat_capacity": 120
+    },
+    "UCS321": {
+      "estimated_cutoff_cgpa": 6.7,
+      "seat_capacity": 120
+    },
+    "UMA401": {
+      "estimated_cutoff_cgpa": 6.78,
+      "seat_capacity": 120
+    },
+    "UML501": {
+      "estimated_cutoff_cgpa": 6.85,
+      "seat_capacity": 120
+    },
+    "UCS531": {
+      "estimated_cutoff_cgpa": 7.34,
+      "seat_capacity": 120
+    },
+    "UCS635": {
+      "estimated_cutoff_cgpa": 7.56,
+      "seat_capacity": 120
+    },
+    "UCS645": {
+      "estimated_cutoff_cgpa": 7.51,
+      "seat_capacity": 120
+    },
+    "UCS751": {
+      "estimated_cutoff_cgpa": 7.39,
+      "seat_capacity": 120
+    },
+    "UCS532": {
+      "estimated_cutoff_cgpa": 7.36,
+      "seat_capacity": 120
+    },
+    "UCS636": {
+      "estimated_cutoff_cgpa": 7.23,
+      "seat_capacity": 120
+    },
+    "UCS646": {
+      "estimated_cutoff_cgpa": 7.28,
+      "seat_capacity": 120
+    },
+    "UCS752": {
+      "estimated_cutoff_cgpa": 7.33,
+      "seat_capacity": 120
+    },
+    "UCS534": {
+      "estimated_cutoff_cgpa": 7.22,
+      "seat_capacity": 120
+    },
+    "UCS638": {
+      "estimated_cutoff_cgpa": 7.27,
+      "seat_capacity": 120
+    },
+    "UCS648": {
+      "estimated_cutoff_cgpa": 7.24,
+      "seat_capacity": 120
+    },
+    "UCS754": {
+      "estimated_cutoff_cgpa": 7.29,
+      "seat_capacity": 120
+    },
+    "UMC513": {
+      "estimated_cutoff_cgpa": 7.57,
+      "seat_capacity": 120
+    },
+    "UMC622": {
+      "estimated_cutoff_cgpa": 7.62,
+      "seat_capacity": 120
+    },
+    "UMC632": {
+      "estimated_cutoff_cgpa": 7.59,
+      "seat_capacity": 120
+    },
+    "UMC633": {
+      "estimated_cutoff_cgpa": 7.72,
+      "seat_capacity": 120
+    },
+    "UMC744": {
+      "estimated_cutoff_cgpa": 7.67,
+      "seat_capacity": 120
+    },
+    "UCS548": {
+      "estimated_cutoff_cgpa": 7.18,
+      "seat_capacity": 120
+    },
+    "UCS654": {
+      "estimated_cutoff_cgpa": 7.28,
+      "seat_capacity": 120
+    },
+    "UCS761": {
+      "estimated_cutoff_cgpa": 7.38,
+      "seat_capacity": 120
+    },
+    "UCS772": {
+      "estimated_cutoff_cgpa": 7.4,
+      "seat_capacity": 120
+    },
+    "UCS539": {
+      "estimated_cutoff_cgpa": 7.41,
+      "seat_capacity": 120
+    },
+    "UCS675": {
+      "estimated_cutoff_cgpa": 7.53,
+      "seat_capacity": 120
+    },
+    "UCS658": {
+      "estimated_cutoff_cgpa": 7.63,
+      "seat_capacity": 120
+    },
+    "UMC743": {
+      "estimated_cutoff_cgpa": 7.68,
+      "seat_capacity": 120
+    },
+    "UCS537": {
+      "estimated_cutoff_cgpa": 7.18,
+      "seat_capacity": 120
+    },
+    "UCS659": {
+      "estimated_cutoff_cgpa": 7.28,
+      "seat_capacity": 120
+    },
+    "UCS660": {
+      "estimated_cutoff_cgpa": 7.36,
+      "seat_capacity": 120
+    },
+    "UCS758": {
+      "estimated_cutoff_cgpa": 7.41,
+      "seat_capacity": 120
+    },
+    "UCS542": {
+      "estimated_cutoff_cgpa": 7.32,
+      "seat_capacity": 120
+    },
+    "UCS677": {
+      "estimated_cutoff_cgpa": 7.49,
+      "seat_capacity": 120
+    },
+    "UCS661": {
+      "estimated_cutoff_cgpa": 7.47,
+      "seat_capacity": 120
+    },
+    "UCS662": {
+      "estimated_cutoff_cgpa": 7.37,
+      "seat_capacity": 120
+    },
+    "UCS745": {
+      "estimated_cutoff_cgpa": 7.49,
+      "seat_capacity": 120
+    },
+    "UCS551": {
+      "estimated_cutoff_cgpa": 7.46,
+      "seat_capacity": 120
+    },
+    "UCS664": {
+      "estimated_cutoff_cgpa": 7.54,
+      "seat_capacity": 120
+    },
+    "UCS749": {
+      "estimated_cutoff_cgpa": 7.56,
+      "seat_capacity": 120
+    },
+    "UCS748": {
+      "estimated_cutoff_cgpa": 7.62,
+      "seat_capacity": 120
+    },
+    "UCS547": {
+      "estimated_cutoff_cgpa": 7.56,
+      "seat_capacity": 120
+    },
+    "UCS668": {
+      "estimated_cutoff_cgpa": 7.63,
+      "seat_capacity": 120
+    },
+    "UCS671": {
+      "estimated_cutoff_cgpa": 7.66,
+      "seat_capacity": 120
+    },
+    "UCS760": {
+      "estimated_cutoff_cgpa": 7.71,
+      "seat_capacity": 120
+    },
+    "UCS550": {
+      "estimated_cutoff_cgpa": 7.54,
+      "seat_capacity": 120
+    },
+    "UCS673": {
+      "estimated_cutoff_cgpa": 7.62,
+      "seat_capacity": 120
+    },
+    "UCS674": {
+      "estimated_cutoff_cgpa": 7.67,
+      "seat_capacity": 120
+    },
+    "UCS750": {
+      "estimated_cutoff_cgpa": 7.64,
+      "seat_capacity": 120
+    },
+    "UEC646": {
+      "estimated_cutoff_cgpa": 7.47,
+      "seat_capacity": 120
+    },
+    "UCS678": {
+      "estimated_cutoff_cgpa": 7.45,
+      "seat_capacity": 120
+    },
+    "UCS679": {
+      "estimated_cutoff_cgpa": 7.5,
+      "seat_capacity": 120
+    },
+    "UCS780": {
+      "estimated_cutoff_cgpa": 7.54,
+      "seat_capacity": 120
+    },
+    "UHU016": {
+      "estimated_cutoff_cgpa": 6.45,
+      "seat_capacity": 120
+    },
+    "UHU017": {
+      "estimated_cutoff_cgpa": 6.55,
+      "seat_capacity": 120
+    },
+    "UHU018": {
+      "estimated_cutoff_cgpa": 6.6,
+      "seat_capacity": 120
+    },
+    "UCS002": {
+      "estimated_cutoff_cgpa": 6.58,
+      "seat_capacity": 120
+    },
+    "UPH064": {
+      "estimated_cutoff_cgpa": 6.65,
+      "seat_capacity": 120
+    },
+    "UEN006": {
+      "estimated_cutoff_cgpa": 6.5,
+      "seat_capacity": 120
+    },
+    "UMA069": {
+      "estimated_cutoff_cgpa": 6.7,
+      "seat_capacity": 120
+    },
+    "UBT510": {
+      "estimated_cutoff_cgpa": 6.53,
+      "seat_capacity": 120
+    },
+    "UMA070": {
+      "estimated_cutoff_cgpa": 6.72,
+      "seat_capacity": 120
+    },
+    "UTD004": {
+      "estimated_cutoff_cgpa": 6.42,
+      "seat_capacity": 120
+    }
+  }
+}

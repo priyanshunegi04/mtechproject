@@ -1,0 +1,6262 @@
+{
+  "institution": "Thapar Institute of Engineering & Technology (TIET)",
+  "program": "B.E. Computer Science and Engineering (2026 Scheme)",
+  "generated_at": "2026-10-25T17:17:52.936499+00:00",
+  "counts": {
+    "core_courses": 14,
+    "elective_focus_baskets": 12,
+    "professional_electives": 50,
+    "generic_electives": 10,
+    "total_courses": 74
+  },
+  "core_courses": [
+    {
+      "course_code": "UES103",
+      "title": "Programming for Problem Solving",
+      "category": "CORE_PREREQUISITE",
+      "semester": 1,
+      "ltp": "3-0-2",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 4.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 2.6,
+      "weekly_self_effort_hours": 6.0,
+      "lab_tech_stack": [
+        "C",
+        "GCC",
+        "GDB",
+        "Linux Shell",
+        "Make"
+      ],
+      "syllabus_keywords": [
+        "C programming",
+        "pointers",
+        "recursion",
+        "arrays",
+        "structures",
+        "dynamic memory allocation",
+        "file handling"
+      ],
+      "clos": [
+        "CLO1: Formulate structured algorithms for numerical and array-based problems in C.",
+        "CLO2: Manipulate pointers, dynamic memory allocation, and recursive functions.",
+        "CLO3: Design modular programs using structures, unions, and file streams."
+      ]
+    },
+    {
+      "course_code": "UMA022",
+      "title": "Calculus for Engineers",
+      "category": "CORE_PREREQUISITE",
+      "semester": 1,
+      "ltp": "3-1-0",
+      "lecture_hours": 3,
+      "tutorial_hours": 1,
+      "practical_hours": 0,
+      "credits": 3.5,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 2.9,
+      "weekly_self_effort_hours": 5.5,
+      "lab_tech_stack": [
+        "MATLAB",
+        "SymPy"
+      ],
+      "syllabus_keywords": [
+        "infinite series",
+        "partial derivatives",
+        "multiple integrals",
+        "vector calculus",
+        "gradient divergence curl"
+      ],
+      "clos": [
+        "CLO1: Test convergence of infinite series and power series expansions.",
+        "CLO2: Apply multivariable differential calculus to optimization problems.",
+        "CLO3: Evaluate multiple and vector integrals using Green, Stokes, and Gauss theorems."
+      ]
+    },
+    {
+      "course_code": "UMA023",
+      "title": "Differential Equations and Linear Algebra",
+      "category": "CORE_PREREQUISITE",
+      "semester": 2,
+      "ltp": "3-1-0",
+      "lecture_hours": 3,
+      "tutorial_hours": 1,
+      "practical_hours": 0,
+      "credits": 3.5,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.1,
+      "weekly_self_effort_hours": 6.0,
+      "lab_tech_stack": [
+        "MATLAB",
+        "NumPy"
+      ],
+      "syllabus_keywords": [
+        "ordinary differential equations",
+        "Laplace transforms",
+        "vector spaces",
+        "linear transformations",
+        "eigenvalues and eigenvectors"
+      ],
+      "clos": [
+        "CLO1: Solve higher-order ordinary differential equations and system dynamics.",
+        "CLO2: Analyze vector spaces, basis, rank-nullity, and orthogonality.",
+        "CLO3: Compute eigenvalues, eigenvectors, and diagonalization of linear operators."
+      ]
+    },
+    {
+      "course_code": "UCS301",
+      "title": "Data Structures",
+      "category": "CORE_PREREQUISITE",
+      "semester": 3,
+      "ltp": "3-0-2",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 4.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.5,
+      "weekly_self_effort_hours": 7.5,
+      "lab_tech_stack": [
+        "C++17",
+        "STL",
+        "Valgrind",
+        "CMake"
+      ],
+      "syllabus_keywords": [
+        "trees",
+        "graphs",
+        "hashing",
+        "complexity",
+        "AVL and B-trees",
+        "heaps",
+        "sorting and searching"
+      ],
+      "clos": [
+        "CLO1: Analyze asymptotic time and space complexity of linear and non-linear data structures.",
+        "CLO2: Implement balanced search trees, priority queues, and collision-resilient hash tables.",
+        "CLO3: Design graph traversal, shortest path, and minimum spanning tree algorithms."
+      ]
+    },
+    {
+      "course_code": "UCS303",
+      "title": "Operating System",
+      "category": "CORE_PREREQUISITE",
+      "semester": 3,
+      "ltp": "3-0-2",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 4.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.4,
+      "weekly_self_effort_hours": 6.5,
+      "lab_tech_stack": [
+        "POSIX Threads",
+        "Linux Kernel Modules",
+        "C",
+        "Bash"
+      ],
+      "syllabus_keywords": [
+        "processes",
+        "concurrency",
+        "memory management",
+        "CPU scheduling",
+        "deadlocks",
+        "virtual memory paging",
+        "file systems"
+      ],
+      "clos": [
+        "CLO1: Evaluate CPU scheduling, process synchronization, and deadlock handling mechanisms.",
+        "CLO2: Implement concurrent programs using POSIX threads, mutexes, and semaphores.",
+        "CLO3: Analyze virtual memory paging, segmentation, and disk scheduling algorithms."
+      ]
+    },
+    {
+      "course_code": "UTA018",
+      "title": "Object Oriented Programming",
+      "category": "CORE_PREREQUISITE",
+      "semester": 3,
+      "ltp": "3-0-2",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 4.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 2.8,
+      "weekly_self_effort_hours": 6.0,
+      "lab_tech_stack": [
+        "C++",
+        "Java",
+        "JUnit",
+        "UML"
+      ],
+      "syllabus_keywords": [
+        "C++/Java OOP",
+        "design patterns",
+        "inheritance",
+        "polymorphism",
+        "templates and generics",
+        "exception handling",
+        "SOLID principles"
+      ],
+      "clos": [
+        "CLO1: Apply encapsulation, inheritance, and polymorphism to modular software design.",
+        "CLO2: Utilize generic programming, STL/Collections, and exception safety.",
+        "CLO3: Implement object-oriented design patterns following SOLID engineering principles."
+      ]
+    },
+    {
+      "course_code": "UCS405",
+      "title": "Discrete Mathematical Structures",
+      "category": "CORE_PREREQUISITE",
+      "semester": 3,
+      "ltp": "3-1-0",
+      "lecture_hours": 3,
+      "tutorial_hours": 1,
+      "practical_hours": 0,
+      "credits": 3.5,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.3,
+      "weekly_self_effort_hours": 6.0,
+      "lab_tech_stack": [
+        "Python",
+        "NetworkX",
+        "Z3 Theorem Prover"
+      ],
+      "syllabus_keywords": [
+        "logic",
+        "combinatorics",
+        "graph theory",
+        "recurrence relations",
+        "groups and rings",
+        "Boolean algebra",
+        "lattices"
+      ],
+      "clos": [
+        "CLO1: Construct formal mathematical proofs using propositional and predicate logic.",
+        "CLO2: Solve recurrence relations and combinatorial enumeration problems.",
+        "CLO3: Apply algebraic structures, lattices, and graph theory to computer science problems."
+      ]
+    },
+    {
+      "course_code": "UMA021",
+      "title": "Numerical Linear Algebra",
+      "category": "CORE_PREREQUISITE",
+      "semester": 4,
+      "ltp": "3-0-2",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 4.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.6,
+      "weekly_self_effort_hours": 7.0,
+      "lab_tech_stack": [
+        "Python",
+        "NumPy",
+        "SciPy",
+        "MATLAB"
+      ],
+      "syllabus_keywords": [
+        "SVD",
+        "eigenvalues",
+        "matrix factorizations",
+        "LU and QR decomposition",
+        "least squares",
+        "conditioning and stability"
+      ],
+      "clos": [
+        "CLO1: Analyze numerical stability, conditioning, and floating-point error propagation.",
+        "CLO2: Implement LU, Cholesky, QR, and Singular Value Decomposition (SVD) algorithms.",
+        "CLO3: Solve large sparse linear systems and eigenvalue problems iteratively."
+      ]
+    },
+    {
+      "course_code": "UCS415",
+      "title": "Design and Analysis of Algorithms",
+      "category": "CORE_PREREQUISITE",
+      "semester": 4,
+      "ltp": "3-0-2",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 4.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.9,
+      "weekly_self_effort_hours": 8.0,
+      "lab_tech_stack": [
+        "C++20",
+        "Python",
+        "Google Benchmark"
+      ],
+      "syllabus_keywords": [
+        "DP",
+        "greedy",
+        "NP-completeness",
+        "divide and conquer",
+        "backtracking",
+        "network flow",
+        "approximation algorithms"
+      ],
+      "clos": [
+        "CLO1: Design optimal algorithms using divide-and-conquer, greedy, and dynamic programming.",
+        "CLO2: Formulate graph network flows, string matching, and branch-and-bound solutions.",
+        "CLO3: Prove NP-completeness via polynomial-time reductions and design approximation schemes."
+      ]
+    },
+    {
+      "course_code": "UCS310",
+      "title": "Database Management Systems",
+      "category": "CORE_PREREQUISITE",
+      "semester": 4,
+      "ltp": "3-0-2",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 4.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.0,
+      "weekly_self_effort_hours": 6.0,
+      "lab_tech_stack": [
+        "PostgreSQL",
+        "Oracle PL/SQL",
+        "MongoDB",
+        "Redis"
+      ],
+      "syllabus_keywords": [
+        "SQL",
+        "normalization",
+        "transactions",
+        "relational algebra",
+        "BCNF",
+        "ACID concurrency control",
+        "B+ tree indexing"
+      ],
+      "clos": [
+        "CLO1: Model enterprise schemas using ER diagrams, relational algebra, and BCNF normalization.",
+        "CLO2: Write complex analytical SQL queries, triggers, and stored procedures.",
+        "CLO3: Evaluate transaction serializability, two-phase locking, and crash recovery protocols."
+      ]
+    },
+    {
+      "course_code": "UCS414",
+      "title": "Computer Networks",
+      "category": "CORE_PREREQUISITE",
+      "semester": 4,
+      "ltp": "3-0-2",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 4.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.2,
+      "weekly_self_effort_hours": 6.0,
+      "lab_tech_stack": [
+        "Wireshark",
+        "Cisco Packet Tracer",
+        "Python Sockets",
+        "ns-3"
+      ],
+      "syllabus_keywords": [
+        "TCP/IP",
+        "routing",
+        "network security basics",
+        "OSI model",
+        "OSPF and BGP",
+        "congestion control",
+        "DNS and HTTP/3"
+      ],
+      "clos": [
+        "CLO1: Analyze layered network protocols across Data Link, Network, and Transport layers.",
+        "CLO2: Configure IPv4/IPv6 subnetting, OSPF/BGP routing, and TCP congestion control.",
+        "CLO3: Implement client-server socket applications and inspect packet traces."
+      ]
+    },
+    {
+      "course_code": "UCS321",
+      "title": "AI for Engineers",
+      "category": "CORE_PREREQUISITE",
+      "semester": 4,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.1,
+      "weekly_self_effort_hours": 5.5,
+      "lab_tech_stack": [
+        "Python",
+        "Scikit-Learn",
+        "NumPy",
+        "Pandas"
+      ],
+      "syllabus_keywords": [
+        "search algorithms",
+        "knowledge representation",
+        "ML basics",
+        "A* heuristic search",
+        "adversarial games",
+        "Bayesian reasoning"
+      ],
+      "clos": [
+        "CLO1: Formulate state-space search problems using uninformed and heuristic A* strategies.",
+        "CLO2: Represent domain knowledge using first-order logic and probabilistic graphical models.",
+        "CLO3: Build foundational supervised and unsupervised machine learning pipelines."
+      ]
+    },
+    {
+      "course_code": "UMA401",
+      "title": "Probability and Statistics",
+      "category": "CORE_PREREQUISITE",
+      "semester": 4,
+      "ltp": "3-0-2",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 4.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.4,
+      "weekly_self_effort_hours": 6.5,
+      "lab_tech_stack": [
+        "R",
+        "Python SciPy",
+        "Statsmodels"
+      ],
+      "syllabus_keywords": [
+        "Bayesian inference",
+        "distributions",
+        "hypothesis testing",
+        "random variables",
+        "maximum likelihood estimation",
+        "regression analysis",
+        "Markov chains"
+      ],
+      "clos": [
+        "CLO1: Model stochastic phenomena using discrete and continuous probability distributions.",
+        "CLO2: Perform parameter estimation, confidence interval construction, and hypothesis testing.",
+        "CLO3: Apply linear regression, ANOVA, and Bayesian inference to engineering datasets."
+      ]
+    },
+    {
+      "course_code": "UML501",
+      "title": "Machine Learning",
+      "category": "CORE_SEM5",
+      "semester": 5,
+      "ltp": "3-0-2",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 4.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.7,
+      "weekly_self_effort_hours": 7.5,
+      "lab_tech_stack": [
+        "Python",
+        "Scikit-Learn",
+        "PyTorch",
+        "XGBoost"
+      ],
+      "syllabus_keywords": [
+        "supervised learning",
+        "support vector machines",
+        "ensemble methods",
+        "neural networks",
+        "dimensionality reduction",
+        "regularization"
+      ],
+      "clos": [
+        "CLO1: Derive and implement parametric and non-parametric supervised learning algorithms.",
+        "CLO2: Optimize ensemble trees, SVMs, and multi-layer perceptrons with cross-validation.",
+        "CLO3: Apply clustering, PCA, and feature selection to high-dimensional data."
+      ]
+    }
+  ],
+  "elective_focus_baskets": [
+    {
+      "basket_id": "EF_BASKET_01",
+      "basket_number": 1,
+      "name": "High Performance Computing",
+      "collaboration": "TIET Advanced Computing Lab",
+      "career_tracks": [
+        "Cloud & Distributed Systems Architect",
+        "HPC & Systems Engineer",
+        "Backend Infrastructure Engineer"
+      ],
+      "key_prerequisites": [
+        "UCS303",
+        "UCS415",
+        "UMA021",
+        "UCS301"
+      ],
+      "elective_sequence": {
+        "PE-I": [
+          "UCS531"
+        ],
+        "PE-II": [
+          "UCS635"
+        ],
+        "PE-III": [
+          "UCS645"
+        ],
+        "PE-IV": [
+          "UCS751"
+        ]
+      }
+    },
+    {
+      "basket_id": "EF_BASKET_02",
+      "basket_number": 2,
+      "name": "Computer Animation and Gaming",
+      "collaboration": "TIET Visual Computing & Graphics Studio",
+      "career_tracks": [
+        "Computer Vision & Graphics Engineer",
+        "Game Engine & AR/VR Developer",
+        "Multimedia Systems Engineer"
+      ],
+      "key_prerequisites": [
+        "UTA018",
+        "UCS301",
+        "UMA021",
+        "UES103"
+      ],
+      "elective_sequence": {
+        "PE-I": [
+          "UCS532"
+        ],
+        "PE-II": [
+          "UCS636"
+        ],
+        "PE-III": [
+          "UCS646"
+        ],
+        "PE-IV": [
+          "UCS752"
+        ]
+      }
+    },
+    {
+      "basket_id": "EF_BASKET_03",
+      "basket_number": 3,
+      "name": "Information and Cyber Security",
+      "collaboration": "TIET Information Assurance Cell",
+      "career_tracks": [
+        "Cybersecurity Architect",
+        "Product Security Engineer",
+        "Blockchain & Cryptography Engineer"
+      ],
+      "key_prerequisites": [
+        "UCS414",
+        "UCS303",
+        "UCS405",
+        "UES103"
+      ],
+      "elective_sequence": {
+        "PE-I": [
+          "UCS534"
+        ],
+        "PE-II": [
+          "UCS638"
+        ],
+        "PE-III": [
+          "UCS648"
+        ],
+        "PE-IV": [
+          "UCS754"
+        ]
+      }
+    },
+    {
+      "basket_id": "EF_BASKET_04",
+      "basket_number": 4,
+      "name": "Mathematics and Computing",
+      "collaboration": "TIET School of Mathematics & Computing",
+      "career_tracks": [
+        "Quantitative Researcher",
+        "Algorithm & Quantum Computing Scientist",
+        "AI Research Engineer"
+      ],
+      "key_prerequisites": [
+        "UMA021",
+        "UMA401",
+        "UCS405",
+        "UCS415"
+      ],
+      "elective_sequence": {
+        "PE-I": [
+          "UMC513"
+        ],
+        "PE-II": [
+          "UMC622",
+          "UMC632"
+        ],
+        "PE-III": [
+          "UMC633"
+        ],
+        "PE-IV": [
+          "UMC744"
+        ]
+      }
+    },
+    {
+      "basket_id": "EF_BASKET_05",
+      "basket_number": 5,
+      "name": "Data Science",
+      "collaboration": "TIET Center of Excellence in Data Science",
+      "career_tracks": [
+        "Data Scientist",
+        "Machine Learning Engineer",
+        "Applied AI Scientist"
+      ],
+      "key_prerequisites": [
+        "UMA401",
+        "UCS321",
+        "UMA021",
+        "UCS310"
+      ],
+      "elective_sequence": {
+        "PE-I": [
+          "UCS548"
+        ],
+        "PE-II": [
+          "UCS654"
+        ],
+        "PE-III": [
+          "UCS761"
+        ],
+        "PE-IV": [
+          "UCS772"
+        ]
+      }
+    },
+    {
+      "basket_id": "EF_BASKET_06",
+      "basket_number": 6,
+      "name": "Financial Derivative",
+      "collaboration": "Future First Collaboration",
+      "career_tracks": [
+        "Quantitative Trader & Derivatives Analyst",
+        "FinTech Risk Modeler",
+        "Algorithmic Trading Strategist"
+      ],
+      "key_prerequisites": [
+        "UMA401",
+        "UMA021",
+        "UMA022",
+        "UCS415"
+      ],
+      "elective_sequence": {
+        "PE-I": [
+          "UCS539"
+        ],
+        "PE-II": [
+          "UCS675"
+        ],
+        "PE-III": [
+          "UCS658"
+        ],
+        "PE-IV": [
+          "UMC743"
+        ]
+      }
+    },
+    {
+      "basket_id": "EF_BASKET_07",
+      "basket_number": 7,
+      "name": "DevOps and Continuous Delivery",
+      "collaboration": "Xebia Collaboration",
+      "career_tracks": [
+        "Site Reliability Engineer (SRE)",
+        "DevOps & Platform Engineer",
+        "Cloud Release Architect"
+      ],
+      "key_prerequisites": [
+        "UCS303",
+        "UCS414",
+        "UTA018",
+        "UCS310"
+      ],
+      "elective_sequence": {
+        "PE-I": [
+          "UCS537"
+        ],
+        "PE-II": [
+          "UCS659"
+        ],
+        "PE-III": [
+          "UCS660"
+        ],
+        "PE-IV": [
+          "UCS758"
+        ]
+      }
+    },
+    {
+      "basket_id": "EF_BASKET_08",
+      "basket_number": 8,
+      "name": "Full Stack",
+      "collaboration": "Xebia Collaboration",
+      "career_tracks": [
+        "Full-Stack Software Engineer",
+        "Data & Database Platform Engineer",
+        "Cloud Product Engineer"
+      ],
+      "key_prerequisites": [
+        "UTA018",
+        "UCS310",
+        "UCS301",
+        "UCS414"
+      ],
+      "elective_sequence": {
+        "PE-I": [
+          "UCS542"
+        ],
+        "PE-II": [
+          "UCS677",
+          "UCS661"
+        ],
+        "PE-III": [
+          "UCS662"
+        ],
+        "PE-IV": [
+          "UCS745"
+        ]
+      }
+    },
+    {
+      "basket_id": "EF_BASKET_09",
+      "basket_number": 9,
+      "name": "Conversational AI",
+      "collaboration": "NVIDIA Collaboration",
+      "career_tracks": [
+        "Generative AI & LLM Engineer",
+        "NLP Research Scientist",
+        "Speech & Multimodal AI Engineer"
+      ],
+      "key_prerequisites": [
+        "UCS321",
+        "UMA021",
+        "UMA401",
+        "UCS415"
+      ],
+      "elective_sequence": {
+        "PE-I": [
+          "UCS551"
+        ],
+        "PE-II": [
+          "UCS664"
+        ],
+        "PE-III": [
+          "UCS749"
+        ],
+        "PE-IV": [
+          "UCS748"
+        ]
+      }
+    },
+    {
+      "basket_id": "EF_BASKET_10",
+      "basket_number": 10,
+      "name": "Robotics and Edge AI",
+      "collaboration": "NVIDIA Collaboration",
+      "career_tracks": [
+        "Robotics & Autonomous Systems Engineer",
+        "Edge AI & Embedded Vision Engineer",
+        "Reinforcement Learning Researcher"
+      ],
+      "key_prerequisites": [
+        "UCS321",
+        "UCS303",
+        "UMA021",
+        "UES103"
+      ],
+      "elective_sequence": {
+        "PE-I": [
+          "UCS547"
+        ],
+        "PE-II": [
+          "UCS668"
+        ],
+        "PE-III": [
+          "UCS671"
+        ],
+        "PE-IV": [
+          "UCS760"
+        ]
+      }
+    },
+    {
+      "basket_id": "EF_BASKET_11",
+      "basket_number": 11,
+      "name": "Cyber Forensics and Ethical Hacking",
+      "collaboration": "EC-Council, USA",
+      "career_tracks": [
+        "Penetration Tester & Red Team Specialist",
+        "Digital Forensics Investigator",
+        "SOC & Network Defense Lead"
+      ],
+      "key_prerequisites": [
+        "UCS414",
+        "UCS303",
+        "UCS310",
+        "UES103"
+      ],
+      "elective_sequence": {
+        "PE-I": [
+          "UCS550"
+        ],
+        "PE-II": [
+          "UCS673"
+        ],
+        "PE-III": [
+          "UCS674"
+        ],
+        "PE-IV": [
+          "UCS750"
+        ]
+      }
+    },
+    {
+      "basket_id": "EF_BASKET_12",
+      "basket_number": 12,
+      "name": "Intelligent Transport Systems",
+      "collaboration": "TIET Smart Mobility & V2X Group",
+      "career_tracks": [
+        "Connected Mobility & V2X Engineer",
+        "Automotive Data Scientist",
+        "ITS Cybersecurity Specialist"
+      ],
+      "key_prerequisites": [
+        "UCS414",
+        "UMA401",
+        "UCS321",
+        "UCS303"
+      ],
+      "elective_sequence": {
+        "PE-I": [
+          "UEC646"
+        ],
+        "PE-II": [
+          "UCS678"
+        ],
+        "PE-III": [
+          "UCS679"
+        ],
+        "PE-IV": [
+          "UCS780"
+        ]
+      }
+    }
+  ],
+  "professional_electives": [
+    {
+      "course_code": "UCS531",
+      "title": "Cloud Computing",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_01",
+      "elective_slot": "PE-I",
+      "semester": 5,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.2,
+      "weekly_self_effort_hours": 5.5,
+      "prerequisites": [
+        "UCS303",
+        "UCS414"
+      ],
+      "lab_tech_stack": [
+        "Docker",
+        "Kubernetes",
+        "AWS EC2/S3",
+        "OpenStack"
+      ],
+      "syllabus_keywords": [
+        "virtualization",
+        "IaaS PaaS SaaS",
+        "cloud orchestration",
+        "microservices",
+        "auto-scaling"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Cloud Computing.",
+        "CLO2: Design, implement, and benchmark production solutions using Docker, Kubernetes.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Cloud Computing."
+      ]
+    },
+    {
+      "course_code": "UCS635",
+      "title": "GPU Computing",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_01",
+      "elective_slot": "PE-II",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 4.1,
+      "weekly_self_effort_hours": 7.5,
+      "prerequisites": [
+        "UCS303",
+        "UES103",
+        "UMA021"
+      ],
+      "lab_tech_stack": [
+        "NVIDIA CUDA",
+        "Nsight",
+        "C++",
+        "cuBLAS"
+      ],
+      "syllabus_keywords": [
+        "SIMT architecture",
+        "CUDA thread hierarchy",
+        "shared memory optimization",
+        "warp divergence",
+        "GPU kernels"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of GPU Computing.",
+        "CLO2: Design, implement, and benchmark production solutions using NVIDIA CUDA, Nsight.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in GPU Computing."
+      ]
+    },
+    {
+      "course_code": "UCS645",
+      "title": "Parallel & Distributed Computing",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_01",
+      "elective_slot": "PE-III",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.9,
+      "weekly_self_effort_hours": 7.0,
+      "prerequisites": [
+        "UCS303",
+        "UCS415",
+        "UCS414"
+      ],
+      "lab_tech_stack": [
+        "OpenMP",
+        "MPI",
+        "Apache Spark",
+        "C++"
+      ],
+      "syllabus_keywords": [
+        "Amdahl law",
+        "message passing interface",
+        "shared memory parallelism",
+        "distributed consensus",
+        "MapReduce"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Parallel & Distributed Computing.",
+        "CLO2: Design, implement, and benchmark production solutions using OpenMP, MPI.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Parallel & Distributed Computing."
+      ]
+    },
+    {
+      "course_code": "UCS751",
+      "title": "Simulation & Modelling",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_01",
+      "elective_slot": "PE-IV",
+      "semester": 7,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.4,
+      "weekly_self_effort_hours": 6.0,
+      "prerequisites": [
+        "UMA401",
+        "UMA021",
+        "UCS415"
+      ],
+      "lab_tech_stack": [
+        "SimPy",
+        "MATLAB Simulink",
+        "Python",
+        "AnyLogic"
+      ],
+      "syllabus_keywords": [
+        "discrete event simulation",
+        "Monte Carlo methods",
+        "queueing networks",
+        "stochastic processes",
+        "system dynamics"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Simulation & Modelling.",
+        "CLO2: Design, implement, and benchmark production solutions using SimPy, MATLAB Simulink.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Simulation & Modelling."
+      ]
+    },
+    {
+      "course_code": "UCS532",
+      "title": "Computer Vision",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_02",
+      "elective_slot": "PE-I",
+      "semester": 5,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.6,
+      "weekly_self_effort_hours": 6.5,
+      "prerequisites": [
+        "UMA021",
+        "UCS321",
+        "UCS301"
+      ],
+      "lab_tech_stack": [
+        "OpenCV",
+        "PyTorch",
+        "Python",
+        "NumPy"
+      ],
+      "syllabus_keywords": [
+        "image filtering",
+        "edge detection",
+        "feature descriptors SIFT/ORB",
+        "camera calibration",
+        "object detection"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Computer Vision.",
+        "CLO2: Design, implement, and benchmark production solutions using OpenCV, PyTorch.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Computer Vision."
+      ]
+    },
+    {
+      "course_code": "UCS636",
+      "title": "3D Modelling and Animation",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_02",
+      "elective_slot": "PE-II",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.1,
+      "weekly_self_effort_hours": 6.0,
+      "prerequisites": [
+        "UTA018",
+        "UMA021"
+      ],
+      "lab_tech_stack": [
+        "Blender",
+        "OpenGL",
+        "Three.js",
+        "GLSL Shaders"
+      ],
+      "syllabus_keywords": [
+        "polygonal meshes",
+        "NURBS",
+        "skeletal rigging",
+        "keyframe kinematics",
+        "PBR rendering"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of 3D Modelling and Animation.",
+        "CLO2: Design, implement, and benchmark production solutions using Blender, OpenGL.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in 3D Modelling and Animation."
+      ]
+    },
+    {
+      "course_code": "UCS646",
+      "title": "Game Design & Development",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_02",
+      "elective_slot": "PE-III",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.3,
+      "weekly_self_effort_hours": 6.5,
+      "prerequisites": [
+        "UTA018",
+        "UCS301",
+        "UCS321"
+      ],
+      "lab_tech_stack": [
+        "Unity 3D",
+        "Unreal Engine",
+        "C#",
+        "C++"
+      ],
+      "syllabus_keywords": [
+        "game physics engine",
+        "collision detection",
+        "navmesh pathfinding",
+        "shader pipelines",
+        "entity component system"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Game Design & Development.",
+        "CLO2: Design, implement, and benchmark production solutions using Unity 3D, Unreal Engine.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Game Design & Development."
+      ]
+    },
+    {
+      "course_code": "UCS752",
+      "title": "Augmented and Virtual Reality",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_02",
+      "elective_slot": "PE-IV",
+      "semester": 7,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.5,
+      "weekly_self_effort_hours": 6.5,
+      "prerequisites": [
+        "UCS532",
+        "UTA018",
+        "UMA021"
+      ],
+      "lab_tech_stack": [
+        "Unity XR Toolkit",
+        "OpenXR",
+        "ARKit/ARCore",
+        "C#"
+      ],
+      "syllabus_keywords": [
+        "SLAM spatial tracking",
+        "stereoscopic rendering",
+        "haptic interaction",
+        "spatial audio",
+        "mixed reality UX"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Augmented and Virtual Reality.",
+        "CLO2: Design, implement, and benchmark production solutions using Unity XR Toolkit, OpenXR.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Augmented and Virtual Reality."
+      ]
+    },
+    {
+      "course_code": "UCS534",
+      "title": "Computer & Network Security",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_03",
+      "elective_slot": "PE-I",
+      "semester": 5,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.4,
+      "weekly_self_effort_hours": 6.0,
+      "prerequisites": [
+        "UCS414",
+        "UCS303",
+        "UCS405"
+      ],
+      "lab_tech_stack": [
+        "OpenSSL",
+        "Wireshark",
+        "Snort IDS",
+        "iptables"
+      ],
+      "syllabus_keywords": [
+        "symmetric and public-key cryptography",
+        "TLS/IPSec",
+        "firewalls",
+        "intrusion detection",
+        "authentication protocols"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Computer & Network Security.",
+        "CLO2: Design, implement, and benchmark production solutions using OpenSSL, Wireshark.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Computer & Network Security."
+      ]
+    },
+    {
+      "course_code": "UCS638",
+      "title": "Secure Coding",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_03",
+      "elective_slot": "PE-II",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.6,
+      "weekly_self_effort_hours": 6.5,
+      "prerequisites": [
+        "UES103",
+        "UTA018",
+        "UCS303"
+      ],
+      "lab_tech_stack": [
+        "SonarQube",
+        "OWASP ZAP",
+        "GDB",
+        "AddressSanitizer"
+      ],
+      "syllabus_keywords": [
+        "buffer overflow mitigation",
+        "SQL injection prevention",
+        "XSS/CSRF defenses",
+        "static taint analysis",
+        "memory safety"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Secure Coding.",
+        "CLO2: Design, implement, and benchmark production solutions using SonarQube, OWASP ZAP.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Secure Coding."
+      ]
+    },
+    {
+      "course_code": "UCS648",
+      "title": "Cyber Forensics",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_03",
+      "elective_slot": "PE-III",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.5,
+      "weekly_self_effort_hours": 6.0,
+      "prerequisites": [
+        "UCS303",
+        "UCS414",
+        "UCS310"
+      ],
+      "lab_tech_stack": [
+        "Autopsy",
+        "Volatility",
+        "FTK Imager",
+        "Sleuth Kit"
+      ],
+      "syllabus_keywords": [
+        "disk imaging",
+        "memory forensics",
+        "network packet reconstruction",
+        "file carving",
+        "chain of custody"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Cyber Forensics.",
+        "CLO2: Design, implement, and benchmark production solutions using Autopsy, Volatility.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Cyber Forensics."
+      ]
+    },
+    {
+      "course_code": "UCS754",
+      "title": "Blockchain Technology and Applications",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_03",
+      "elective_slot": "PE-IV",
+      "semester": 7,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.7,
+      "weekly_self_effort_hours": 6.5,
+      "prerequisites": [
+        "UCS405",
+        "UCS414",
+        "UCS301"
+      ],
+      "lab_tech_stack": [
+        "Solidity",
+        "Hardhat",
+        "Ethereum EVM",
+        "Hyperledger Fabric"
+      ],
+      "syllabus_keywords": [
+        "Merkle trees",
+        "Byzantine fault tolerance",
+        "smart contracts",
+        "zero-knowledge proofs",
+        "DeFi security"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Blockchain Technology and Applications.",
+        "CLO2: Design, implement, and benchmark production solutions using Solidity, Hardhat.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Blockchain Technology and Applications."
+      ]
+    },
+    {
+      "course_code": "UMC513",
+      "title": "Linear Algebra for AI and ML",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_04",
+      "elective_slot": "PE-I",
+      "semester": 5,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.8,
+      "weekly_self_effort_hours": 7.0,
+      "prerequisites": [
+        "UMA021",
+        "UMA023",
+        "UCS321"
+      ],
+      "lab_tech_stack": [
+        "Python",
+        "NumPy",
+        "SciPy",
+        "JAX"
+      ],
+      "syllabus_keywords": [
+        "spectral decomposition",
+        "positive definite matrices",
+        "tensor contractions",
+        "PCA and kernel SVD",
+        "gradient calculus"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Linear Algebra for AI and ML.",
+        "CLO2: Design, implement, and benchmark production solutions using Python, NumPy.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Linear Algebra for AI and ML."
+      ]
+    },
+    {
+      "course_code": "UMC622",
+      "title": "Matrix Computation",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_04",
+      "elective_slot": "PE-II",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 4.0,
+      "weekly_self_effort_hours": 7.5,
+      "prerequisites": [
+        "UMA021",
+        "UMA023",
+        "UCS415"
+      ],
+      "lab_tech_stack": [
+        "LAPACK",
+        "SciPy Sparse",
+        "MATLAB",
+        "Julia"
+      ],
+      "syllabus_keywords": [
+        "Krylov subspace methods",
+        "GMRES and Conjugate Gradient",
+        "Hessenberg reduction",
+        "QR iteration",
+        "preconditioning"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Matrix Computation.",
+        "CLO2: Design, implement, and benchmark production solutions using LAPACK, SciPy Sparse.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Matrix Computation."
+      ]
+    },
+    {
+      "course_code": "UMC632",
+      "title": "Financial Mathematics",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_04",
+      "elective_slot": "PE-II",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.9,
+      "weekly_self_effort_hours": 7.0,
+      "prerequisites": [
+        "UMA401",
+        "UMA022",
+        "UMA021"
+      ],
+      "lab_tech_stack": [
+        "Python",
+        "QuantLib",
+        "NumPy",
+        "Statsmodels"
+      ],
+      "syllabus_keywords": [
+        "stochastic calculus",
+        "Ito lemma",
+        "martingale pricing",
+        "binomial asset pricing",
+        "term structure models"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Financial Mathematics.",
+        "CLO2: Design, implement, and benchmark production solutions using Python, QuantLib.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Financial Mathematics."
+      ]
+    },
+    {
+      "course_code": "UMC633",
+      "title": "Mathematics for Quantum Computing",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_04",
+      "elective_slot": "PE-III",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 4.4,
+      "weekly_self_effort_hours": 8.5,
+      "prerequisites": [
+        "UMA021",
+        "UCS405",
+        "UMA401"
+      ],
+      "lab_tech_stack": [
+        "Qiskit",
+        "PennyLane",
+        "Python",
+        "SciPy"
+      ],
+      "syllabus_keywords": [
+        "Hilbert spaces",
+        "unitary operators",
+        "quantum entanglement",
+        "Shor and Grover algorithms",
+        "quantum error correction"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Mathematics for Quantum Computing.",
+        "CLO2: Design, implement, and benchmark production solutions using Qiskit, PennyLane.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Mathematics for Quantum Computing."
+      ]
+    },
+    {
+      "course_code": "UMC744",
+      "title": "Cryptography and Coding Theory",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_04",
+      "elective_slot": "PE-IV",
+      "semester": 7,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 4.2,
+      "weekly_self_effort_hours": 8.0,
+      "prerequisites": [
+        "UCS405",
+        "UMA021",
+        "UCS415"
+      ],
+      "lab_tech_stack": [
+        "SageMath",
+        "Python",
+        "OpenSSL",
+        "PARI/GP"
+      ],
+      "syllabus_keywords": [
+        "finite fields Galois theory",
+        "elliptic curve cryptography",
+        "lattice-based post-quantum crypto",
+        "Reed-Solomon codes",
+        "LDPC codes"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Cryptography and Coding Theory.",
+        "CLO2: Design, implement, and benchmark production solutions using SageMath, Python.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Cryptography and Coding Theory."
+      ]
+    },
+    {
+      "course_code": "UCS548",
+      "title": "Foundation of Data Science",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_05",
+      "elective_slot": "PE-I",
+      "semester": 5,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.2,
+      "weekly_self_effort_hours": 6.0,
+      "prerequisites": [
+        "UMA401",
+        "UCS321",
+        "UCS310"
+      ],
+      "lab_tech_stack": [
+        "Python",
+        "Pandas",
+        "Seaborn",
+        "Scikit-Learn"
+      ],
+      "syllabus_keywords": [
+        "exploratory data analysis",
+        "feature engineering",
+        "data wrangling",
+        "statistical visualization",
+        "dimensionality reduction"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Foundation of Data Science.",
+        "CLO2: Design, implement, and benchmark production solutions using Python, Pandas.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Foundation of Data Science."
+      ]
+    },
+    {
+      "course_code": "UCS654",
+      "title": "Predictive Analytics using Statistics",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_05",
+      "elective_slot": "PE-II",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.6,
+      "weekly_self_effort_hours": 6.5,
+      "prerequisites": [
+        "UMA401",
+        "UMA021",
+        "UCS321"
+      ],
+      "lab_tech_stack": [
+        "R",
+        "Statsmodels",
+        "XGBoost",
+        "Scikit-Learn"
+      ],
+      "syllabus_keywords": [
+        "generalized linear models",
+        "ARIMA and Prophet time-series",
+        "survival analysis",
+        "ridge/lasso regularization",
+        "causal inference"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Predictive Analytics using Statistics.",
+        "CLO2: Design, implement, and benchmark production solutions using R, Statsmodels.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Predictive Analytics using Statistics."
+      ]
+    },
+    {
+      "course_code": "UCS761",
+      "title": "Deep Learning",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_05",
+      "elective_slot": "PE-III",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 4.0,
+      "weekly_self_effort_hours": 7.5,
+      "prerequisites": [
+        "UCS321",
+        "UMA021",
+        "UMA401"
+      ],
+      "lab_tech_stack": [
+        "PyTorch",
+        "TensorFlow",
+        "CUDA",
+        "Weights & Biases"
+      ],
+      "syllabus_keywords": [
+        "backpropagation",
+        "CNNs ResNet/ViT",
+        "RNNs and LSTMs",
+        "attention mechanisms",
+        "batch norm and dropout"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Deep Learning.",
+        "CLO2: Design, implement, and benchmark production solutions using PyTorch, TensorFlow.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Deep Learning."
+      ]
+    },
+    {
+      "course_code": "UCS772",
+      "title": "Data Science: Computer Vision & NLP",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_05",
+      "elective_slot": "PE-IV",
+      "semester": 7,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 4.1,
+      "weekly_self_effort_hours": 7.5,
+      "prerequisites": [
+        "UCS321",
+        "UMA021",
+        "UMA401"
+      ],
+      "lab_tech_stack": [
+        "PyTorch",
+        "HuggingFace Transformers",
+        "OpenCV",
+        "spaCy"
+      ],
+      "syllabus_keywords": [
+        "Vision Transformers",
+        "semantic segmentation",
+        "transformer tokenization",
+        "BERT/GPT fine-tuning",
+        "multimodal representation"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Data Science: Computer Vision & NLP.",
+        "CLO2: Design, implement, and benchmark production solutions using PyTorch, HuggingFace Transformers.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Data Science: Computer Vision & NLP."
+      ]
+    },
+    {
+      "course_code": "UCS539",
+      "title": "Finance, Accounting and Valuation",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_06",
+      "elective_slot": "PE-I",
+      "semester": 5,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.0,
+      "weekly_self_effort_hours": 5.5,
+      "prerequisites": [
+        "UMA401",
+        "UMA022"
+      ],
+      "lab_tech_stack": [
+        "Python",
+        "Excel Financial Modeling",
+        "Pandas",
+        "yfinance"
+      ],
+      "syllabus_keywords": [
+        "financial statements",
+        "discounted cash flow valuation",
+        "time value of money",
+        "cost of capital WACC",
+        "fixed income basics"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Finance, Accounting and Valuation.",
+        "CLO2: Design, implement, and benchmark production solutions using Python, Excel Financial Modeling.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Finance, Accounting and Valuation."
+      ]
+    },
+    {
+      "course_code": "UCS675",
+      "title": "Financial Markets and Portfolio Theory",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_06",
+      "elective_slot": "PE-II",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.5,
+      "weekly_self_effort_hours": 6.5,
+      "prerequisites": [
+        "UMA401",
+        "UMA021"
+      ],
+      "lab_tech_stack": [
+        "Python",
+        "PyPortfolioOpt",
+        "NumPy",
+        "QuantConnect"
+      ],
+      "syllabus_keywords": [
+        "Markowitz mean-variance optimization",
+        "CAPM and factor models",
+        "efficient frontier",
+        "Value at Risk VaR",
+        "market microstructure"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Financial Markets and Portfolio Theory.",
+        "CLO2: Design, implement, and benchmark production solutions using Python, PyPortfolioOpt.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Financial Markets and Portfolio Theory."
+      ]
+    },
+    {
+      "course_code": "UCS658",
+      "title": "Derivatives Pricing, Trading and Strategies",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_06",
+      "elective_slot": "PE-III",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.9,
+      "weekly_self_effort_hours": 7.0,
+      "prerequisites": [
+        "UMA401",
+        "UMA022",
+        "UMA021"
+      ],
+      "lab_tech_stack": [
+        "Python",
+        "QuantLib",
+        "NumPy",
+        "Matplotlib"
+      ],
+      "syllabus_keywords": [
+        "Black-Scholes-Merton PDE",
+        "options Greeks delta-gamma hedging",
+        "futures and swaps",
+        "volatility smiles",
+        "arbitrage strategies"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Derivatives Pricing, Trading and Strategies.",
+        "CLO2: Design, implement, and benchmark production solutions using Python, QuantLib.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Derivatives Pricing, Trading and Strategies."
+      ]
+    },
+    {
+      "course_code": "UMC743",
+      "title": "Quantitative and Statistical Methods for Finance",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_06",
+      "elective_slot": "PE-IV",
+      "semester": 7,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 4.1,
+      "weekly_self_effort_hours": 7.5,
+      "prerequisites": [
+        "UMA401",
+        "UMA021",
+        "UCS415"
+      ],
+      "lab_tech_stack": [
+        "Python",
+        "ARCH/GARCH",
+        "SciPy",
+        "C++"
+      ],
+      "syllabus_keywords": [
+        "GARCH volatility modeling",
+        "cointegration pairs trading",
+        "Monte Carlo derivative simulation",
+        "high-frequency order book dynamics",
+        "backtesting"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Quantitative and Statistical Methods for Finance.",
+        "CLO2: Design, implement, and benchmark production solutions using Python, ARCH/GARCH.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Quantitative and Statistical Methods for Finance."
+      ]
+    },
+    {
+      "course_code": "UCS537",
+      "title": "Source Code Management",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_07",
+      "elective_slot": "PE-I",
+      "semester": 5,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 2.7,
+      "weekly_self_effort_hours": 5.0,
+      "prerequisites": [
+        "UTA018",
+        "UCS303"
+      ],
+      "lab_tech_stack": [
+        "Git",
+        "GitHub Actions",
+        "GitLab",
+        "Bash"
+      ],
+      "syllabus_keywords": [
+        "Git internals DAG",
+        "branching strategies trunk-based/GitFlow",
+        "semantic versioning",
+        "code review automation",
+        "monorepo tooling"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Source Code Management.",
+        "CLO2: Design, implement, and benchmark production solutions using Git, GitHub Actions.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Source Code Management."
+      ]
+    },
+    {
+      "course_code": "UCS659",
+      "title": "Build and Release Management",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_07",
+      "elective_slot": "PE-II",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.1,
+      "weekly_self_effort_hours": 5.5,
+      "prerequisites": [
+        "UTA018",
+        "UCS303"
+      ],
+      "lab_tech_stack": [
+        "Maven",
+        "Gradle",
+        "Nexus Artifact Repository",
+        "Docker"
+      ],
+      "syllabus_keywords": [
+        "dependency resolution",
+        "reproducible builds",
+        "artifact signing SBOM",
+        "container image layering",
+        "release pipelines"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Build and Release Management.",
+        "CLO2: Design, implement, and benchmark production solutions using Maven, Gradle.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Build and Release Management."
+      ]
+    },
+    {
+      "course_code": "UCS660",
+      "title": "Continuous Integration and Continuous Deployment",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_07",
+      "elective_slot": "PE-III",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.4,
+      "weekly_self_effort_hours": 6.0,
+      "prerequisites": [
+        "UCS303",
+        "UCS414",
+        "UTA018"
+      ],
+      "lab_tech_stack": [
+        "Jenkins",
+        "GitHub Actions",
+        "ArgoCD",
+        "Helm"
+      ],
+      "syllabus_keywords": [
+        "automated CI pipelines",
+        "blue-green and canary deployments",
+        "GitOps workflows",
+        "pipeline security scanning DevSecOps",
+        "DORA metrics"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Continuous Integration and Continuous Deployment.",
+        "CLO2: Design, implement, and benchmark production solutions using Jenkins, GitHub Actions.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Continuous Integration and Continuous Deployment."
+      ]
+    },
+    {
+      "course_code": "UCS758",
+      "title": "System Provisioning and Configuration Management",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_07",
+      "elective_slot": "PE-IV",
+      "semester": 7,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.6,
+      "weekly_self_effort_hours": 6.5,
+      "prerequisites": [
+        "UCS303",
+        "UCS414"
+      ],
+      "lab_tech_stack": [
+        "Terraform",
+        "Ansible",
+        "Kubernetes",
+        "Prometheus & Grafana"
+      ],
+      "syllabus_keywords": [
+        "Infrastructure as Code IaC",
+        "immutable infrastructure",
+        "Ansible playbooks",
+        "Kubernetes operators",
+        "observability and SRE"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of System Provisioning and Configuration Management.",
+        "CLO2: Design, implement, and benchmark production solutions using Terraform, Ansible.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in System Provisioning and Configuration Management."
+      ]
+    },
+    {
+      "course_code": "UCS542",
+      "title": "UI & UX Specialist",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_08",
+      "elective_slot": "PE-I",
+      "semester": 5,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 2.8,
+      "weekly_self_effort_hours": 5.5,
+      "prerequisites": [
+        "UTA018",
+        "UES103"
+      ],
+      "lab_tech_stack": [
+        "React 18",
+        "TypeScript",
+        "Tailwind CSS",
+        "Figma"
+      ],
+      "syllabus_keywords": [
+        "design systems",
+        "component architecture",
+        "WCAG accessibility",
+        "state management",
+        "responsive micro-interactions"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of UI & UX Specialist.",
+        "CLO2: Design, implement, and benchmark production solutions using React 18, TypeScript.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in UI & UX Specialist."
+      ]
+    },
+    {
+      "course_code": "UCS677",
+      "title": "Data Engineering",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_08",
+      "elective_slot": "PE-II",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.5,
+      "weekly_self_effort_hours": 6.5,
+      "prerequisites": [
+        "UCS310",
+        "UCS301",
+        "UTA018"
+      ],
+      "lab_tech_stack": [
+        "Apache Kafka",
+        "Apache Spark",
+        "Airflow",
+        "Snowflake/PostgreSQL"
+      ],
+      "syllabus_keywords": [
+        "ETL/ELT pipelines",
+        "event streaming",
+        "data warehousing star schema",
+        "lakehouse architecture",
+        "batch vs stream processing"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Data Engineering.",
+        "CLO2: Design, implement, and benchmark production solutions using Apache Kafka, Apache Spark.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Data Engineering."
+      ]
+    },
+    {
+      "course_code": "UCS661",
+      "title": "Database Engineer",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_08",
+      "elective_slot": "PE-II",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.4,
+      "weekly_self_effort_hours": 6.0,
+      "prerequisites": [
+        "UCS310",
+        "UCS301"
+      ],
+      "lab_tech_stack": [
+        "PostgreSQL",
+        "MongoDB Atlas",
+        "Redis",
+        "PgBouncer"
+      ],
+      "syllabus_keywords": [
+        "query execution plans",
+        "sharding and replication",
+        "NoSQL document modeling",
+        "MVCC internals",
+        "database performance tuning"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Database Engineer.",
+        "CLO2: Design, implement, and benchmark production solutions using PostgreSQL, MongoDB Atlas.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Database Engineer."
+      ]
+    },
+    {
+      "course_code": "UCS662",
+      "title": "Test Automation",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_08",
+      "elective_slot": "PE-III",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.0,
+      "weekly_self_effort_hours": 5.5,
+      "prerequisites": [
+        "UTA018",
+        "UCS310"
+      ],
+      "lab_tech_stack": [
+        "Playwright",
+        "Cypress",
+        "Jest",
+        "k6 Load Testing"
+      ],
+      "syllabus_keywords": [
+        "test-driven development TDD",
+        "end-to-end UI testing",
+        "API contract testing",
+        "mutation testing",
+        "performance load profiling"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Test Automation.",
+        "CLO2: Design, implement, and benchmark production solutions using Playwright, Cypress.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Test Automation."
+      ]
+    },
+    {
+      "course_code": "UCS745",
+      "title": "Cloud & DevOps",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_08",
+      "elective_slot": "PE-IV",
+      "semester": 7,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.5,
+      "weekly_self_effort_hours": 6.5,
+      "prerequisites": [
+        "UCS414",
+        "UCS310",
+        "UTA018"
+      ],
+      "lab_tech_stack": [
+        "AWS",
+        "Docker",
+        "Kubernetes",
+        "Node.js/Express"
+      ],
+      "syllabus_keywords": [
+        "cloud-native full-stack deployment",
+        "serverless functions",
+        "API gateways",
+        "distributed tracing",
+        "zero-downtime scaling"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Cloud & DevOps.",
+        "CLO2: Design, implement, and benchmark production solutions using AWS, Docker.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Cloud & DevOps."
+      ]
+    },
+    {
+      "course_code": "UCS551",
+      "title": "Conversational AI: Accelerated Data Science",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_09",
+      "elective_slot": "PE-I",
+      "semester": 5,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.6,
+      "weekly_self_effort_hours": 6.5,
+      "prerequisites": [
+        "UCS321",
+        "UMA021",
+        "UMA401"
+      ],
+      "lab_tech_stack": [
+        "NVIDIA RAPIDS cuDF",
+        "PyTorch",
+        "CUDA",
+        "Python"
+      ],
+      "syllabus_keywords": [
+        "GPU-accelerated dataframes",
+        "vectorized preprocessing",
+        "distributed training basics",
+        "mixed precision FP16",
+        "embedding pipelines"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Conversational AI: Accelerated Data Science.",
+        "CLO2: Design, implement, and benchmark production solutions using NVIDIA RAPIDS cuDF, PyTorch.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Conversational AI: Accelerated Data Science."
+      ]
+    },
+    {
+      "course_code": "UCS664",
+      "title": "Conversational AI: Natural Language Processing",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_09",
+      "elective_slot": "PE-II",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.9,
+      "weekly_self_effort_hours": 7.0,
+      "prerequisites": [
+        "UCS321",
+        "UMA401",
+        "UMA021"
+      ],
+      "lab_tech_stack": [
+        "HuggingFace",
+        "PyTorch",
+        "NVIDIA NeMo",
+        "spaCy"
+      ],
+      "syllabus_keywords": [
+        "word embeddings Word2Vec/GloVe",
+        "self-attention and Transformers",
+        "sequence-to-sequence models",
+        "named entity recognition",
+        "dialogue state tracking"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Conversational AI: Natural Language Processing.",
+        "CLO2: Design, implement, and benchmark production solutions using HuggingFace, PyTorch.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Conversational AI: Natural Language Processing."
+      ]
+    },
+    {
+      "course_code": "UCS749",
+      "title": "Conversational AI: Speech Processing & Synthesis",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_09",
+      "elective_slot": "PE-III",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 4.0,
+      "weekly_self_effort_hours": 7.5,
+      "prerequisites": [
+        "UCS321",
+        "UMA021",
+        "UMA401"
+      ],
+      "lab_tech_stack": [
+        "NVIDIA NeMo ASR/TTS",
+        "torchaudio",
+        "Librosa",
+        "PyTorch"
+      ],
+      "syllabus_keywords": [
+        "Mel-frequency cepstral coefficients",
+        "CTC and Conformer ASR",
+        "neural text-to-speech vocoders",
+        "speaker diarization",
+        "real-time streaming audio"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Conversational AI: Speech Processing & Synthesis.",
+        "CLO2: Design, implement, and benchmark production solutions using NVIDIA NeMo ASR/TTS, torchaudio.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Conversational AI: Speech Processing & Synthesis."
+      ]
+    },
+    {
+      "course_code": "UCS748",
+      "title": "Generative AI",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_09",
+      "elective_slot": "PE-IV",
+      "semester": 7,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 4.2,
+      "weekly_self_effort_hours": 8.0,
+      "prerequisites": [
+        "UCS321",
+        "UMA021",
+        "UMA401"
+      ],
+      "lab_tech_stack": [
+        "PyTorch",
+        "vLLM",
+        "LangChain",
+        "NVIDIA TensorRT-LLM"
+      ],
+      "syllabus_keywords": [
+        "autoregressive LLMs",
+        "RLHF and DPO alignment",
+        "Retrieval-Augmented Generation RAG",
+        "LoRA/QLoRA parameter-efficient tuning",
+        "diffusion models"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Generative AI.",
+        "CLO2: Design, implement, and benchmark production solutions using PyTorch, vLLM.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Generative AI."
+      ]
+    },
+    {
+      "course_code": "UCS547",
+      "title": "Edge AI and Robotics: Accelerated Data Science",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_10",
+      "elective_slot": "PE-I",
+      "semester": 5,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.6,
+      "weekly_self_effort_hours": 6.5,
+      "prerequisites": [
+        "UCS321",
+        "UCS303",
+        "UES103"
+      ],
+      "lab_tech_stack": [
+        "NVIDIA Jetson",
+        "CUDA",
+        "Python",
+        "TensorRT"
+      ],
+      "syllabus_keywords": [
+        "edge inference quantization INT8",
+        "sensor data fusion",
+        "GPU memory optimization",
+        "real-time telemetry processing",
+        "embedded Linux"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Edge AI and Robotics: Accelerated Data Science.",
+        "CLO2: Design, implement, and benchmark production solutions using NVIDIA Jetson, CUDA.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Edge AI and Robotics: Accelerated Data Science."
+      ]
+    },
+    {
+      "course_code": "UCS668",
+      "title": "Edge AI and Robotics: Data Centre Vision",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_10",
+      "elective_slot": "PE-II",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.9,
+      "weekly_self_effort_hours": 7.0,
+      "prerequisites": [
+        "UCS321",
+        "UMA021",
+        "UCS301"
+      ],
+      "lab_tech_stack": [
+        "NVIDIA DeepStream",
+        "PyTorch",
+        "OpenCV",
+        "Triton Inference Server"
+      ],
+      "syllabus_keywords": [
+        "multi-stream video analytics",
+        "3D object detection",
+        "optical flow tracking",
+        "vision model pruning",
+        "high-throughput inference"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Edge AI and Robotics: Data Centre Vision.",
+        "CLO2: Design, implement, and benchmark production solutions using NVIDIA DeepStream, PyTorch.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Edge AI and Robotics: Data Centre Vision."
+      ]
+    },
+    {
+      "course_code": "UCS671",
+      "title": "Edge AI and Robotics: Embedded Vision",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_10",
+      "elective_slot": "PE-III",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 4.0,
+      "weekly_self_effort_hours": 7.5,
+      "prerequisites": [
+        "UCS303",
+        "UES103",
+        "UCS321"
+      ],
+      "lab_tech_stack": [
+        "ROS 2",
+        "NVIDIA Isaac ROS",
+        "C++",
+        "TensorRT"
+      ],
+      "syllabus_keywords": [
+        "visual odometry SLAM",
+        "depth estimation stereo vision",
+        "edge neural accelerators",
+        "hardware-in-the-loop perception",
+        "low-latency control"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Edge AI and Robotics: Embedded Vision.",
+        "CLO2: Design, implement, and benchmark production solutions using ROS 2, NVIDIA Isaac ROS.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Edge AI and Robotics: Embedded Vision."
+      ]
+    },
+    {
+      "course_code": "UCS760",
+      "title": "Edge AI and Robotics: Reinforcement Learning & Conversational AI",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_10",
+      "elective_slot": "PE-IV",
+      "semester": 7,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 4.2,
+      "weekly_self_effort_hours": 8.0,
+      "prerequisites": [
+        "UCS321",
+        "UMA401",
+        "UMA021"
+      ],
+      "lab_tech_stack": [
+        "NVIDIA Isaac Gym",
+        "PyTorch",
+        "ROS 2",
+        "Gymnasium"
+      ],
+      "syllabus_keywords": [
+        "Markov Decision Processes",
+        "Deep Q-Networks and PPO",
+        "sim-to-real transfer",
+        "embodied multimodal agents",
+        "robotic manipulation policies"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Edge AI and Robotics: Reinforcement Learning & Conversational AI.",
+        "CLO2: Design, implement, and benchmark production solutions using NVIDIA Isaac Gym, PyTorch.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Edge AI and Robotics: Reinforcement Learning & Conversational AI."
+      ]
+    },
+    {
+      "course_code": "UCS550",
+      "title": "Network Defence",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_11",
+      "elective_slot": "PE-I",
+      "semester": 5,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.3,
+      "weekly_self_effort_hours": 6.0,
+      "prerequisites": [
+        "UCS414",
+        "UCS303"
+      ],
+      "lab_tech_stack": [
+        "pfSense",
+        "Zeek",
+        "Suricata",
+        "Splunk SIEM"
+      ],
+      "syllabus_keywords": [
+        "perimeter defense architecture",
+        "zero-trust network segmentation",
+        "VPN andbastion hardening",
+        "SIEM log correlation",
+        "incident containment"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Network Defence.",
+        "CLO2: Design, implement, and benchmark production solutions using pfSense, Zeek.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Network Defence."
+      ]
+    },
+    {
+      "course_code": "UCS673",
+      "title": "Ethical Hacking-1",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_11",
+      "elective_slot": "PE-II",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.6,
+      "weekly_self_effort_hours": 6.5,
+      "prerequisites": [
+        "UCS414",
+        "UCS303",
+        "UES103"
+      ],
+      "lab_tech_stack": [
+        "Kali Linux",
+        "Nmap",
+        "Metasploit",
+        "Burp Suite"
+      ],
+      "syllabus_keywords": [
+        "reconnaissance and footprinting",
+        "vulnerability enumeration",
+        "system privilege escalation",
+        "active directory attacks",
+        "MITRE ATT&CK framework"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Ethical Hacking-1.",
+        "CLO2: Design, implement, and benchmark production solutions using Kali Linux, Nmap.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Ethical Hacking-1."
+      ]
+    },
+    {
+      "course_code": "UCS674",
+      "title": "Ethical Hacking-II",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_11",
+      "elective_slot": "PE-III",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.8,
+      "weekly_self_effort_hours": 7.0,
+      "prerequisites": [
+        "UCS414",
+        "UCS303",
+        "UES103"
+      ],
+      "lab_tech_stack": [
+        "Burp Suite Pro",
+        "Ghidra",
+        "Frida",
+        "OWASP Testing Guide"
+      ],
+      "syllabus_keywords": [
+        "web application penetration testing",
+        "wireless and IoT exploitation",
+        "reverse engineering binaries",
+        "exploit development",
+        "red team operations"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Ethical Hacking-II.",
+        "CLO2: Design, implement, and benchmark production solutions using Burp Suite Pro, Ghidra.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Ethical Hacking-II."
+      ]
+    },
+    {
+      "course_code": "UCS750",
+      "title": "Computer Hacking and Forensic Investigation",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_11",
+      "elective_slot": "PE-IV",
+      "semester": 7,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.7,
+      "weekly_self_effort_hours": 6.5,
+      "prerequisites": [
+        "UCS414",
+        "UCS303",
+        "UCS310"
+      ],
+      "lab_tech_stack": [
+        "EnCase",
+        "Autopsy",
+        "Volatility 3",
+        "Wireshark"
+      ],
+      "syllabus_keywords": [
+        "anti-forensics detection",
+        "malware static/dynamic triage",
+        "cloud & mobile forensics",
+        "dark web threat intelligence",
+        "expert witness reporting"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Computer Hacking and Forensic Investigation.",
+        "CLO2: Design, implement, and benchmark production solutions using EnCase, Autopsy.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Computer Hacking and Forensic Investigation."
+      ]
+    },
+    {
+      "course_code": "UEC646",
+      "title": "Network and Communication for Connected Vehicles",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_12",
+      "elective_slot": "PE-I",
+      "semester": 5,
+      "ltp": "3-0-0",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.3,
+      "weekly_self_effort_hours": 5.5,
+      "prerequisites": [
+        "UCS414",
+        "UCS303"
+      ],
+      "lab_tech_stack": [
+        "OMNeT++",
+        "SUMO",
+        "VEINS",
+        "Python"
+      ],
+      "syllabus_keywords": [
+        "V2V and V2X communication",
+        "IEEE 802.11p DSRC",
+        "Cellular-V2X 5G NR",
+        "CAN bus automotive protocols",
+        "vehicular ad-hoc networks VANET"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Network and Communication for Connected Vehicles.",
+        "CLO2: Design, implement, and benchmark production solutions using OMNeT++, SUMO.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Network and Communication for Connected Vehicles."
+      ]
+    },
+    {
+      "course_code": "UCS678",
+      "title": "Intelligent Transportation Systems",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_12",
+      "elective_slot": "PE-II",
+      "semester": 6,
+      "ltp": "3-0-0",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.2,
+      "weekly_self_effort_hours": 5.5,
+      "prerequisites": [
+        "UCS415",
+        "UCS321",
+        "UCS414"
+      ],
+      "lab_tech_stack": [
+        "SUMO Traffic Simulator",
+        "Python",
+        "GeoPandas",
+        "PostGIS"
+      ],
+      "syllabus_keywords": [
+        "adaptive traffic signal control",
+        "smart mobility architecture",
+        "spatio-temporal trajectory modeling",
+        "autonomous fleet routing",
+        "digital twins"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Intelligent Transportation Systems.",
+        "CLO2: Design, implement, and benchmark production solutions using SUMO Traffic Simulator, Python.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Intelligent Transportation Systems."
+      ]
+    },
+    {
+      "course_code": "UCS679",
+      "title": "Data Analytics in Automobile Engineering",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_12",
+      "elective_slot": "PE-III",
+      "semester": 6,
+      "ltp": "3-0-0",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.4,
+      "weekly_self_effort_hours": 6.0,
+      "prerequisites": [
+        "UMA401",
+        "UCS321",
+        "UCS310"
+      ],
+      "lab_tech_stack": [
+        "Python",
+        "Scikit-Learn",
+        "PySpark",
+        "InfluxDB"
+      ],
+      "syllabus_keywords": [
+        "predictive maintenance telemetry",
+        "EV battery state-of-health estimation",
+        "driver behavior profiling",
+        "sensor time-series anomaly detection",
+        "CAN log analytics"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Data Analytics in Automobile Engineering.",
+        "CLO2: Design, implement, and benchmark production solutions using Python, Scikit-Learn.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Data Analytics in Automobile Engineering."
+      ]
+    },
+    {
+      "course_code": "UCS780",
+      "title": "Cyber Security for Mobility Systems",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_12",
+      "elective_slot": "PE-IV",
+      "semester": 7,
+      "ltp": "3-0-0",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.6,
+      "weekly_self_effort_hours": 6.0,
+      "prerequisites": [
+        "UCS414",
+        "UCS303",
+        "UCS405"
+      ],
+      "lab_tech_stack": [
+        "Wireshark CAN",
+        "Scapy",
+        "OpenSSL",
+        "ISO/SAE 21434 Tools"
+      ],
+      "syllabus_keywords": [
+        "in-vehicle network intrusion detection",
+        "ECU firmware attestation",
+        "V2X PKI certificate security",
+        "GNSS spoofing resilience",
+        "ISO/SAE 21434 compliance"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Cyber Security for Mobility Systems.",
+        "CLO2: Design, implement, and benchmark production solutions using Wireshark CAN, Scapy.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Cyber Security for Mobility Systems."
+      ]
+    }
+  ],
+  "generic_electives": [
+    {
+      "course_code": "UHU016",
+      "title": "Introductory Course in French",
+      "category": "GENERIC_ELECTIVE",
+      "basket_id": "GENERIC_SEM5",
+      "elective_slot": "GE-SEM5",
+      "semester": 5,
+      "ltp": "2-0-0",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "credits": 2.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 2.1,
+      "weekly_self_effort_hours": 3.0,
+      "prerequisites": [],
+      "lab_tech_stack": [
+        "Language Lab Audio Suite",
+        "CEFR A1 Modules"
+      ],
+      "syllabus_keywords": [
+        "French phonetics",
+        "basic conversational grammar",
+        "Francophone culture",
+        "reading comprehension"
+      ],
+      "clos": [
+        "CLO1: Understand foundational interdisciplinary concepts in Introductory Course in French.",
+        "CLO2: Apply analytical frameworks from Introductory Course in French to cross-functional engineering contexts."
+      ]
+    },
+    {
+      "course_code": "UHU017",
+      "title": "Introduction to Cognitive Science",
+      "category": "GENERIC_ELECTIVE",
+      "basket_id": "GENERIC_SEM5",
+      "elective_slot": "GE-SEM5",
+      "semester": 5,
+      "ltp": "2-0-0",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "credits": 2.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 2.5,
+      "weekly_self_effort_hours": 3.5,
+      "prerequisites": [],
+      "lab_tech_stack": [
+        "PsychoPy",
+        "Cognitive Modeling Cases"
+      ],
+      "syllabus_keywords": [
+        "human perception",
+        "memory and attention",
+        "decision making heuristics",
+        "computational mind models"
+      ],
+      "clos": [
+        "CLO1: Understand foundational interdisciplinary concepts in Introduction to Cognitive Science.",
+        "CLO2: Apply analytical frameworks from Introduction to Cognitive Science to cross-functional engineering contexts."
+      ]
+    },
+    {
+      "course_code": "UHU018",
+      "title": "Introduction to Corporate Finance",
+      "category": "GENERIC_ELECTIVE",
+      "basket_id": "GENERIC_SEM5",
+      "elective_slot": "GE-SEM5",
+      "semester": 5,
+      "ltp": "2-0-0",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "credits": 2.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 2.7,
+      "weekly_self_effort_hours": 4.0,
+      "prerequisites": [],
+      "lab_tech_stack": [
+        "Excel Financial Analysis",
+        "Bloomberg Case Studies"
+      ],
+      "syllabus_keywords": [
+        "capital budgeting",
+        "financial ratios",
+        "working capital management",
+        "corporate governance"
+      ],
+      "clos": [
+        "CLO1: Understand foundational interdisciplinary concepts in Introduction to Corporate Finance.",
+        "CLO2: Apply analytical frameworks from Introduction to Corporate Finance to cross-functional engineering contexts."
+      ]
+    },
+    {
+      "course_code": "UCS002",
+      "title": "Introduction to Cyber Security",
+      "category": "GENERIC_ELECTIVE",
+      "basket_id": "GENERIC_SEM5",
+      "elective_slot": "GE-SEM5",
+      "semester": 5,
+      "ltp": "2-0-0",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "credits": 2.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 2.6,
+      "weekly_self_effort_hours": 3.8,
+      "prerequisites": [],
+      "lab_tech_stack": [
+        "Cyber Hygiene Toolkit",
+        "OWASP Top 10 Sandbox"
+      ],
+      "syllabus_keywords": [
+        "cyber threat landscape",
+        "password and MFA hygiene",
+        "phishing defense",
+        "data privacy regulations"
+      ],
+      "clos": [
+        "CLO1: Understand foundational interdisciplinary concepts in Introduction to Cyber Security.",
+        "CLO2: Apply analytical frameworks from Introduction to Cyber Security to cross-functional engineering contexts."
+      ]
+    },
+    {
+      "course_code": "UPH064",
+      "title": "Nanoscience and Nanomaterials",
+      "category": "GENERIC_ELECTIVE",
+      "basket_id": "GENERIC_SEM5",
+      "elective_slot": "GE-SEM5",
+      "semester": 5,
+      "ltp": "2-0-0",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "credits": 2.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 2.9,
+      "weekly_self_effort_hours": 4.2,
+      "prerequisites": [],
+      "lab_tech_stack": [
+        "Nanomaterial Characterization Cases",
+        "XRD/SEM Simulation"
+      ],
+      "syllabus_keywords": [
+        "quantum confinement",
+        "carbon nanotubes",
+        "thin film synthesis",
+        "nanoelectronics applications"
+      ],
+      "clos": [
+        "CLO1: Understand foundational interdisciplinary concepts in Nanoscience and Nanomaterials.",
+        "CLO2: Apply analytical frameworks from Nanoscience and Nanomaterials to cross-functional engineering contexts."
+      ]
+    },
+    {
+      "course_code": "UEN006",
+      "title": "Technologies for Sustainable Development",
+      "category": "GENERIC_ELECTIVE",
+      "basket_id": "GENERIC_SEM5",
+      "elective_slot": "GE-SEM5",
+      "semester": 5,
+      "ltp": "2-0-0",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "credits": 2.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 2.3,
+      "weekly_self_effort_hours": 3.2,
+      "prerequisites": [],
+      "lab_tech_stack": [
+        "Life Cycle Assessment LCA Tools",
+        "Renewable Energy Sim"
+      ],
+      "syllabus_keywords": [
+        "circular economy",
+        "solar and hydrogen energy",
+        "carbon footprint mitigation",
+        "green engineering"
+      ],
+      "clos": [
+        "CLO1: Understand foundational interdisciplinary concepts in Technologies for Sustainable Development.",
+        "CLO2: Apply analytical frameworks from Technologies for Sustainable Development to cross-functional engineering contexts."
+      ]
+    },
+    {
+      "course_code": "UMA069",
+      "title": "Graph Theory and Applications",
+      "category": "GENERIC_ELECTIVE",
+      "basket_id": "GENERIC_SEM5",
+      "elective_slot": "GE-SEM5",
+      "semester": 5,
+      "ltp": "2-0-0",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "credits": 2.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.1,
+      "weekly_self_effort_hours": 4.5,
+      "prerequisites": [],
+      "lab_tech_stack": [
+        "Python NetworkX",
+        "GraphViz"
+      ],
+      "syllabus_keywords": [
+        "planar graphs",
+        "Eulerian and Hamiltonian paths",
+        "graph coloring",
+        "matching and network flows"
+      ],
+      "clos": [
+        "CLO1: Understand foundational interdisciplinary concepts in Graph Theory and Applications.",
+        "CLO2: Apply analytical frameworks from Graph Theory and Applications to cross-functional engineering contexts."
+      ]
+    },
+    {
+      "course_code": "UBT510",
+      "title": "Biology for Engineers",
+      "category": "GENERIC_ELECTIVE",
+      "basket_id": "GENERIC_SEM5",
+      "elective_slot": "GE-SEM5",
+      "semester": 5,
+      "ltp": "2-0-0",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "credits": 2.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 2.4,
+      "weekly_self_effort_hours": 3.4,
+      "prerequisites": [],
+      "lab_tech_stack": [
+        "NCBI BLAST",
+        "BioPython Basics"
+      ],
+      "syllabus_keywords": [
+        "central dogma molecular biology",
+        "biosensors",
+        "biomimetics",
+        "genomic sequence alignment"
+      ],
+      "clos": [
+        "CLO1: Understand foundational interdisciplinary concepts in Biology for Engineers.",
+        "CLO2: Apply analytical frameworks from Biology for Engineers to cross-functional engineering contexts."
+      ]
+    },
+    {
+      "course_code": "UMA070",
+      "title": "Advanced Numerical Methods",
+      "category": "GENERIC_ELECTIVE",
+      "basket_id": "GENERIC_SEM5",
+      "elective_slot": "GE-SEM5",
+      "semester": 5,
+      "ltp": "2-0-0",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "credits": 2.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.2,
+      "weekly_self_effort_hours": 4.6,
+      "prerequisites": [],
+      "lab_tech_stack": [
+        "MATLAB",
+        "Python SciPy"
+      ],
+      "syllabus_keywords": [
+        "finite difference PDE solvers",
+        "Runge-Kutta boundary value problems",
+        "spline interpolation",
+        "numerical quadrature"
+      ],
+      "clos": [
+        "CLO1: Understand foundational interdisciplinary concepts in Advanced Numerical Methods.",
+        "CLO2: Apply analytical frameworks from Advanced Numerical Methods to cross-functional engineering contexts."
+      ]
+    },
+    {
+      "course_code": "UTD004",
+      "title": "Campus 2 Corporate",
+      "category": "GENERIC_ELECTIVE",
+      "basket_id": "GENERIC_SEM5",
+      "elective_slot": "GE-SEM5",
+      "semester": 5,
+      "ltp": "2-0-0",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "credits": 2.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 2.0,
+      "weekly_self_effort_hours": 2.8,
+      "prerequisites": [],
+      "lab_tech_stack": [
+        "Executive Communication Studio",
+        "Case Interview Framework"
+      ],
+      "syllabus_keywords": [
+        "executive communication",
+        "agile workplace readiness",
+        "stakeholder negotiation",
+        "leadership ethics"
+      ],
+      "clos": [
+        "CLO1: Understand foundational interdisciplinary concepts in Campus 2 Corporate.",
+        "CLO2: Apply analytical frameworks from Campus 2 Corporate to cross-functional engineering contexts."
+      ]
+    }
+  ],
+  "all_courses": [
+    {
+      "course_code": "UES103",
+      "title": "Programming for Problem Solving",
+      "category": "CORE_PREREQUISITE",
+      "semester": 1,
+      "ltp": "3-0-2",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 4.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 2.6,
+      "weekly_self_effort_hours": 6.0,
+      "lab_tech_stack": [
+        "C",
+        "GCC",
+        "GDB",
+        "Linux Shell",
+        "Make"
+      ],
+      "syllabus_keywords": [
+        "C programming",
+        "pointers",
+        "recursion",
+        "arrays",
+        "structures",
+        "dynamic memory allocation",
+        "file handling"
+      ],
+      "clos": [
+        "CLO1: Formulate structured algorithms for numerical and array-based problems in C.",
+        "CLO2: Manipulate pointers, dynamic memory allocation, and recursive functions.",
+        "CLO3: Design modular programs using structures, unions, and file streams."
+      ]
+    },
+    {
+      "course_code": "UMA022",
+      "title": "Calculus for Engineers",
+      "category": "CORE_PREREQUISITE",
+      "semester": 1,
+      "ltp": "3-1-0",
+      "lecture_hours": 3,
+      "tutorial_hours": 1,
+      "practical_hours": 0,
+      "credits": 3.5,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 2.9,
+      "weekly_self_effort_hours": 5.5,
+      "lab_tech_stack": [
+        "MATLAB",
+        "SymPy"
+      ],
+      "syllabus_keywords": [
+        "infinite series",
+        "partial derivatives",
+        "multiple integrals",
+        "vector calculus",
+        "gradient divergence curl"
+      ],
+      "clos": [
+        "CLO1: Test convergence of infinite series and power series expansions.",
+        "CLO2: Apply multivariable differential calculus to optimization problems.",
+        "CLO3: Evaluate multiple and vector integrals using Green, Stokes, and Gauss theorems."
+      ]
+    },
+    {
+      "course_code": "UMA023",
+      "title": "Differential Equations and Linear Algebra",
+      "category": "CORE_PREREQUISITE",
+      "semester": 2,
+      "ltp": "3-1-0",
+      "lecture_hours": 3,
+      "tutorial_hours": 1,
+      "practical_hours": 0,
+      "credits": 3.5,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.1,
+      "weekly_self_effort_hours": 6.0,
+      "lab_tech_stack": [
+        "MATLAB",
+        "NumPy"
+      ],
+      "syllabus_keywords": [
+        "ordinary differential equations",
+        "Laplace transforms",
+        "vector spaces",
+        "linear transformations",
+        "eigenvalues and eigenvectors"
+      ],
+      "clos": [
+        "CLO1: Solve higher-order ordinary differential equations and system dynamics.",
+        "CLO2: Analyze vector spaces, basis, rank-nullity, and orthogonality.",
+        "CLO3: Compute eigenvalues, eigenvectors, and diagonalization of linear operators."
+      ]
+    },
+    {
+      "course_code": "UCS301",
+      "title": "Data Structures",
+      "category": "CORE_PREREQUISITE",
+      "semester": 3,
+      "ltp": "3-0-2",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 4.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.5,
+      "weekly_self_effort_hours": 7.5,
+      "lab_tech_stack": [
+        "C++17",
+        "STL",
+        "Valgrind",
+        "CMake"
+      ],
+      "syllabus_keywords": [
+        "trees",
+        "graphs",
+        "hashing",
+        "complexity",
+        "AVL and B-trees",
+        "heaps",
+        "sorting and searching"
+      ],
+      "clos": [
+        "CLO1: Analyze asymptotic time and space complexity of linear and non-linear data structures.",
+        "CLO2: Implement balanced search trees, priority queues, and collision-resilient hash tables.",
+        "CLO3: Design graph traversal, shortest path, and minimum spanning tree algorithms."
+      ]
+    },
+    {
+      "course_code": "UCS303",
+      "title": "Operating System",
+      "category": "CORE_PREREQUISITE",
+      "semester": 3,
+      "ltp": "3-0-2",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 4.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.4,
+      "weekly_self_effort_hours": 6.5,
+      "lab_tech_stack": [
+        "POSIX Threads",
+        "Linux Kernel Modules",
+        "C",
+        "Bash"
+      ],
+      "syllabus_keywords": [
+        "processes",
+        "concurrency",
+        "memory management",
+        "CPU scheduling",
+        "deadlocks",
+        "virtual memory paging",
+        "file systems"
+      ],
+      "clos": [
+        "CLO1: Evaluate CPU scheduling, process synchronization, and deadlock handling mechanisms.",
+        "CLO2: Implement concurrent programs using POSIX threads, mutexes, and semaphores.",
+        "CLO3: Analyze virtual memory paging, segmentation, and disk scheduling algorithms."
+      ]
+    },
+    {
+      "course_code": "UTA018",
+      "title": "Object Oriented Programming",
+      "category": "CORE_PREREQUISITE",
+      "semester": 3,
+      "ltp": "3-0-2",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 4.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 2.8,
+      "weekly_self_effort_hours": 6.0,
+      "lab_tech_stack": [
+        "C++",
+        "Java",
+        "JUnit",
+        "UML"
+      ],
+      "syllabus_keywords": [
+        "C++/Java OOP",
+        "design patterns",
+        "inheritance",
+        "polymorphism",
+        "templates and generics",
+        "exception handling",
+        "SOLID principles"
+      ],
+      "clos": [
+        "CLO1: Apply encapsulation, inheritance, and polymorphism to modular software design.",
+        "CLO2: Utilize generic programming, STL/Collections, and exception safety.",
+        "CLO3: Implement object-oriented design patterns following SOLID engineering principles."
+      ]
+    },
+    {
+      "course_code": "UCS405",
+      "title": "Discrete Mathematical Structures",
+      "category": "CORE_PREREQUISITE",
+      "semester": 3,
+      "ltp": "3-1-0",
+      "lecture_hours": 3,
+      "tutorial_hours": 1,
+      "practical_hours": 0,
+      "credits": 3.5,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.3,
+      "weekly_self_effort_hours": 6.0,
+      "lab_tech_stack": [
+        "Python",
+        "NetworkX",
+        "Z3 Theorem Prover"
+      ],
+      "syllabus_keywords": [
+        "logic",
+        "combinatorics",
+        "graph theory",
+        "recurrence relations",
+        "groups and rings",
+        "Boolean algebra",
+        "lattices"
+      ],
+      "clos": [
+        "CLO1: Construct formal mathematical proofs using propositional and predicate logic.",
+        "CLO2: Solve recurrence relations and combinatorial enumeration problems.",
+        "CLO3: Apply algebraic structures, lattices, and graph theory to computer science problems."
+      ]
+    },
+    {
+      "course_code": "UMA021",
+      "title": "Numerical Linear Algebra",
+      "category": "CORE_PREREQUISITE",
+      "semester": 4,
+      "ltp": "3-0-2",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 4.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.6,
+      "weekly_self_effort_hours": 7.0,
+      "lab_tech_stack": [
+        "Python",
+        "NumPy",
+        "SciPy",
+        "MATLAB"
+      ],
+      "syllabus_keywords": [
+        "SVD",
+        "eigenvalues",
+        "matrix factorizations",
+        "LU and QR decomposition",
+        "least squares",
+        "conditioning and stability"
+      ],
+      "clos": [
+        "CLO1: Analyze numerical stability, conditioning, and floating-point error propagation.",
+        "CLO2: Implement LU, Cholesky, QR, and Singular Value Decomposition (SVD) algorithms.",
+        "CLO3: Solve large sparse linear systems and eigenvalue problems iteratively."
+      ]
+    },
+    {
+      "course_code": "UCS415",
+      "title": "Design and Analysis of Algorithms",
+      "category": "CORE_PREREQUISITE",
+      "semester": 4,
+      "ltp": "3-0-2",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 4.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.9,
+      "weekly_self_effort_hours": 8.0,
+      "lab_tech_stack": [
+        "C++20",
+        "Python",
+        "Google Benchmark"
+      ],
+      "syllabus_keywords": [
+        "DP",
+        "greedy",
+        "NP-completeness",
+        "divide and conquer",
+        "backtracking",
+        "network flow",
+        "approximation algorithms"
+      ],
+      "clos": [
+        "CLO1: Design optimal algorithms using divide-and-conquer, greedy, and dynamic programming.",
+        "CLO2: Formulate graph network flows, string matching, and branch-and-bound solutions.",
+        "CLO3: Prove NP-completeness via polynomial-time reductions and design approximation schemes."
+      ]
+    },
+    {
+      "course_code": "UCS310",
+      "title": "Database Management Systems",
+      "category": "CORE_PREREQUISITE",
+      "semester": 4,
+      "ltp": "3-0-2",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 4.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.0,
+      "weekly_self_effort_hours": 6.0,
+      "lab_tech_stack": [
+        "PostgreSQL",
+        "Oracle PL/SQL",
+        "MongoDB",
+        "Redis"
+      ],
+      "syllabus_keywords": [
+        "SQL",
+        "normalization",
+        "transactions",
+        "relational algebra",
+        "BCNF",
+        "ACID concurrency control",
+        "B+ tree indexing"
+      ],
+      "clos": [
+        "CLO1: Model enterprise schemas using ER diagrams, relational algebra, and BCNF normalization.",
+        "CLO2: Write complex analytical SQL queries, triggers, and stored procedures.",
+        "CLO3: Evaluate transaction serializability, two-phase locking, and crash recovery protocols."
+      ]
+    },
+    {
+      "course_code": "UCS414",
+      "title": "Computer Networks",
+      "category": "CORE_PREREQUISITE",
+      "semester": 4,
+      "ltp": "3-0-2",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 4.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.2,
+      "weekly_self_effort_hours": 6.0,
+      "lab_tech_stack": [
+        "Wireshark",
+        "Cisco Packet Tracer",
+        "Python Sockets",
+        "ns-3"
+      ],
+      "syllabus_keywords": [
+        "TCP/IP",
+        "routing",
+        "network security basics",
+        "OSI model",
+        "OSPF and BGP",
+        "congestion control",
+        "DNS and HTTP/3"
+      ],
+      "clos": [
+        "CLO1: Analyze layered network protocols across Data Link, Network, and Transport layers.",
+        "CLO2: Configure IPv4/IPv6 subnetting, OSPF/BGP routing, and TCP congestion control.",
+        "CLO3: Implement client-server socket applications and inspect packet traces."
+      ]
+    },
+    {
+      "course_code": "UCS321",
+      "title": "AI for Engineers",
+      "category": "CORE_PREREQUISITE",
+      "semester": 4,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.1,
+      "weekly_self_effort_hours": 5.5,
+      "lab_tech_stack": [
+        "Python",
+        "Scikit-Learn",
+        "NumPy",
+        "Pandas"
+      ],
+      "syllabus_keywords": [
+        "search algorithms",
+        "knowledge representation",
+        "ML basics",
+        "A* heuristic search",
+        "adversarial games",
+        "Bayesian reasoning"
+      ],
+      "clos": [
+        "CLO1: Formulate state-space search problems using uninformed and heuristic A* strategies.",
+        "CLO2: Represent domain knowledge using first-order logic and probabilistic graphical models.",
+        "CLO3: Build foundational supervised and unsupervised machine learning pipelines."
+      ]
+    },
+    {
+      "course_code": "UMA401",
+      "title": "Probability and Statistics",
+      "category": "CORE_PREREQUISITE",
+      "semester": 4,
+      "ltp": "3-0-2",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 4.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.4,
+      "weekly_self_effort_hours": 6.5,
+      "lab_tech_stack": [
+        "R",
+        "Python SciPy",
+        "Statsmodels"
+      ],
+      "syllabus_keywords": [
+        "Bayesian inference",
+        "distributions",
+        "hypothesis testing",
+        "random variables",
+        "maximum likelihood estimation",
+        "regression analysis",
+        "Markov chains"
+      ],
+      "clos": [
+        "CLO1: Model stochastic phenomena using discrete and continuous probability distributions.",
+        "CLO2: Perform parameter estimation, confidence interval construction, and hypothesis testing.",
+        "CLO3: Apply linear regression, ANOVA, and Bayesian inference to engineering datasets."
+      ]
+    },
+    {
+      "course_code": "UML501",
+      "title": "Machine Learning",
+      "category": "CORE_SEM5",
+      "semester": 5,
+      "ltp": "3-0-2",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 4.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.7,
+      "weekly_self_effort_hours": 7.5,
+      "lab_tech_stack": [
+        "Python",
+        "Scikit-Learn",
+        "PyTorch",
+        "XGBoost"
+      ],
+      "syllabus_keywords": [
+        "supervised learning",
+        "support vector machines",
+        "ensemble methods",
+        "neural networks",
+        "dimensionality reduction",
+        "regularization"
+      ],
+      "clos": [
+        "CLO1: Derive and implement parametric and non-parametric supervised learning algorithms.",
+        "CLO2: Optimize ensemble trees, SVMs, and multi-layer perceptrons with cross-validation.",
+        "CLO3: Apply clustering, PCA, and feature selection to high-dimensional data."
+      ]
+    },
+    {
+      "course_code": "UCS531",
+      "title": "Cloud Computing",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_01",
+      "elective_slot": "PE-I",
+      "semester": 5,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.2,
+      "weekly_self_effort_hours": 5.5,
+      "prerequisites": [
+        "UCS303",
+        "UCS414"
+      ],
+      "lab_tech_stack": [
+        "Docker",
+        "Kubernetes",
+        "AWS EC2/S3",
+        "OpenStack"
+      ],
+      "syllabus_keywords": [
+        "virtualization",
+        "IaaS PaaS SaaS",
+        "cloud orchestration",
+        "microservices",
+        "auto-scaling"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Cloud Computing.",
+        "CLO2: Design, implement, and benchmark production solutions using Docker, Kubernetes.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Cloud Computing."
+      ]
+    },
+    {
+      "course_code": "UCS635",
+      "title": "GPU Computing",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_01",
+      "elective_slot": "PE-II",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 4.1,
+      "weekly_self_effort_hours": 7.5,
+      "prerequisites": [
+        "UCS303",
+        "UES103",
+        "UMA021"
+      ],
+      "lab_tech_stack": [
+        "NVIDIA CUDA",
+        "Nsight",
+        "C++",
+        "cuBLAS"
+      ],
+      "syllabus_keywords": [
+        "SIMT architecture",
+        "CUDA thread hierarchy",
+        "shared memory optimization",
+        "warp divergence",
+        "GPU kernels"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of GPU Computing.",
+        "CLO2: Design, implement, and benchmark production solutions using NVIDIA CUDA, Nsight.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in GPU Computing."
+      ]
+    },
+    {
+      "course_code": "UCS645",
+      "title": "Parallel & Distributed Computing",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_01",
+      "elective_slot": "PE-III",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.9,
+      "weekly_self_effort_hours": 7.0,
+      "prerequisites": [
+        "UCS303",
+        "UCS415",
+        "UCS414"
+      ],
+      "lab_tech_stack": [
+        "OpenMP",
+        "MPI",
+        "Apache Spark",
+        "C++"
+      ],
+      "syllabus_keywords": [
+        "Amdahl law",
+        "message passing interface",
+        "shared memory parallelism",
+        "distributed consensus",
+        "MapReduce"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Parallel & Distributed Computing.",
+        "CLO2: Design, implement, and benchmark production solutions using OpenMP, MPI.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Parallel & Distributed Computing."
+      ]
+    },
+    {
+      "course_code": "UCS751",
+      "title": "Simulation & Modelling",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_01",
+      "elective_slot": "PE-IV",
+      "semester": 7,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.4,
+      "weekly_self_effort_hours": 6.0,
+      "prerequisites": [
+        "UMA401",
+        "UMA021",
+        "UCS415"
+      ],
+      "lab_tech_stack": [
+        "SimPy",
+        "MATLAB Simulink",
+        "Python",
+        "AnyLogic"
+      ],
+      "syllabus_keywords": [
+        "discrete event simulation",
+        "Monte Carlo methods",
+        "queueing networks",
+        "stochastic processes",
+        "system dynamics"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Simulation & Modelling.",
+        "CLO2: Design, implement, and benchmark production solutions using SimPy, MATLAB Simulink.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Simulation & Modelling."
+      ]
+    },
+    {
+      "course_code": "UCS532",
+      "title": "Computer Vision",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_02",
+      "elective_slot": "PE-I",
+      "semester": 5,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.6,
+      "weekly_self_effort_hours": 6.5,
+      "prerequisites": [
+        "UMA021",
+        "UCS321",
+        "UCS301"
+      ],
+      "lab_tech_stack": [
+        "OpenCV",
+        "PyTorch",
+        "Python",
+        "NumPy"
+      ],
+      "syllabus_keywords": [
+        "image filtering",
+        "edge detection",
+        "feature descriptors SIFT/ORB",
+        "camera calibration",
+        "object detection"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Computer Vision.",
+        "CLO2: Design, implement, and benchmark production solutions using OpenCV, PyTorch.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Computer Vision."
+      ]
+    },
+    {
+      "course_code": "UCS636",
+      "title": "3D Modelling and Animation",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_02",
+      "elective_slot": "PE-II",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.1,
+      "weekly_self_effort_hours": 6.0,
+      "prerequisites": [
+        "UTA018",
+        "UMA021"
+      ],
+      "lab_tech_stack": [
+        "Blender",
+        "OpenGL",
+        "Three.js",
+        "GLSL Shaders"
+      ],
+      "syllabus_keywords": [
+        "polygonal meshes",
+        "NURBS",
+        "skeletal rigging",
+        "keyframe kinematics",
+        "PBR rendering"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of 3D Modelling and Animation.",
+        "CLO2: Design, implement, and benchmark production solutions using Blender, OpenGL.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in 3D Modelling and Animation."
+      ]
+    },
+    {
+      "course_code": "UCS646",
+      "title": "Game Design & Development",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_02",
+      "elective_slot": "PE-III",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.3,
+      "weekly_self_effort_hours": 6.5,
+      "prerequisites": [
+        "UTA018",
+        "UCS301",
+        "UCS321"
+      ],
+      "lab_tech_stack": [
+        "Unity 3D",
+        "Unreal Engine",
+        "C#",
+        "C++"
+      ],
+      "syllabus_keywords": [
+        "game physics engine",
+        "collision detection",
+        "navmesh pathfinding",
+        "shader pipelines",
+        "entity component system"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Game Design & Development.",
+        "CLO2: Design, implement, and benchmark production solutions using Unity 3D, Unreal Engine.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Game Design & Development."
+      ]
+    },
+    {
+      "course_code": "UCS752",
+      "title": "Augmented and Virtual Reality",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_02",
+      "elective_slot": "PE-IV",
+      "semester": 7,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.5,
+      "weekly_self_effort_hours": 6.5,
+      "prerequisites": [
+        "UCS532",
+        "UTA018",
+        "UMA021"
+      ],
+      "lab_tech_stack": [
+        "Unity XR Toolkit",
+        "OpenXR",
+        "ARKit/ARCore",
+        "C#"
+      ],
+      "syllabus_keywords": [
+        "SLAM spatial tracking",
+        "stereoscopic rendering",
+        "haptic interaction",
+        "spatial audio",
+        "mixed reality UX"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Augmented and Virtual Reality.",
+        "CLO2: Design, implement, and benchmark production solutions using Unity XR Toolkit, OpenXR.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Augmented and Virtual Reality."
+      ]
+    },
+    {
+      "course_code": "UCS534",
+      "title": "Computer & Network Security",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_03",
+      "elective_slot": "PE-I",
+      "semester": 5,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.4,
+      "weekly_self_effort_hours": 6.0,
+      "prerequisites": [
+        "UCS414",
+        "UCS303",
+        "UCS405"
+      ],
+      "lab_tech_stack": [
+        "OpenSSL",
+        "Wireshark",
+        "Snort IDS",
+        "iptables"
+      ],
+      "syllabus_keywords": [
+        "symmetric and public-key cryptography",
+        "TLS/IPSec",
+        "firewalls",
+        "intrusion detection",
+        "authentication protocols"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Computer & Network Security.",
+        "CLO2: Design, implement, and benchmark production solutions using OpenSSL, Wireshark.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Computer & Network Security."
+      ]
+    },
+    {
+      "course_code": "UCS638",
+      "title": "Secure Coding",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_03",
+      "elective_slot": "PE-II",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.6,
+      "weekly_self_effort_hours": 6.5,
+      "prerequisites": [
+        "UES103",
+        "UTA018",
+        "UCS303"
+      ],
+      "lab_tech_stack": [
+        "SonarQube",
+        "OWASP ZAP",
+        "GDB",
+        "AddressSanitizer"
+      ],
+      "syllabus_keywords": [
+        "buffer overflow mitigation",
+        "SQL injection prevention",
+        "XSS/CSRF defenses",
+        "static taint analysis",
+        "memory safety"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Secure Coding.",
+        "CLO2: Design, implement, and benchmark production solutions using SonarQube, OWASP ZAP.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Secure Coding."
+      ]
+    },
+    {
+      "course_code": "UCS648",
+      "title": "Cyber Forensics",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_03",
+      "elective_slot": "PE-III",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.5,
+      "weekly_self_effort_hours": 6.0,
+      "prerequisites": [
+        "UCS303",
+        "UCS414",
+        "UCS310"
+      ],
+      "lab_tech_stack": [
+        "Autopsy",
+        "Volatility",
+        "FTK Imager",
+        "Sleuth Kit"
+      ],
+      "syllabus_keywords": [
+        "disk imaging",
+        "memory forensics",
+        "network packet reconstruction",
+        "file carving",
+        "chain of custody"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Cyber Forensics.",
+        "CLO2: Design, implement, and benchmark production solutions using Autopsy, Volatility.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Cyber Forensics."
+      ]
+    },
+    {
+      "course_code": "UCS754",
+      "title": "Blockchain Technology and Applications",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_03",
+      "elective_slot": "PE-IV",
+      "semester": 7,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.7,
+      "weekly_self_effort_hours": 6.5,
+      "prerequisites": [
+        "UCS405",
+        "UCS414",
+        "UCS301"
+      ],
+      "lab_tech_stack": [
+        "Solidity",
+        "Hardhat",
+        "Ethereum EVM",
+        "Hyperledger Fabric"
+      ],
+      "syllabus_keywords": [
+        "Merkle trees",
+        "Byzantine fault tolerance",
+        "smart contracts",
+        "zero-knowledge proofs",
+        "DeFi security"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Blockchain Technology and Applications.",
+        "CLO2: Design, implement, and benchmark production solutions using Solidity, Hardhat.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Blockchain Technology and Applications."
+      ]
+    },
+    {
+      "course_code": "UMC513",
+      "title": "Linear Algebra for AI and ML",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_04",
+      "elective_slot": "PE-I",
+      "semester": 5,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.8,
+      "weekly_self_effort_hours": 7.0,
+      "prerequisites": [
+        "UMA021",
+        "UMA023",
+        "UCS321"
+      ],
+      "lab_tech_stack": [
+        "Python",
+        "NumPy",
+        "SciPy",
+        "JAX"
+      ],
+      "syllabus_keywords": [
+        "spectral decomposition",
+        "positive definite matrices",
+        "tensor contractions",
+        "PCA and kernel SVD",
+        "gradient calculus"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Linear Algebra for AI and ML.",
+        "CLO2: Design, implement, and benchmark production solutions using Python, NumPy.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Linear Algebra for AI and ML."
+      ]
+    },
+    {
+      "course_code": "UMC622",
+      "title": "Matrix Computation",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_04",
+      "elective_slot": "PE-II",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 4.0,
+      "weekly_self_effort_hours": 7.5,
+      "prerequisites": [
+        "UMA021",
+        "UMA023",
+        "UCS415"
+      ],
+      "lab_tech_stack": [
+        "LAPACK",
+        "SciPy Sparse",
+        "MATLAB",
+        "Julia"
+      ],
+      "syllabus_keywords": [
+        "Krylov subspace methods",
+        "GMRES and Conjugate Gradient",
+        "Hessenberg reduction",
+        "QR iteration",
+        "preconditioning"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Matrix Computation.",
+        "CLO2: Design, implement, and benchmark production solutions using LAPACK, SciPy Sparse.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Matrix Computation."
+      ]
+    },
+    {
+      "course_code": "UMC632",
+      "title": "Financial Mathematics",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_04",
+      "elective_slot": "PE-II",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.9,
+      "weekly_self_effort_hours": 7.0,
+      "prerequisites": [
+        "UMA401",
+        "UMA022",
+        "UMA021"
+      ],
+      "lab_tech_stack": [
+        "Python",
+        "QuantLib",
+        "NumPy",
+        "Statsmodels"
+      ],
+      "syllabus_keywords": [
+        "stochastic calculus",
+        "Ito lemma",
+        "martingale pricing",
+        "binomial asset pricing",
+        "term structure models"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Financial Mathematics.",
+        "CLO2: Design, implement, and benchmark production solutions using Python, QuantLib.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Financial Mathematics."
+      ]
+    },
+    {
+      "course_code": "UMC633",
+      "title": "Mathematics for Quantum Computing",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_04",
+      "elective_slot": "PE-III",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 4.4,
+      "weekly_self_effort_hours": 8.5,
+      "prerequisites": [
+        "UMA021",
+        "UCS405",
+        "UMA401"
+      ],
+      "lab_tech_stack": [
+        "Qiskit",
+        "PennyLane",
+        "Python",
+        "SciPy"
+      ],
+      "syllabus_keywords": [
+        "Hilbert spaces",
+        "unitary operators",
+        "quantum entanglement",
+        "Shor and Grover algorithms",
+        "quantum error correction"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Mathematics for Quantum Computing.",
+        "CLO2: Design, implement, and benchmark production solutions using Qiskit, PennyLane.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Mathematics for Quantum Computing."
+      ]
+    },
+    {
+      "course_code": "UMC744",
+      "title": "Cryptography and Coding Theory",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_04",
+      "elective_slot": "PE-IV",
+      "semester": 7,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 4.2,
+      "weekly_self_effort_hours": 8.0,
+      "prerequisites": [
+        "UCS405",
+        "UMA021",
+        "UCS415"
+      ],
+      "lab_tech_stack": [
+        "SageMath",
+        "Python",
+        "OpenSSL",
+        "PARI/GP"
+      ],
+      "syllabus_keywords": [
+        "finite fields Galois theory",
+        "elliptic curve cryptography",
+        "lattice-based post-quantum crypto",
+        "Reed-Solomon codes",
+        "LDPC codes"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Cryptography and Coding Theory.",
+        "CLO2: Design, implement, and benchmark production solutions using SageMath, Python.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Cryptography and Coding Theory."
+      ]
+    },
+    {
+      "course_code": "UCS548",
+      "title": "Foundation of Data Science",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_05",
+      "elective_slot": "PE-I",
+      "semester": 5,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.2,
+      "weekly_self_effort_hours": 6.0,
+      "prerequisites": [
+        "UMA401",
+        "UCS321",
+        "UCS310"
+      ],
+      "lab_tech_stack": [
+        "Python",
+        "Pandas",
+        "Seaborn",
+        "Scikit-Learn"
+      ],
+      "syllabus_keywords": [
+        "exploratory data analysis",
+        "feature engineering",
+        "data wrangling",
+        "statistical visualization",
+        "dimensionality reduction"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Foundation of Data Science.",
+        "CLO2: Design, implement, and benchmark production solutions using Python, Pandas.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Foundation of Data Science."
+      ]
+    },
+    {
+      "course_code": "UCS654",
+      "title": "Predictive Analytics using Statistics",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_05",
+      "elective_slot": "PE-II",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.6,
+      "weekly_self_effort_hours": 6.5,
+      "prerequisites": [
+        "UMA401",
+        "UMA021",
+        "UCS321"
+      ],
+      "lab_tech_stack": [
+        "R",
+        "Statsmodels",
+        "XGBoost",
+        "Scikit-Learn"
+      ],
+      "syllabus_keywords": [
+        "generalized linear models",
+        "ARIMA and Prophet time-series",
+        "survival analysis",
+        "ridge/lasso regularization",
+        "causal inference"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Predictive Analytics using Statistics.",
+        "CLO2: Design, implement, and benchmark production solutions using R, Statsmodels.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Predictive Analytics using Statistics."
+      ]
+    },
+    {
+      "course_code": "UCS761",
+      "title": "Deep Learning",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_05",
+      "elective_slot": "PE-III",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 4.0,
+      "weekly_self_effort_hours": 7.5,
+      "prerequisites": [
+        "UCS321",
+        "UMA021",
+        "UMA401"
+      ],
+      "lab_tech_stack": [
+        "PyTorch",
+        "TensorFlow",
+        "CUDA",
+        "Weights & Biases"
+      ],
+      "syllabus_keywords": [
+        "backpropagation",
+        "CNNs ResNet/ViT",
+        "RNNs and LSTMs",
+        "attention mechanisms",
+        "batch norm and dropout"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Deep Learning.",
+        "CLO2: Design, implement, and benchmark production solutions using PyTorch, TensorFlow.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Deep Learning."
+      ]
+    },
+    {
+      "course_code": "UCS772",
+      "title": "Data Science: Computer Vision & NLP",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_05",
+      "elective_slot": "PE-IV",
+      "semester": 7,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 4.1,
+      "weekly_self_effort_hours": 7.5,
+      "prerequisites": [
+        "UCS321",
+        "UMA021",
+        "UMA401"
+      ],
+      "lab_tech_stack": [
+        "PyTorch",
+        "HuggingFace Transformers",
+        "OpenCV",
+        "spaCy"
+      ],
+      "syllabus_keywords": [
+        "Vision Transformers",
+        "semantic segmentation",
+        "transformer tokenization",
+        "BERT/GPT fine-tuning",
+        "multimodal representation"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Data Science: Computer Vision & NLP.",
+        "CLO2: Design, implement, and benchmark production solutions using PyTorch, HuggingFace Transformers.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Data Science: Computer Vision & NLP."
+      ]
+    },
+    {
+      "course_code": "UCS539",
+      "title": "Finance, Accounting and Valuation",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_06",
+      "elective_slot": "PE-I",
+      "semester": 5,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.0,
+      "weekly_self_effort_hours": 5.5,
+      "prerequisites": [
+        "UMA401",
+        "UMA022"
+      ],
+      "lab_tech_stack": [
+        "Python",
+        "Excel Financial Modeling",
+        "Pandas",
+        "yfinance"
+      ],
+      "syllabus_keywords": [
+        "financial statements",
+        "discounted cash flow valuation",
+        "time value of money",
+        "cost of capital WACC",
+        "fixed income basics"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Finance, Accounting and Valuation.",
+        "CLO2: Design, implement, and benchmark production solutions using Python, Excel Financial Modeling.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Finance, Accounting and Valuation."
+      ]
+    },
+    {
+      "course_code": "UCS675",
+      "title": "Financial Markets and Portfolio Theory",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_06",
+      "elective_slot": "PE-II",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.5,
+      "weekly_self_effort_hours": 6.5,
+      "prerequisites": [
+        "UMA401",
+        "UMA021"
+      ],
+      "lab_tech_stack": [
+        "Python",
+        "PyPortfolioOpt",
+        "NumPy",
+        "QuantConnect"
+      ],
+      "syllabus_keywords": [
+        "Markowitz mean-variance optimization",
+        "CAPM and factor models",
+        "efficient frontier",
+        "Value at Risk VaR",
+        "market microstructure"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Financial Markets and Portfolio Theory.",
+        "CLO2: Design, implement, and benchmark production solutions using Python, PyPortfolioOpt.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Financial Markets and Portfolio Theory."
+      ]
+    },
+    {
+      "course_code": "UCS658",
+      "title": "Derivatives Pricing, Trading and Strategies",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_06",
+      "elective_slot": "PE-III",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.9,
+      "weekly_self_effort_hours": 7.0,
+      "prerequisites": [
+        "UMA401",
+        "UMA022",
+        "UMA021"
+      ],
+      "lab_tech_stack": [
+        "Python",
+        "QuantLib",
+        "NumPy",
+        "Matplotlib"
+      ],
+      "syllabus_keywords": [
+        "Black-Scholes-Merton PDE",
+        "options Greeks delta-gamma hedging",
+        "futures and swaps",
+        "volatility smiles",
+        "arbitrage strategies"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Derivatives Pricing, Trading and Strategies.",
+        "CLO2: Design, implement, and benchmark production solutions using Python, QuantLib.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Derivatives Pricing, Trading and Strategies."
+      ]
+    },
+    {
+      "course_code": "UMC743",
+      "title": "Quantitative and Statistical Methods for Finance",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_06",
+      "elective_slot": "PE-IV",
+      "semester": 7,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 4.1,
+      "weekly_self_effort_hours": 7.5,
+      "prerequisites": [
+        "UMA401",
+        "UMA021",
+        "UCS415"
+      ],
+      "lab_tech_stack": [
+        "Python",
+        "ARCH/GARCH",
+        "SciPy",
+        "C++"
+      ],
+      "syllabus_keywords": [
+        "GARCH volatility modeling",
+        "cointegration pairs trading",
+        "Monte Carlo derivative simulation",
+        "high-frequency order book dynamics",
+        "backtesting"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Quantitative and Statistical Methods for Finance.",
+        "CLO2: Design, implement, and benchmark production solutions using Python, ARCH/GARCH.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Quantitative and Statistical Methods for Finance."
+      ]
+    },
+    {
+      "course_code": "UCS537",
+      "title": "Source Code Management",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_07",
+      "elective_slot": "PE-I",
+      "semester": 5,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 2.7,
+      "weekly_self_effort_hours": 5.0,
+      "prerequisites": [
+        "UTA018",
+        "UCS303"
+      ],
+      "lab_tech_stack": [
+        "Git",
+        "GitHub Actions",
+        "GitLab",
+        "Bash"
+      ],
+      "syllabus_keywords": [
+        "Git internals DAG",
+        "branching strategies trunk-based/GitFlow",
+        "semantic versioning",
+        "code review automation",
+        "monorepo tooling"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Source Code Management.",
+        "CLO2: Design, implement, and benchmark production solutions using Git, GitHub Actions.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Source Code Management."
+      ]
+    },
+    {
+      "course_code": "UCS659",
+      "title": "Build and Release Management",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_07",
+      "elective_slot": "PE-II",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.1,
+      "weekly_self_effort_hours": 5.5,
+      "prerequisites": [
+        "UTA018",
+        "UCS303"
+      ],
+      "lab_tech_stack": [
+        "Maven",
+        "Gradle",
+        "Nexus Artifact Repository",
+        "Docker"
+      ],
+      "syllabus_keywords": [
+        "dependency resolution",
+        "reproducible builds",
+        "artifact signing SBOM",
+        "container image layering",
+        "release pipelines"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Build and Release Management.",
+        "CLO2: Design, implement, and benchmark production solutions using Maven, Gradle.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Build and Release Management."
+      ]
+    },
+    {
+      "course_code": "UCS660",
+      "title": "Continuous Integration and Continuous Deployment",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_07",
+      "elective_slot": "PE-III",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.4,
+      "weekly_self_effort_hours": 6.0,
+      "prerequisites": [
+        "UCS303",
+        "UCS414",
+        "UTA018"
+      ],
+      "lab_tech_stack": [
+        "Jenkins",
+        "GitHub Actions",
+        "ArgoCD",
+        "Helm"
+      ],
+      "syllabus_keywords": [
+        "automated CI pipelines",
+        "blue-green and canary deployments",
+        "GitOps workflows",
+        "pipeline security scanning DevSecOps",
+        "DORA metrics"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Continuous Integration and Continuous Deployment.",
+        "CLO2: Design, implement, and benchmark production solutions using Jenkins, GitHub Actions.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Continuous Integration and Continuous Deployment."
+      ]
+    },
+    {
+      "course_code": "UCS758",
+      "title": "System Provisioning and Configuration Management",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_07",
+      "elective_slot": "PE-IV",
+      "semester": 7,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.6,
+      "weekly_self_effort_hours": 6.5,
+      "prerequisites": [
+        "UCS303",
+        "UCS414"
+      ],
+      "lab_tech_stack": [
+        "Terraform",
+        "Ansible",
+        "Kubernetes",
+        "Prometheus & Grafana"
+      ],
+      "syllabus_keywords": [
+        "Infrastructure as Code IaC",
+        "immutable infrastructure",
+        "Ansible playbooks",
+        "Kubernetes operators",
+        "observability and SRE"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of System Provisioning and Configuration Management.",
+        "CLO2: Design, implement, and benchmark production solutions using Terraform, Ansible.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in System Provisioning and Configuration Management."
+      ]
+    },
+    {
+      "course_code": "UCS542",
+      "title": "UI & UX Specialist",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_08",
+      "elective_slot": "PE-I",
+      "semester": 5,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 2.8,
+      "weekly_self_effort_hours": 5.5,
+      "prerequisites": [
+        "UTA018",
+        "UES103"
+      ],
+      "lab_tech_stack": [
+        "React 18",
+        "TypeScript",
+        "Tailwind CSS",
+        "Figma"
+      ],
+      "syllabus_keywords": [
+        "design systems",
+        "component architecture",
+        "WCAG accessibility",
+        "state management",
+        "responsive micro-interactions"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of UI & UX Specialist.",
+        "CLO2: Design, implement, and benchmark production solutions using React 18, TypeScript.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in UI & UX Specialist."
+      ]
+    },
+    {
+      "course_code": "UCS677",
+      "title": "Data Engineering",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_08",
+      "elective_slot": "PE-II",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.5,
+      "weekly_self_effort_hours": 6.5,
+      "prerequisites": [
+        "UCS310",
+        "UCS301",
+        "UTA018"
+      ],
+      "lab_tech_stack": [
+        "Apache Kafka",
+        "Apache Spark",
+        "Airflow",
+        "Snowflake/PostgreSQL"
+      ],
+      "syllabus_keywords": [
+        "ETL/ELT pipelines",
+        "event streaming",
+        "data warehousing star schema",
+        "lakehouse architecture",
+        "batch vs stream processing"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Data Engineering.",
+        "CLO2: Design, implement, and benchmark production solutions using Apache Kafka, Apache Spark.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Data Engineering."
+      ]
+    },
+    {
+      "course_code": "UCS661",
+      "title": "Database Engineer",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_08",
+      "elective_slot": "PE-II",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.4,
+      "weekly_self_effort_hours": 6.0,
+      "prerequisites": [
+        "UCS310",
+        "UCS301"
+      ],
+      "lab_tech_stack": [
+        "PostgreSQL",
+        "MongoDB Atlas",
+        "Redis",
+        "PgBouncer"
+      ],
+      "syllabus_keywords": [
+        "query execution plans",
+        "sharding and replication",
+        "NoSQL document modeling",
+        "MVCC internals",
+        "database performance tuning"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Database Engineer.",
+        "CLO2: Design, implement, and benchmark production solutions using PostgreSQL, MongoDB Atlas.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Database Engineer."
+      ]
+    },
+    {
+      "course_code": "UCS662",
+      "title": "Test Automation",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_08",
+      "elective_slot": "PE-III",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.0,
+      "weekly_self_effort_hours": 5.5,
+      "prerequisites": [
+        "UTA018",
+        "UCS310"
+      ],
+      "lab_tech_stack": [
+        "Playwright",
+        "Cypress",
+        "Jest",
+        "k6 Load Testing"
+      ],
+      "syllabus_keywords": [
+        "test-driven development TDD",
+        "end-to-end UI testing",
+        "API contract testing",
+        "mutation testing",
+        "performance load profiling"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Test Automation.",
+        "CLO2: Design, implement, and benchmark production solutions using Playwright, Cypress.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Test Automation."
+      ]
+    },
+    {
+      "course_code": "UCS745",
+      "title": "Cloud & DevOps",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_08",
+      "elective_slot": "PE-IV",
+      "semester": 7,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.5,
+      "weekly_self_effort_hours": 6.5,
+      "prerequisites": [
+        "UCS414",
+        "UCS310",
+        "UTA018"
+      ],
+      "lab_tech_stack": [
+        "AWS",
+        "Docker",
+        "Kubernetes",
+        "Node.js/Express"
+      ],
+      "syllabus_keywords": [
+        "cloud-native full-stack deployment",
+        "serverless functions",
+        "API gateways",
+        "distributed tracing",
+        "zero-downtime scaling"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Cloud & DevOps.",
+        "CLO2: Design, implement, and benchmark production solutions using AWS, Docker.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Cloud & DevOps."
+      ]
+    },
+    {
+      "course_code": "UCS551",
+      "title": "Conversational AI: Accelerated Data Science",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_09",
+      "elective_slot": "PE-I",
+      "semester": 5,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.6,
+      "weekly_self_effort_hours": 6.5,
+      "prerequisites": [
+        "UCS321",
+        "UMA021",
+        "UMA401"
+      ],
+      "lab_tech_stack": [
+        "NVIDIA RAPIDS cuDF",
+        "PyTorch",
+        "CUDA",
+        "Python"
+      ],
+      "syllabus_keywords": [
+        "GPU-accelerated dataframes",
+        "vectorized preprocessing",
+        "distributed training basics",
+        "mixed precision FP16",
+        "embedding pipelines"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Conversational AI: Accelerated Data Science.",
+        "CLO2: Design, implement, and benchmark production solutions using NVIDIA RAPIDS cuDF, PyTorch.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Conversational AI: Accelerated Data Science."
+      ]
+    },
+    {
+      "course_code": "UCS664",
+      "title": "Conversational AI: Natural Language Processing",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_09",
+      "elective_slot": "PE-II",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.9,
+      "weekly_self_effort_hours": 7.0,
+      "prerequisites": [
+        "UCS321",
+        "UMA401",
+        "UMA021"
+      ],
+      "lab_tech_stack": [
+        "HuggingFace",
+        "PyTorch",
+        "NVIDIA NeMo",
+        "spaCy"
+      ],
+      "syllabus_keywords": [
+        "word embeddings Word2Vec/GloVe",
+        "self-attention and Transformers",
+        "sequence-to-sequence models",
+        "named entity recognition",
+        "dialogue state tracking"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Conversational AI: Natural Language Processing.",
+        "CLO2: Design, implement, and benchmark production solutions using HuggingFace, PyTorch.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Conversational AI: Natural Language Processing."
+      ]
+    },
+    {
+      "course_code": "UCS749",
+      "title": "Conversational AI: Speech Processing & Synthesis",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_09",
+      "elective_slot": "PE-III",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 4.0,
+      "weekly_self_effort_hours": 7.5,
+      "prerequisites": [
+        "UCS321",
+        "UMA021",
+        "UMA401"
+      ],
+      "lab_tech_stack": [
+        "NVIDIA NeMo ASR/TTS",
+        "torchaudio",
+        "Librosa",
+        "PyTorch"
+      ],
+      "syllabus_keywords": [
+        "Mel-frequency cepstral coefficients",
+        "CTC and Conformer ASR",
+        "neural text-to-speech vocoders",
+        "speaker diarization",
+        "real-time streaming audio"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Conversational AI: Speech Processing & Synthesis.",
+        "CLO2: Design, implement, and benchmark production solutions using NVIDIA NeMo ASR/TTS, torchaudio.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Conversational AI: Speech Processing & Synthesis."
+      ]
+    },
+    {
+      "course_code": "UCS748",
+      "title": "Generative AI",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_09",
+      "elective_slot": "PE-IV",
+      "semester": 7,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 4.2,
+      "weekly_self_effort_hours": 8.0,
+      "prerequisites": [
+        "UCS321",
+        "UMA021",
+        "UMA401"
+      ],
+      "lab_tech_stack": [
+        "PyTorch",
+        "vLLM",
+        "LangChain",
+        "NVIDIA TensorRT-LLM"
+      ],
+      "syllabus_keywords": [
+        "autoregressive LLMs",
+        "RLHF and DPO alignment",
+        "Retrieval-Augmented Generation RAG",
+        "LoRA/QLoRA parameter-efficient tuning",
+        "diffusion models"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Generative AI.",
+        "CLO2: Design, implement, and benchmark production solutions using PyTorch, vLLM.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Generative AI."
+      ]
+    },
+    {
+      "course_code": "UCS547",
+      "title": "Edge AI and Robotics: Accelerated Data Science",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_10",
+      "elective_slot": "PE-I",
+      "semester": 5,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.6,
+      "weekly_self_effort_hours": 6.5,
+      "prerequisites": [
+        "UCS321",
+        "UCS303",
+        "UES103"
+      ],
+      "lab_tech_stack": [
+        "NVIDIA Jetson",
+        "CUDA",
+        "Python",
+        "TensorRT"
+      ],
+      "syllabus_keywords": [
+        "edge inference quantization INT8",
+        "sensor data fusion",
+        "GPU memory optimization",
+        "real-time telemetry processing",
+        "embedded Linux"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Edge AI and Robotics: Accelerated Data Science.",
+        "CLO2: Design, implement, and benchmark production solutions using NVIDIA Jetson, CUDA.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Edge AI and Robotics: Accelerated Data Science."
+      ]
+    },
+    {
+      "course_code": "UCS668",
+      "title": "Edge AI and Robotics: Data Centre Vision",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_10",
+      "elective_slot": "PE-II",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.9,
+      "weekly_self_effort_hours": 7.0,
+      "prerequisites": [
+        "UCS321",
+        "UMA021",
+        "UCS301"
+      ],
+      "lab_tech_stack": [
+        "NVIDIA DeepStream",
+        "PyTorch",
+        "OpenCV",
+        "Triton Inference Server"
+      ],
+      "syllabus_keywords": [
+        "multi-stream video analytics",
+        "3D object detection",
+        "optical flow tracking",
+        "vision model pruning",
+        "high-throughput inference"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Edge AI and Robotics: Data Centre Vision.",
+        "CLO2: Design, implement, and benchmark production solutions using NVIDIA DeepStream, PyTorch.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Edge AI and Robotics: Data Centre Vision."
+      ]
+    },
+    {
+      "course_code": "UCS671",
+      "title": "Edge AI and Robotics: Embedded Vision",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_10",
+      "elective_slot": "PE-III",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 4.0,
+      "weekly_self_effort_hours": 7.5,
+      "prerequisites": [
+        "UCS303",
+        "UES103",
+        "UCS321"
+      ],
+      "lab_tech_stack": [
+        "ROS 2",
+        "NVIDIA Isaac ROS",
+        "C++",
+        "TensorRT"
+      ],
+      "syllabus_keywords": [
+        "visual odometry SLAM",
+        "depth estimation stereo vision",
+        "edge neural accelerators",
+        "hardware-in-the-loop perception",
+        "low-latency control"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Edge AI and Robotics: Embedded Vision.",
+        "CLO2: Design, implement, and benchmark production solutions using ROS 2, NVIDIA Isaac ROS.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Edge AI and Robotics: Embedded Vision."
+      ]
+    },
+    {
+      "course_code": "UCS760",
+      "title": "Edge AI and Robotics: Reinforcement Learning & Conversational AI",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_10",
+      "elective_slot": "PE-IV",
+      "semester": 7,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 4.2,
+      "weekly_self_effort_hours": 8.0,
+      "prerequisites": [
+        "UCS321",
+        "UMA401",
+        "UMA021"
+      ],
+      "lab_tech_stack": [
+        "NVIDIA Isaac Gym",
+        "PyTorch",
+        "ROS 2",
+        "Gymnasium"
+      ],
+      "syllabus_keywords": [
+        "Markov Decision Processes",
+        "Deep Q-Networks and PPO",
+        "sim-to-real transfer",
+        "embodied multimodal agents",
+        "robotic manipulation policies"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Edge AI and Robotics: Reinforcement Learning & Conversational AI.",
+        "CLO2: Design, implement, and benchmark production solutions using NVIDIA Isaac Gym, PyTorch.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Edge AI and Robotics: Reinforcement Learning & Conversational AI."
+      ]
+    },
+    {
+      "course_code": "UCS550",
+      "title": "Network Defence",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_11",
+      "elective_slot": "PE-I",
+      "semester": 5,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.3,
+      "weekly_self_effort_hours": 6.0,
+      "prerequisites": [
+        "UCS414",
+        "UCS303"
+      ],
+      "lab_tech_stack": [
+        "pfSense",
+        "Zeek",
+        "Suricata",
+        "Splunk SIEM"
+      ],
+      "syllabus_keywords": [
+        "perimeter defense architecture",
+        "zero-trust network segmentation",
+        "VPN andbastion hardening",
+        "SIEM log correlation",
+        "incident containment"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Network Defence.",
+        "CLO2: Design, implement, and benchmark production solutions using pfSense, Zeek.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Network Defence."
+      ]
+    },
+    {
+      "course_code": "UCS673",
+      "title": "Ethical Hacking-1",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_11",
+      "elective_slot": "PE-II",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.6,
+      "weekly_self_effort_hours": 6.5,
+      "prerequisites": [
+        "UCS414",
+        "UCS303",
+        "UES103"
+      ],
+      "lab_tech_stack": [
+        "Kali Linux",
+        "Nmap",
+        "Metasploit",
+        "Burp Suite"
+      ],
+      "syllabus_keywords": [
+        "reconnaissance and footprinting",
+        "vulnerability enumeration",
+        "system privilege escalation",
+        "active directory attacks",
+        "MITRE ATT&CK framework"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Ethical Hacking-1.",
+        "CLO2: Design, implement, and benchmark production solutions using Kali Linux, Nmap.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Ethical Hacking-1."
+      ]
+    },
+    {
+      "course_code": "UCS674",
+      "title": "Ethical Hacking-II",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_11",
+      "elective_slot": "PE-III",
+      "semester": 6,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.8,
+      "weekly_self_effort_hours": 7.0,
+      "prerequisites": [
+        "UCS414",
+        "UCS303",
+        "UES103"
+      ],
+      "lab_tech_stack": [
+        "Burp Suite Pro",
+        "Ghidra",
+        "Frida",
+        "OWASP Testing Guide"
+      ],
+      "syllabus_keywords": [
+        "web application penetration testing",
+        "wireless and IoT exploitation",
+        "reverse engineering binaries",
+        "exploit development",
+        "red team operations"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Ethical Hacking-II.",
+        "CLO2: Design, implement, and benchmark production solutions using Burp Suite Pro, Ghidra.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Ethical Hacking-II."
+      ]
+    },
+    {
+      "course_code": "UCS750",
+      "title": "Computer Hacking and Forensic Investigation",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_11",
+      "elective_slot": "PE-IV",
+      "semester": 7,
+      "ltp": "2-0-2",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.7,
+      "weekly_self_effort_hours": 6.5,
+      "prerequisites": [
+        "UCS414",
+        "UCS303",
+        "UCS310"
+      ],
+      "lab_tech_stack": [
+        "EnCase",
+        "Autopsy",
+        "Volatility 3",
+        "Wireshark"
+      ],
+      "syllabus_keywords": [
+        "anti-forensics detection",
+        "malware static/dynamic triage",
+        "cloud & mobile forensics",
+        "dark web threat intelligence",
+        "expert witness reporting"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Computer Hacking and Forensic Investigation.",
+        "CLO2: Design, implement, and benchmark production solutions using EnCase, Autopsy.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Computer Hacking and Forensic Investigation."
+      ]
+    },
+    {
+      "course_code": "UEC646",
+      "title": "Network and Communication for Connected Vehicles",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_12",
+      "elective_slot": "PE-I",
+      "semester": 5,
+      "ltp": "3-0-0",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.3,
+      "weekly_self_effort_hours": 5.5,
+      "prerequisites": [
+        "UCS414",
+        "UCS303"
+      ],
+      "lab_tech_stack": [
+        "OMNeT++",
+        "SUMO",
+        "VEINS",
+        "Python"
+      ],
+      "syllabus_keywords": [
+        "V2V and V2X communication",
+        "IEEE 802.11p DSRC",
+        "Cellular-V2X 5G NR",
+        "CAN bus automotive protocols",
+        "vehicular ad-hoc networks VANET"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Network and Communication for Connected Vehicles.",
+        "CLO2: Design, implement, and benchmark production solutions using OMNeT++, SUMO.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Network and Communication for Connected Vehicles."
+      ]
+    },
+    {
+      "course_code": "UCS678",
+      "title": "Intelligent Transportation Systems",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_12",
+      "elective_slot": "PE-II",
+      "semester": 6,
+      "ltp": "3-0-0",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.2,
+      "weekly_self_effort_hours": 5.5,
+      "prerequisites": [
+        "UCS415",
+        "UCS321",
+        "UCS414"
+      ],
+      "lab_tech_stack": [
+        "SUMO Traffic Simulator",
+        "Python",
+        "GeoPandas",
+        "PostGIS"
+      ],
+      "syllabus_keywords": [
+        "adaptive traffic signal control",
+        "smart mobility architecture",
+        "spatio-temporal trajectory modeling",
+        "autonomous fleet routing",
+        "digital twins"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Intelligent Transportation Systems.",
+        "CLO2: Design, implement, and benchmark production solutions using SUMO Traffic Simulator, Python.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Intelligent Transportation Systems."
+      ]
+    },
+    {
+      "course_code": "UCS679",
+      "title": "Data Analytics in Automobile Engineering",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_12",
+      "elective_slot": "PE-III",
+      "semester": 6,
+      "ltp": "3-0-0",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.4,
+      "weekly_self_effort_hours": 6.0,
+      "prerequisites": [
+        "UMA401",
+        "UCS321",
+        "UCS310"
+      ],
+      "lab_tech_stack": [
+        "Python",
+        "Scikit-Learn",
+        "PySpark",
+        "InfluxDB"
+      ],
+      "syllabus_keywords": [
+        "predictive maintenance telemetry",
+        "EV battery state-of-health estimation",
+        "driver behavior profiling",
+        "sensor time-series anomaly detection",
+        "CAN log analytics"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Data Analytics in Automobile Engineering.",
+        "CLO2: Design, implement, and benchmark production solutions using Python, Scikit-Learn.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Data Analytics in Automobile Engineering."
+      ]
+    },
+    {
+      "course_code": "UCS780",
+      "title": "Cyber Security for Mobility Systems",
+      "category": "PROFESSIONAL_ELECTIVE",
+      "basket_id": "EF_BASKET_12",
+      "elective_slot": "PE-IV",
+      "semester": 7,
+      "ltp": "3-0-0",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "credits": 3.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.6,
+      "weekly_self_effort_hours": 6.0,
+      "prerequisites": [
+        "UCS414",
+        "UCS303",
+        "UCS405"
+      ],
+      "lab_tech_stack": [
+        "Wireshark CAN",
+        "Scapy",
+        "OpenSSL",
+        "ISO/SAE 21434 Tools"
+      ],
+      "syllabus_keywords": [
+        "in-vehicle network intrusion detection",
+        "ECU firmware attestation",
+        "V2X PKI certificate security",
+        "GNSS spoofing resilience",
+        "ISO/SAE 21434 compliance"
+      ],
+      "clos": [
+        "CLO1: Master core theoretical principles and architectural patterns of Cyber Security for Mobility Systems.",
+        "CLO2: Design, implement, and benchmark production solutions using Wireshark CAN, Scapy.",
+        "CLO3: Evaluate system trade-offs, scalability, and real-world engineering constraints in Cyber Security for Mobility Systems."
+      ]
+    },
+    {
+      "course_code": "UHU016",
+      "title": "Introductory Course in French",
+      "category": "GENERIC_ELECTIVE",
+      "basket_id": "GENERIC_SEM5",
+      "elective_slot": "GE-SEM5",
+      "semester": 5,
+      "ltp": "2-0-0",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "credits": 2.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 2.1,
+      "weekly_self_effort_hours": 3.0,
+      "prerequisites": [],
+      "lab_tech_stack": [
+        "Language Lab Audio Suite",
+        "CEFR A1 Modules"
+      ],
+      "syllabus_keywords": [
+        "French phonetics",
+        "basic conversational grammar",
+        "Francophone culture",
+        "reading comprehension"
+      ],
+      "clos": [
+        "CLO1: Understand foundational interdisciplinary concepts in Introductory Course in French.",
+        "CLO2: Apply analytical frameworks from Introductory Course in French to cross-functional engineering contexts."
+      ]
+    },
+    {
+      "course_code": "UHU017",
+      "title": "Introduction to Cognitive Science",
+      "category": "GENERIC_ELECTIVE",
+      "basket_id": "GENERIC_SEM5",
+      "elective_slot": "GE-SEM5",
+      "semester": 5,
+      "ltp": "2-0-0",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "credits": 2.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 2.5,
+      "weekly_self_effort_hours": 3.5,
+      "prerequisites": [],
+      "lab_tech_stack": [
+        "PsychoPy",
+        "Cognitive Modeling Cases"
+      ],
+      "syllabus_keywords": [
+        "human perception",
+        "memory and attention",
+        "decision making heuristics",
+        "computational mind models"
+      ],
+      "clos": [
+        "CLO1: Understand foundational interdisciplinary concepts in Introduction to Cognitive Science.",
+        "CLO2: Apply analytical frameworks from Introduction to Cognitive Science to cross-functional engineering contexts."
+      ]
+    },
+    {
+      "course_code": "UHU018",
+      "title": "Introduction to Corporate Finance",
+      "category": "GENERIC_ELECTIVE",
+      "basket_id": "GENERIC_SEM5",
+      "elective_slot": "GE-SEM5",
+      "semester": 5,
+      "ltp": "2-0-0",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "credits": 2.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 2.7,
+      "weekly_self_effort_hours": 4.0,
+      "prerequisites": [],
+      "lab_tech_stack": [
+        "Excel Financial Analysis",
+        "Bloomberg Case Studies"
+      ],
+      "syllabus_keywords": [
+        "capital budgeting",
+        "financial ratios",
+        "working capital management",
+        "corporate governance"
+      ],
+      "clos": [
+        "CLO1: Understand foundational interdisciplinary concepts in Introduction to Corporate Finance.",
+        "CLO2: Apply analytical frameworks from Introduction to Corporate Finance to cross-functional engineering contexts."
+      ]
+    },
+    {
+      "course_code": "UCS002",
+      "title": "Introduction to Cyber Security",
+      "category": "GENERIC_ELECTIVE",
+      "basket_id": "GENERIC_SEM5",
+      "elective_slot": "GE-SEM5",
+      "semester": 5,
+      "ltp": "2-0-0",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "credits": 2.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 2.6,
+      "weekly_self_effort_hours": 3.8,
+      "prerequisites": [],
+      "lab_tech_stack": [
+        "Cyber Hygiene Toolkit",
+        "OWASP Top 10 Sandbox"
+      ],
+      "syllabus_keywords": [
+        "cyber threat landscape",
+        "password and MFA hygiene",
+        "phishing defense",
+        "data privacy regulations"
+      ],
+      "clos": [
+        "CLO1: Understand foundational interdisciplinary concepts in Introduction to Cyber Security.",
+        "CLO2: Apply analytical frameworks from Introduction to Cyber Security to cross-functional engineering contexts."
+      ]
+    },
+    {
+      "course_code": "UPH064",
+      "title": "Nanoscience and Nanomaterials",
+      "category": "GENERIC_ELECTIVE",
+      "basket_id": "GENERIC_SEM5",
+      "elective_slot": "GE-SEM5",
+      "semester": 5,
+      "ltp": "2-0-0",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "credits": 2.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 2.9,
+      "weekly_self_effort_hours": 4.2,
+      "prerequisites": [],
+      "lab_tech_stack": [
+        "Nanomaterial Characterization Cases",
+        "XRD/SEM Simulation"
+      ],
+      "syllabus_keywords": [
+        "quantum confinement",
+        "carbon nanotubes",
+        "thin film synthesis",
+        "nanoelectronics applications"
+      ],
+      "clos": [
+        "CLO1: Understand foundational interdisciplinary concepts in Nanoscience and Nanomaterials.",
+        "CLO2: Apply analytical frameworks from Nanoscience and Nanomaterials to cross-functional engineering contexts."
+      ]
+    },
+    {
+      "course_code": "UEN006",
+      "title": "Technologies for Sustainable Development",
+      "category": "GENERIC_ELECTIVE",
+      "basket_id": "GENERIC_SEM5",
+      "elective_slot": "GE-SEM5",
+      "semester": 5,
+      "ltp": "2-0-0",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "credits": 2.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 2.3,
+      "weekly_self_effort_hours": 3.2,
+      "prerequisites": [],
+      "lab_tech_stack": [
+        "Life Cycle Assessment LCA Tools",
+        "Renewable Energy Sim"
+      ],
+      "syllabus_keywords": [
+        "circular economy",
+        "solar and hydrogen energy",
+        "carbon footprint mitigation",
+        "green engineering"
+      ],
+      "clos": [
+        "CLO1: Understand foundational interdisciplinary concepts in Technologies for Sustainable Development.",
+        "CLO2: Apply analytical frameworks from Technologies for Sustainable Development to cross-functional engineering contexts."
+      ]
+    },
+    {
+      "course_code": "UMA069",
+      "title": "Graph Theory and Applications",
+      "category": "GENERIC_ELECTIVE",
+      "basket_id": "GENERIC_SEM5",
+      "elective_slot": "GE-SEM5",
+      "semester": 5,
+      "ltp": "2-0-0",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "credits": 2.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.1,
+      "weekly_self_effort_hours": 4.5,
+      "prerequisites": [],
+      "lab_tech_stack": [
+        "Python NetworkX",
+        "GraphViz"
+      ],
+      "syllabus_keywords": [
+        "planar graphs",
+        "Eulerian and Hamiltonian paths",
+        "graph coloring",
+        "matching and network flows"
+      ],
+      "clos": [
+        "CLO1: Understand foundational interdisciplinary concepts in Graph Theory and Applications.",
+        "CLO2: Apply analytical frameworks from Graph Theory and Applications to cross-functional engineering contexts."
+      ]
+    },
+    {
+      "course_code": "UBT510",
+      "title": "Biology for Engineers",
+      "category": "GENERIC_ELECTIVE",
+      "basket_id": "GENERIC_SEM5",
+      "elective_slot": "GE-SEM5",
+      "semester": 5,
+      "ltp": "2-0-0",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "credits": 2.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 2.4,
+      "weekly_self_effort_hours": 3.4,
+      "prerequisites": [],
+      "lab_tech_stack": [
+        "NCBI BLAST",
+        "BioPython Basics"
+      ],
+      "syllabus_keywords": [
+        "central dogma molecular biology",
+        "biosensors",
+        "biomimetics",
+        "genomic sequence alignment"
+      ],
+      "clos": [
+        "CLO1: Understand foundational interdisciplinary concepts in Biology for Engineers.",
+        "CLO2: Apply analytical frameworks from Biology for Engineers to cross-functional engineering contexts."
+      ]
+    },
+    {
+      "course_code": "UMA070",
+      "title": "Advanced Numerical Methods",
+      "category": "GENERIC_ELECTIVE",
+      "basket_id": "GENERIC_SEM5",
+      "elective_slot": "GE-SEM5",
+      "semester": 5,
+      "ltp": "2-0-0",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "credits": 2.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 3.2,
+      "weekly_self_effort_hours": 4.6,
+      "prerequisites": [],
+      "lab_tech_stack": [
+        "MATLAB",
+        "Python SciPy"
+      ],
+      "syllabus_keywords": [
+        "finite difference PDE solvers",
+        "Runge-Kutta boundary value problems",
+        "spline interpolation",
+        "numerical quadrature"
+      ],
+      "clos": [
+        "CLO1: Understand foundational interdisciplinary concepts in Advanced Numerical Methods.",
+        "CLO2: Apply analytical frameworks from Advanced Numerical Methods to cross-functional engineering contexts."
+      ]
+    },
+    {
+      "course_code": "UTD004",
+      "title": "Campus 2 Corporate",
+      "category": "GENERIC_ELECTIVE",
+      "basket_id": "GENERIC_SEM5",
+      "elective_slot": "GE-SEM5",
+      "semester": 5,
+      "ltp": "2-0-0",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "credits": 2.0,
+      "mst_weight": 28,
+      "est_weight": 42,
+      "sessional_weight": 30,
+      "seat_capacity": 120,
+      "difficulty_index": 2.0,
+      "weekly_self_effort_hours": 2.8,
+      "prerequisites": [],
+      "lab_tech_stack": [
+        "Executive Communication Studio",
+        "Case Interview Framework"
+      ],
+      "syllabus_keywords": [
+        "executive communication",
+        "agile workplace readiness",
+        "stakeholder negotiation",
+        "leadership ethics"
+      ],
+      "clos": [
+        "CLO1: Understand foundational interdisciplinary concepts in Campus 2 Corporate.",
+        "CLO2: Apply analytical frameworks from Campus 2 Corporate to cross-functional engineering contexts."
+      ]
+    }
+  ]
+}

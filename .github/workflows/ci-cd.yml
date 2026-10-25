@@ -1,0 +1,66 @@
+name: ThaparElectiveAI Cloud CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, production]
+  pull_request:
+    branches: [main]
+
+env:
+  NODE_VERSION: "20"
+  PYTHON_VERSION: "3.11"
+  MONGODB_URI: "mongodb+srv://tiet_ci_runner:TietCloud2026Secure@tiet-elective-cluster.mongodb.net/thapar_elective_ai?retryWrites=true&w=majority&appName=ThaparElectiveAI"
+  ML_SERVICE_URL: "https://thapar-elective-ml-service.onrender.com"
+  ML_SERVICE_API_KEY: "tiet_ml_internal_secret_key_change_in_production_minimum_32_chars"
+  JWT_ACCESS_SECRET: "tiet_jwt_access_secret_key_minimum_32_characters_required_prod"
+  JWT_REFRESH_SECRET: "tiet_jwt_refresh_secret_key_minimum_32_characters_required_prod"
+  FRONTEND_ORIGIN: "https://electives.thapar.edu,https://thapar-elective-ai.vercel.app"
+  VITE_API_BASE_URL: "https://thapar-elective-backend.onrender.com/api/v1"
+
+jobs:
+  backend-and-frontend-build:
+    name: Build & Typecheck Node.js Backend + React 18 Frontend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install Monorepo Dependencies
+        run: npm install
+
+      - name: Typecheck & Build Backend Workspace
+        run: npm run typecheck --workspace=backend && npm run build --workspace=backend
+
+      - name: Typecheck & Build Frontend Workspace
+        run: npm run typecheck --workspace=frontend && npm run build --workspace=frontend
+
+  ml-service-pytest:
+    name: Verify Python 3.11 FastAPI ML Service & Pytest Suite
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ml-service
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+
+      - name: Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Pytest Verification Suite
+        run: pytest -v
+
