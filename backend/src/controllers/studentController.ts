@@ -83,7 +83,14 @@ export class StudentController {
       if (data.statementOfPurpose !== undefined) user.statementOfPurpose = data.statementOfPurpose;
       if (data.codingProfileScore !== undefined) user.codingProfileScore = data.codingProfileScore;
       if (data.mathAptitudeScore !== undefined) user.mathAptitudeScore = data.mathAptitudeScore;
-      if (data.preferenceWeights !== undefined) user.preferenceWeights = data.preferenceWeights;
+      if (data.preferenceWeights !== undefined) {
+        user.preferenceWeights = {
+          alpha: data.preferenceWeights.alpha ?? user.preferenceWeights?.alpha ?? 0.25,
+          beta: data.preferenceWeights.beta ?? user.preferenceWeights?.beta ?? 0.25,
+          gamma: data.preferenceWeights.gamma ?? user.preferenceWeights?.gamma ?? 0.25,
+          delta: data.preferenceWeights.delta ?? user.preferenceWeights?.delta ?? 0.25,
+        };
+      }
 
       await user.save();
 
