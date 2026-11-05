@@ -42,12 +42,12 @@ const envSchema = z
     ML_SERVICE_URL: z
       .string()
       .url('ML_SERVICE_URL must be a valid HTTPS cloud URL')
-      .default('https://thapar-elective-ml-service.onrender.com'),
+      .default('https://thapar-elective-ml.onrender.com'),
     ML_SERVICE_API_KEY: z
       .string()
       .min(16, 'ML_SERVICE_API_KEY must be at least 16 characters')
       .default('tiet_ml_internal_secret_key_change_in_production_minimum_32_chars'),
-    ML_SERVICE_TIMEOUT_MS: z.coerce.number().int().min(1000).default(15000),
+    ML_SERVICE_TIMEOUT_MS: z.coerce.number().int().min(1000).default(60000),
 
     FRONTEND_ORIGIN: z
       .string()

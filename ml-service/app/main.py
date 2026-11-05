@@ -78,8 +78,12 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings_boot.allowed_origins_list + ["https://mtechproject.vercel.app"],
-    allow_origin_regex=r"^https://.*\.vercel\.app$",
+    allow_origins=[
+        *settings_boot.allowed_origins_list,
+        "https://mtechproject.vercel.app",
+        "https://thapar-elective-backend.onrender.com",
+    ],
+    allow_origin_regex=r"^https://.*\.vercel\.app$|^https://.*\.onrender\.com$",
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Content-Type", "Authorization", "X-ML-Service-Key", "X-ML-Api-Key"],
@@ -150,6 +154,10 @@ async def health_check(request: Request) -> Dict[str, Any]:
 
 
 @app.post("/api/ml/recommend-baskets", dependencies=[Depends(verify_ml_service_key)])
+@app.post("/recommend-baskets", dependencies=[Depends(verify_ml_service_key)])
+@app.post("/recommend", dependencies=[Depends(verify_ml_service_key)])
+@app.post("/api/v1/recommend-baskets", dependencies=[Depends(verify_ml_service_key)])
+@app.post("/api/v1/ml/recommend-baskets", dependencies=[Depends(verify_ml_service_key)])
 async def recommend_baskets(
     payload: RecommendBasketsRequest,
     ranker: HybridElectiveRanker = Depends(get_ranker),
@@ -166,6 +174,10 @@ async def recommend_baskets(
 
 
 @app.post("/api/ml/recommend-courses", dependencies=[Depends(verify_ml_service_key)])
+@app.post("/recommend-courses", dependencies=[Depends(verify_ml_service_key)])
+@app.post("/courses", dependencies=[Depends(verify_ml_service_key)])
+@app.post("/api/v1/recommend-courses", dependencies=[Depends(verify_ml_service_key)])
+@app.post("/api/v1/ml/recommend-courses", dependencies=[Depends(verify_ml_service_key)])
 async def recommend_courses(
     payload: RecommendCoursesRequest,
     ranker: HybridElectiveRanker = Depends(get_ranker),
@@ -188,6 +200,10 @@ async def recommend_courses(
 
 
 @app.post("/api/ml/predict-performance", dependencies=[Depends(verify_ml_service_key)])
+@app.post("/predict-performance", dependencies=[Depends(verify_ml_service_key)])
+@app.post("/predict", dependencies=[Depends(verify_ml_service_key)])
+@app.post("/api/v1/predict-performance", dependencies=[Depends(verify_ml_service_key)])
+@app.post("/api/v1/ml/predict-performance", dependencies=[Depends(verify_ml_service_key)])
 async def predict_performance(
     payload: PredictPerformanceRequest,
     ranker: HybridElectiveRanker = Depends(get_ranker),
@@ -209,6 +225,10 @@ async def predict_performance(
 
 
 @app.post("/api/ml/peer-cohort-insights", dependencies=[Depends(verify_ml_service_key)])
+@app.post("/peer-cohort-insights", dependencies=[Depends(verify_ml_service_key)])
+@app.post("/peer-cohort", dependencies=[Depends(verify_ml_service_key)])
+@app.post("/api/v1/peer-cohort-insights", dependencies=[Depends(verify_ml_service_key)])
+@app.post("/api/v1/ml/peer-cohort-insights", dependencies=[Depends(verify_ml_service_key)])
 async def peer_cohort_insights(
     payload: PeerCohortInsightsRequest,
     ranker: HybridElectiveRanker = Depends(get_ranker),
@@ -230,6 +250,10 @@ async def peer_cohort_insights(
 
 
 @app.post("/api/ml/advisor-chat", dependencies=[Depends(verify_ml_service_key)])
+@app.post("/advisor-chat", dependencies=[Depends(verify_ml_service_key)])
+@app.post("/chat", dependencies=[Depends(verify_ml_service_key)])
+@app.post("/api/v1/advisor-chat", dependencies=[Depends(verify_ml_service_key)])
+@app.post("/api/v1/ml/advisor-chat", dependencies=[Depends(verify_ml_service_key)])
 async def advisor_chat(
     payload: AdvisorChatRequest,
     ranker: HybridElectiveRanker = Depends(get_ranker),

@@ -87,12 +87,18 @@ function parseStudentProfile(body: Record<string, any>): Record<string, any> {
 
 export function createMlRouter(env: EnvConfig): Router {
   const router = Router();
-  const mlServiceUrl = (process.env.ML_SERVICE_URL || env.ML_SERVICE_URL).replace(/\/+$/, '');
+  const rawUrl =
+    process.env.ML_SERVICE_URL ||
+    env.ML_SERVICE_URL ||
+    'https://thapar-elective-ml.onrender.com';
+  const mlServiceUrl = rawUrl.includes('thapar-elective-ml-service.onrender.com')
+    ? 'https://thapar-elective-ml.onrender.com'
+    : rawUrl;
   const apiKey = env.ML_SERVICE_API_KEY;
 
   const client = axios.create({
-    baseURL: mlServiceUrl,
-    timeout: 30000, // 30-second timeout to handle Render cold-starts gracefully
+    baseURL: mlServiceUrl.replace(/\/+$/, ''),
+    timeout: 60000, // 60-second timeout to accommodate Render free-tier cold starts
     headers: {
       'Content-Type': 'application/json',
       'X-ML-Service-Key': apiKey,
@@ -114,6 +120,7 @@ export function createMlRouter(env: EnvConfig): Router {
       return res.status(200).json(response.data);
     } catch (err: unknown) {
       const error = err as AxiosError;
+      console.error('ML Gateway Error:', error.message, error.response?.data);
       logger.warn(
         { err: error.message, code: error.code },
         'FastAPI ml-service unreachable or cold-starting during recommend-baskets'
@@ -141,6 +148,7 @@ export function createMlRouter(env: EnvConfig): Router {
       return res.status(200).json(response.data);
     } catch (err: unknown) {
       const error = err as AxiosError;
+      console.error('ML Gateway Error:', error.message, error.response?.data);
       logger.warn(
         { err: error.message, code: error.code },
         'FastAPI ml-service unreachable or cold-starting during predict-performance'
@@ -167,6 +175,7 @@ export function createMlRouter(env: EnvConfig): Router {
       return res.status(200).json(response.data);
     } catch (err: unknown) {
       const error = err as AxiosError;
+      console.error('ML Gateway Error:', error.message, error.response?.data);
       logger.warn(
         { err: error.message, code: error.code },
         'FastAPI ml-service unreachable or cold-starting during peer-cohort-insights'

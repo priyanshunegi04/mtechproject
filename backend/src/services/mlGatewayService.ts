@@ -13,9 +13,17 @@ export class MLGatewayService {
 
   constructor(env: EnvConfig) {
     this.env = env;
+    const rawUrl =
+      process.env.ML_SERVICE_URL ||
+      env.ML_SERVICE_URL ||
+      'https://thapar-elective-ml.onrender.com';
+    const mlUrl = rawUrl.includes('thapar-elective-ml-service.onrender.com')
+      ? 'https://thapar-elective-ml.onrender.com'
+      : rawUrl;
+
     this.httpClient = axios.create({
-      baseURL: env.ML_SERVICE_URL.replace(/\/+$/, ''),
-      timeout: env.ML_SERVICE_TIMEOUT_MS,
+      baseURL: mlUrl.replace(/\/+$/, ''),
+      timeout: 60000, // 60s timeout to accommodate Render free-tier cold starts
       headers: {
         'Content-Type': 'application/json',
         'X-ML-Service-Key': env.ML_SERVICE_API_KEY,
@@ -96,7 +104,8 @@ export class MLGatewayService {
       });
       await this.setCache(cacheKey, response.data);
       return response.data as Record<string, unknown>;
-    } catch (error) {
+    } catch (error: any) {
+      console.error('ML Gateway Error:', error.message, error.response?.data);
       logger.warn(
         { err: error instanceof Error ? error.message : String(error) },
         'ml-service unreachable or cold-starting; computing deterministic hybrid basket ranking fallback'
@@ -121,7 +130,8 @@ export class MLGatewayService {
         ...filters,
       });
       return response.data as Record<string, unknown>;
-    } catch (error) {
+    } catch (error: any) {
+      console.error('ML Gateway Error:', error.message, error.response?.data);
       logger.warn(
         { err: error instanceof Error ? error.message : String(error) },
         'ml-service unreachable; using deterministic course recommendation fallback'
@@ -140,7 +150,8 @@ export class MLGatewayService {
         selected_course_codes: selectedCourseCodes,
       });
       return response.data as Record<string, unknown>;
-    } catch (_error) {
+    } catch (error: any) {
+      console.error('ML Gateway Error:', error.message, error.response?.data);
       const catalog = loadLocalCoursesCatalog();
       const allCourses = (catalog.all_courses as Record<string, unknown>[]) || [];
       const courseMap = new Map(allCourses.map((c) => [String(c.course_code), c]));
@@ -193,7 +204,8 @@ export class MLGatewayService {
         top_k: topK,
       });
       return response.data as Record<string, unknown>;
-    } catch (_error) {
+    } catch (error: any) {
+      console.error('ML Gateway Error:', error.message, error.response?.data);
       return {
         success: true,
         cohort_size: topK,
@@ -224,7 +236,8 @@ export class MLGatewayService {
         conversation_history: conversationHistory,
       });
       return response.data as Record<string, unknown>;
-    } catch (_error) {
+    } catch (error: any) {
+      console.error('ML Gateway Error:', error.message, error.response?.data);
       return {
         success: true,
         reply: `Based on your TIET Sem IV CGPA of **${user.cgpa.toFixed(2)}** and preferred career roles (${(user.targetCareerRoles || []).join(', ')}), your top-matched Elective Focus Basket is **${user.rankedBasketPreferences?.[0] || 'EF_BASKET_05'}** and your top Generic Elective is **${user.rankedGenericPreferences?.[0] || 'UMA069'}**.`,
