@@ -10,19 +10,21 @@ const logger = pino({ name: 'tiet-ml-gateway' });
 export class MLGatewayService {
   private readonly httpClient: AxiosInstance;
   private readonly env: EnvConfig;
+  private readonly baseUrl: string;
 
   constructor(env: EnvConfig) {
     this.env = env;
-    const rawUrl =
+    const ML_BASE_URL = (
       process.env.ML_SERVICE_URL ||
       env.ML_SERVICE_URL ||
-      'https://thapar-elective-ml.onrender.com';
-    const mlUrl = rawUrl.includes('thapar-elective-ml-service.onrender.com')
+      'https://thapar-elective-ml.onrender.com'
+    ).replace(/\/+$/, '');
+    this.baseUrl = ML_BASE_URL.includes('thapar-elective-ml-service.onrender.com')
       ? 'https://thapar-elective-ml.onrender.com'
-      : rawUrl;
+      : ML_BASE_URL;
 
     this.httpClient = axios.create({
-      baseURL: mlUrl.replace(/\/+$/, ''),
+      baseURL: this.baseUrl,
       timeout: 60000, // 60s timeout to accommodate Render free-tier cold starts
       headers: {
         'Content-Type': 'application/json',
@@ -97,18 +99,25 @@ export class MLGatewayService {
       return cached;
     }
 
+    const endpointPath = '/api/ml/recommend-baskets';
     try {
-      const response = await this.httpClient.post('/api/ml/recommend-baskets', {
+      const response = await this.httpClient.post(endpointPath, {
         student_profile: this.buildStudentMLProfile(user),
         weights,
       });
       await this.setCache(cacheKey, response.data);
       return response.data as Record<string, unknown>;
     } catch (error: any) {
-      console.error('ML Gateway Error:', error.message, error.response?.data);
+      console.error('ML Service proxy error:', {
+        message: error.message,
+        code: error.code,
+        status: error.response?.status,
+        data: error.response?.data,
+        targetUrl: `${this.baseUrl}${endpointPath}`,
+      });
       logger.warn(
         { err: error instanceof Error ? error.message : String(error) },
-        'ml-service unreachable or cold-starting; computing deterministic hybrid basket ranking fallback'
+        'ml-service unreachable or cold-starting; computing safe deterministic hybrid basket ranking fallback'
       );
       return this.fallbackRecommendBaskets(user, weights);
     }
@@ -124,17 +133,24 @@ export class MLGatewayService {
       weights?: { alpha?: number; beta?: number; gamma?: number; delta?: number };
     }
   ): Promise<Record<string, unknown>> {
+    const endpointPath = '/api/ml/recommend-courses';
     try {
-      const response = await this.httpClient.post('/api/ml/recommend-courses', {
+      const response = await this.httpClient.post(endpointPath, {
         student_profile: this.buildStudentMLProfile(user),
         ...filters,
       });
       return response.data as Record<string, unknown>;
     } catch (error: any) {
-      console.error('ML Gateway Error:', error.message, error.response?.data);
+      console.error('ML Service proxy error:', {
+        message: error.message,
+        code: error.code,
+        status: error.response?.status,
+        data: error.response?.data,
+        targetUrl: `${this.baseUrl}${endpointPath}`,
+      });
       logger.warn(
         { err: error instanceof Error ? error.message : String(error) },
-        'ml-service unreachable; using deterministic course recommendation fallback'
+        'ml-service unreachable; using safe deterministic course recommendation fallback'
       );
       return this.fallbackRecommendCourses(user, filters);
     }
@@ -144,14 +160,21 @@ export class MLGatewayService {
     user: IUser,
     selectedCourseCodes: string[]
   ): Promise<Record<string, unknown>> {
+    const endpointPath = '/api/ml/predict-performance';
     try {
-      const response = await this.httpClient.post('/api/ml/predict-performance', {
+      const response = await this.httpClient.post(endpointPath, {
         student_profile: this.buildStudentMLProfile(user),
         selected_course_codes: selectedCourseCodes,
       });
       return response.data as Record<string, unknown>;
     } catch (error: any) {
-      console.error('ML Gateway Error:', error.message, error.response?.data);
+      console.error('ML Service proxy error:', {
+        message: error.message,
+        code: error.code,
+        status: error.response?.status,
+        data: error.response?.data,
+        targetUrl: `${this.baseUrl}${endpointPath}`,
+      });
       const catalog = loadLocalCoursesCatalog();
       const allCourses = (catalog.all_courses as Record<string, unknown>[]) || [];
       const courseMap = new Map(allCourses.map((c) => [String(c.course_code), c]));
@@ -178,7 +201,8 @@ export class MLGatewayService {
 
       const totalHours = preds.reduce((acc, p) => acc + p.expected_weekly_workload_hours, 0);
       return {
-        success: true,
+        success: false,
+        fallback: true,
         model_version: 'tiet-hybrid-fallback-v1.0',
         selected_course_codes: selectedCourseCodes,
         course_predictions: preds,
@@ -198,16 +222,24 @@ export class MLGatewayService {
   }
 
   public async peerCohortInsights(user: IUser, topK = 50): Promise<Record<string, unknown>> {
+    const endpointPath = '/api/ml/peer-cohort-insights';
     try {
-      const response = await this.httpClient.post('/api/ml/peer-cohort-insights', {
+      const response = await this.httpClient.post(endpointPath, {
         student_profile: this.buildStudentMLProfile(user),
         top_k: topK,
       });
       return response.data as Record<string, unknown>;
     } catch (error: any) {
-      console.error('ML Gateway Error:', error.message, error.response?.data);
+      console.error('ML Service proxy error:', {
+        message: error.message,
+        code: error.code,
+        status: error.response?.status,
+        data: error.response?.data,
+        targetUrl: `${this.baseUrl}${endpointPath}`,
+      });
       return {
-        success: true,
+        success: false,
+        fallback: true,
         cohort_size: topK,
         avg_peer_similarity_pct: 91.4,
         avg_cohort_cgpa_sem4: user.cgpa,
@@ -229,17 +261,25 @@ export class MLGatewayService {
     message: string,
     conversationHistory?: { role: string; content: string }[]
   ): Promise<Record<string, unknown>> {
+    const endpointPath = '/api/ml/advisor-chat';
     try {
-      const response = await this.httpClient.post('/api/ml/advisor-chat', {
+      const response = await this.httpClient.post(endpointPath, {
         student_profile: this.buildStudentMLProfile(user),
         message,
         conversation_history: conversationHistory,
       });
       return response.data as Record<string, unknown>;
     } catch (error: any) {
-      console.error('ML Gateway Error:', error.message, error.response?.data);
+      console.error('ML Service proxy error:', {
+        message: error.message,
+        code: error.code,
+        status: error.response?.status,
+        data: error.response?.data,
+        targetUrl: `${this.baseUrl}${endpointPath}`,
+      });
       return {
-        success: true,
+        success: false,
+        fallback: true,
         reply: `Based on your TIET Sem IV CGPA of **${user.cgpa.toFixed(2)}** and preferred career roles (${(user.targetCareerRoles || []).join(', ')}), your top-matched Elective Focus Basket is **${user.rankedBasketPreferences?.[0] || 'EF_BASKET_05'}** and your top Generic Elective is **${user.rankedGenericPreferences?.[0] || 'UMA069'}**.`,
         student_cgpa_sem4: user.cgpa,
       };
@@ -333,9 +373,11 @@ export class MLGatewayService {
       r.rank = i + 1;
     });
     return {
-      success: true,
+      success: false,
+      fallback: true,
       model_version: 'tiet-hybrid-fallback-v1.0',
       weights_applied: weights,
+      ranked_baskets: recs,
       recommendations: recs,
     };
   }
@@ -371,9 +413,11 @@ export class MLGatewayService {
       top_shap_reasons: [],
     }));
     return {
-      success: true,
+      success: false,
+      fallback: true,
       model_version: 'tiet-hybrid-fallback-v1.0',
       total_candidates: recs.length,
+      ranked_courses: recs,
       recommendations: recs,
     };
   }
