@@ -300,6 +300,16 @@ class CollaborativeRecommender:
             )
         basket_distribution.sort(key=lambda x: x["peer_count"], reverse=True)
 
+        top_elective_choices = [
+            {
+                "basket_id": b["basket_id"],
+                "basket_name": b["basket_name"],
+                "selection_pct": b["percentage"],
+                "peer_count": b["peer_count"],
+            }
+            for b in basket_distribution
+        ]
+
         # Overall placement tier breakdown across the 50 peers
         overall_placements = Counter(peers_df["placement_tier"].astype(str).tolist())
         placement_summary = [
@@ -311,28 +321,77 @@ class CollaborativeRecommender:
             for tier, cnt in overall_placements.most_common()
         ]
 
+        avg_delta = float(peers_df["cgpa_delta"].mean())
+        delta_str = f"+{avg_delta:.2f}" if avg_delta >= 0 else f"{avg_delta:.2f}"
+
+        placement_tiers_formatted: Dict[str, float] = {}
+        for item in placement_summary:
+            t_name = item["tier"]
+            if t_name in ("Super-Dream", "Super Dream"):
+                label = "Super Dream (>20 LPA)"
+            elif t_name == "Dream":
+                label = "Dream (10-20 LPA)"
+            elif t_name in ("Higher-Studies", "Higher Studies"):
+                label = "Higher Studies"
+            else:
+                label = "Standard / Core"
+            placement_tiers_formatted[label] = item["percentage"]
+
+        outcome_distributions = {
+            "avg_cgpa_delta": delta_str,
+            "avg_elective_sgpa": round(float(peers_df["avg_elective_sgpa"].mean()), 2),
+            "placement_tiers": placement_tiers_formatted,
+        }
+
         # Top closest individual alumni records
         closest_seniors: List[Dict[str, Any]] = []
+        representative_peers: List[Dict[str, Any]] = []
         for row in peers_df.head(15).itertuples(index=False):
             b_code = str(getattr(row, "chosen_basket_id"))
+            b_name = self.basket_id_to_name.get(b_code, b_code)
+            sim_score = round(float(getattr(row, "similarity")) * 100.0, 1)
+
             closest_seniors.append(
                 {
                     "student_id": str(getattr(row, "student_id")),
                     "roll_no": str(getattr(row, "roll_no")),
                     "batch_year": int(getattr(row, "batch_year")),
-                    "similarity_score": round(float(getattr(row, "similarity")) * 100.0, 1),
+                    "similarity_score": sim_score,
                     "cgpa_sem4": float(getattr(row, "cgpa_sem4")),
                     "avg_elective_sgpa": float(getattr(row, "avg_elective_sgpa")),
                     "cgpa_delta": float(getattr(row, "cgpa_delta")),
                     "chosen_basket_id": b_code,
-                    "chosen_basket_name": self.basket_id_to_name.get(b_code, b_code),
+                    "chosen_basket_name": b_name,
                     "chosen_generic_elective": str(getattr(row, "chosen_generic_elective")),
                     "preferred_career_track": str(getattr(row, "preferred_career_track")),
                     "placement_tier": str(getattr(row, "placement_tier")),
                 }
             )
 
+            representative_peers.append(
+                {
+                    "peer_id": str(getattr(row, "student_id")),
+                    "roll_no": str(getattr(row, "roll_no")),
+                    "batch_year": int(getattr(row, "batch_year")),
+                    "similarity": round(float(getattr(row, "similarity")), 2),
+                    "sem4_cgpa": float(getattr(row, "cgpa_sem4")),
+                    "final_cgpa": float(getattr(row, "avg_elective_sgpa")),
+                    "cgpa_delta": float(getattr(row, "cgpa_delta")),
+                    "chosen_basket": b_code,
+                    "chosen_basket_name": b_name,
+                    "placement_category": str(getattr(row, "placement_tier")),
+                    "career_role": str(getattr(row, "preferred_career_track")),
+                    "chosen_generic": str(getattr(row, "chosen_generic_elective")),
+                }
+            )
+
         return {
+            "matched_cohort_size": int(k),
+            "similarity_score_avg": round(float(np.mean(peer_similarities)), 2),
+            "top_elective_choices": top_elective_choices,
+            "outcome_distributions": outcome_distributions,
+            "representative_peers": representative_peers,
+            # Backward-compatible fields
             "cohort_size": int(k),
             "avg_peer_similarity_pct": round(float(np.mean(peer_similarities)) * 100.0, 1),
             "avg_cohort_cgpa_sem4": round(float(peers_df["cgpa_sem4"].mean()), 2),

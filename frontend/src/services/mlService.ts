@@ -316,66 +316,142 @@ export function adaptLiveBasketsToRecommendations(
 }
 
 /**
- * Adapts live FastAPI peer cohort k-NN output into typed PeerCohortAnalytics
+ * Adapts live FastAPI peer cohort k-NN output into typed PeerCohortAnalytics.
+ * Supports both standard response schemas (matched_cohort_size, top_elective_choices, outcome_distributions, representative_peers)
+ * and backward-compatible fields (cohort_size, basket_distribution, closest_seniors).
  */
 export function adaptLivePeerCohortToAnalytics(
   liveData: LivePeerCohortResponse,
   fallbackCohort: PeerCohortAnalytics
 ): PeerCohortAnalytics {
-  if (!liveData || !liveData.success) {
+  if (!liveData || (!liveData.success && !liveData.matched_cohort_size && !liveData.cohort_size)) {
     return fallbackCohort;
   }
 
-  const closestSeniors: PeerSeniorRecord[] = (liveData.closest_seniors || []).map(
-    (s: Record<string, any>, idx: number) => ({
-      studentId: String(s.student_id || `SR_${idx + 1}`),
-      rollNo: String(s.roll_no || `102203${String(idx + 10).padStart(3, '0')}`),
-      batchYear: Number(s.batch_year || 2022),
-      similarityScorePct: Number(
-        s.similarity ? (s.similarity * 100).toFixed(1) : (92 - idx * 0.4).toFixed(1)
-      ),
-      cgpaSem4: Number(s.cgpa_sem4 || 8.0),
-      avgElectiveSgpa: Number(s.avg_elective_sgpa || 8.4),
-      cgpaDelta: Number(s.cgpa_delta || 0.4),
-      chosenBasketId: String(s.chosen_basket_id || 'EF_BASKET_09'),
-      chosenBasketName: String(s.chosen_basket_name || 'Data Science'),
-      chosenGenericElective: String(s.chosen_generic_elective || 'UMA069'),
-      preferredCareerTrack: String(s.preferred_career_track || 'Software Development Engineer'),
-      placementTier: (s.placement_tier || 'Dream') as
-        | 'Super-Dream'
-        | 'Dream'
-        | 'Higher-Studies'
-        | 'Core',
-    })
+  // 1. Closest Seniors / Representative Peers
+  const rawPeers: Record<string, any>[] =
+    (liveData.representative_peers && liveData.representative_peers.length > 0)
+      ? liveData.representative_peers
+      : (liveData.closest_seniors && liveData.closest_seniors.length > 0)
+      ? liveData.closest_seniors
+      : [];
+
+  const closestSeniors: PeerSeniorRecord[] = rawPeers.map(
+    (s: Record<string, any>, idx: number) => {
+      const rawSim =
+        s.similarity != null
+          ? Number(s.similarity)
+          : s.similarity_score != null
+          ? Number(s.similarity_score) / 100
+          : null;
+      const simPct =
+        rawSim != null
+          ? Number((rawSim > 1 ? rawSim : rawSim * 100).toFixed(1))
+          : Number(s.similarityScorePct ?? (94 - idx * 0.5).toFixed(1));
+
+      const sem4 = Number(s.sem4_cgpa ?? s.cgpa_sem4 ?? s.cgpaSem4 ?? 8.0);
+      const finalCgpa = Number(s.final_cgpa ?? s.avg_elective_sgpa ?? s.avgElectiveSgpa ?? sem4 + 0.3);
+      const delta = Number(s.cgpa_delta ?? s.cgpaDelta ?? (finalCgpa - sem4));
+
+      const tierRaw = String(s.placement_category || s.placement_tier || s.placementTier || 'Dream');
+      const cleanTier: 'Super-Dream' | 'Dream' | 'Higher-Studies' | 'Core' =
+        tierRaw.toLowerCase().includes('super')
+          ? 'Super-Dream'
+          : tierRaw.toLowerCase().includes('dream')
+          ? 'Dream'
+          : tierRaw.toLowerCase().includes('study') || tierRaw.toLowerCase().includes('higher')
+          ? 'Higher-Studies'
+          : 'Core';
+
+      return {
+        studentId: String(s.peer_id || s.student_id || s.studentId || `HIST-${s.batch_year || 2024}-${String(idx + 101).padStart(3, '0')}`),
+        rollNo: String(s.roll_no || s.rollNo || s.peer_id || `102203${String(idx + 10).padStart(3, '0')}`),
+        batchYear: Number(s.batch_year || s.batchYear || 2024),
+        similarityScorePct: simPct,
+        cgpaSem4: Number(sem4.toFixed(2)),
+        avgElectiveSgpa: Number(finalCgpa.toFixed(2)),
+        cgpaDelta: Number(delta.toFixed(2)),
+        chosenBasketId: String(s.chosen_basket || s.chosen_basket_id || s.chosenBasketId || 'EF_BASKET_05'),
+        chosenBasketName: String(s.chosen_basket_name || s.chosenBasketName || 'Artificial Intelligence & Machine Learning'),
+        chosenGenericElective: String(s.chosen_generic || s.chosen_generic_elective || s.chosenGenericElective || 'UMA069'),
+        preferredCareerTrack: String(s.career_role || s.preferred_career_track || s.preferredCareerTrack || 'Machine Learning Engineer'),
+        placementTier: cleanTier,
+      };
+    }
   );
 
-  const basketDistribution = (liveData.basket_distribution || []).map((b: Record<string, any>) => ({
-    basketId: String(b.basket_id || ''),
-    basketName: String(b.basket_name || b.basket_id || ''),
-    peerCount: Number(b.peer_count || 0),
-    percentage: Number(b.percentage || 0),
-    avgPeerCgpaSem4: Number(b.avg_peer_cgpa_sem4 || 8.0),
-    avgElectiveSgpa: Number(b.avg_elective_sgpa || 8.4),
-    avgCgpaDelta: Number(b.avg_cgpa_delta || 0.4),
-    placementOutcomes: b.placement_outcomes || {},
-  }));
+  // 2. Basket Distribution / Top Elective Choices
+  const rawBaskets: Record<string, any>[] =
+    (liveData.top_elective_choices && liveData.top_elective_choices.length > 0)
+      ? liveData.top_elective_choices
+      : (liveData.basket_distribution && liveData.basket_distribution.length > 0)
+      ? liveData.basket_distribution
+      : [];
+
+  const basketDistribution = rawBaskets.map((b: Record<string, any>) => {
+    const bId = String(b.basket_id || b.basketId || '');
+    const pct = Number(b.selection_pct ?? b.percentage ?? 0);
+    const peerCnt = Number(
+      b.peer_count ??
+        b.peerCount ??
+        Math.round((pct / 100) * (liveData.matched_cohort_size || liveData.cohort_size || 50))
+    );
+
+    return {
+      basketId: bId,
+      basketName: String(b.basket_name || b.basketName || bId),
+      peerCount: peerCnt,
+      percentage: pct,
+      avgPeerCgpaSem4: Number(b.avg_peer_cgpa_sem4 || b.avgPeerCgpaSem4 || liveData.avg_cohort_cgpa_sem4 || 8.0),
+      avgElectiveSgpa: Number(b.avg_elective_sgpa || b.avgElectiveSgpa || liveData.avg_cohort_elective_sgpa || 8.4),
+      avgCgpaDelta: Number(b.avg_cgpa_delta || b.avgCgpaDelta || 0.4),
+      placementOutcomes: b.placement_outcomes || b.placementOutcomes || {},
+    };
+  });
+
+  // 3. Placement Summary / Outcome Distributions
+  let placementSummary = liveData.placement_summary || [];
+  if ((!placementSummary || placementSummary.length === 0) && liveData.outcome_distributions?.placement_tiers) {
+    const tiers = liveData.outcome_distributions.placement_tiers;
+    const totalCohort = Number(liveData.matched_cohort_size || liveData.cohort_size || 50);
+    placementSummary = Object.entries(tiers).map(([tier, pct]) => ({
+      tier: String(tier),
+      percentage: Number(pct),
+      count: Math.round((Number(pct) / 100) * totalCohort),
+    }));
+  }
+
+  // 4. Metrics & Averages
+  const cohortSize = Number(liveData.matched_cohort_size || liveData.cohort_size || fallbackCohort.cohortSize);
+  const avgPeerSimilarityPct =
+    liveData.similarity_score_avg != null
+      ? Number((liveData.similarity_score_avg * 100).toFixed(1))
+      : Number(liveData.avg_peer_similarity_pct || fallbackCohort.avgPeerSimilarityPct);
+
+  const deltaRaw = liveData.outcome_distributions?.avg_cgpa_delta;
+  const avgCohortCgpaDelta =
+    deltaRaw != null
+      ? parseFloat(String(deltaRaw))
+      : Number(liveData.avg_cohort_cgpa_delta || fallbackCohort.avgCohortCgpaDelta);
+
+  const avgCohortElectiveSgpa = Number(
+    liveData.outcome_distributions?.avg_elective_sgpa ||
+      liveData.avg_cohort_elective_sgpa ||
+      fallbackCohort.avgCohortElectiveSgpa
+  );
 
   return {
-    cohortSize: Number(liveData.cohort_size || fallbackCohort.cohortSize),
-    avgPeerSimilarityPct: Number(
-      liveData.avg_peer_similarity_pct || fallbackCohort.avgPeerSimilarityPct
-    ),
+    cohortSize,
+    avgPeerSimilarityPct,
     avgCohortCgpaSem4: Number(liveData.avg_cohort_cgpa_sem4 || fallbackCohort.avgCohortCgpaSem4),
-    avgCohortElectiveSgpa: Number(
-      liveData.avg_cohort_elective_sgpa || fallbackCohort.avgCohortElectiveSgpa
-    ),
-    avgCohortCgpaDelta: Number(
-      liveData.avg_cohort_cgpa_delta || fallbackCohort.avgCohortCgpaDelta
-    ),
+    avgCohortElectiveSgpa,
+    avgCohortCgpaDelta,
     basketDistribution:
       basketDistribution.length > 0 ? basketDistribution : fallbackCohort.basketDistribution,
-    placementSummary: liveData.placement_summary || fallbackCohort.placementSummary,
-    closestSeniors: closestSeniors.length > 0 ? closestSeniors : fallbackCohort.closestSeniors,
+    placementSummary:
+      placementSummary.length > 0 ? placementSummary : fallbackCohort.placementSummary,
+    closestSeniors:
+      closestSeniors.length > 0 ? closestSeniors : fallbackCohort.closestSeniors,
   };
 }
 

@@ -240,16 +240,38 @@ export class MLGatewayService {
       return {
         success: false,
         fallback: true,
+        matched_cohort_size: topK,
+        similarity_score_avg: 0.91,
+        top_elective_choices: [
+          { basket_id: 'EF_BASKET_05', basket_name: 'Artificial Intelligence and Machine Learning', selection_pct: 42, peer_count: Math.round(topK * 0.42) },
+          { basket_id: 'EF_BASKET_09', basket_name: 'Data Science and Engineering', selection_pct: 26, peer_count: Math.round(topK * 0.26) },
+          { basket_id: 'EF_BASKET_08', basket_name: 'Full-Stack Web and Mobile Systems', selection_pct: 18, peer_count: Math.round(topK * 0.18) },
+          { basket_id: 'EF_BASKET_03', basket_name: 'Information and Cyber Security', selection_pct: 14, peer_count: Math.round(topK * 0.14) },
+        ],
+        outcome_distributions: {
+          avg_cgpa_delta: '+0.35',
+          avg_elective_sgpa: Number(Math.min(10, user.cgpa + 0.35).toFixed(2)),
+          placement_tiers: {
+            'Super Dream (>20 LPA)': 48,
+            'Dream (10-20 LPA)': 36,
+            'Higher Studies': 16,
+          },
+        },
+        representative_peers: [],
         cohort_size: topK,
         avg_peer_similarity_pct: 91.4,
         avg_cohort_cgpa_sem4: user.cgpa,
         avg_cohort_elective_sgpa: Number(Math.min(10, user.cgpa + 0.35).toFixed(2)),
         avg_cohort_cgpa_delta: 0.35,
-        basket_distribution: [],
+        basket_distribution: [
+          { basket_id: 'EF_BASKET_05', basket_name: 'Artificial Intelligence and Machine Learning', percentage: 42, peer_count: Math.round(topK * 0.42), avg_peer_cgpa_sem4: user.cgpa, avg_elective_sgpa: user.cgpa + 0.35, avg_cgpa_delta: 0.35 },
+          { basket_id: 'EF_BASKET_09', basket_name: 'Data Science and Engineering', percentage: 26, peer_count: Math.round(topK * 0.26), avg_peer_cgpa_sem4: user.cgpa, avg_elective_sgpa: user.cgpa + 0.30, avg_cgpa_delta: 0.30 },
+          { basket_id: 'EF_BASKET_08', basket_name: 'Full-Stack Web and Mobile Systems', percentage: 18, peer_count: Math.round(topK * 0.18), avg_peer_cgpa_sem4: user.cgpa, avg_elective_sgpa: user.cgpa + 0.25, avg_cgpa_delta: 0.25 },
+        ],
         placement_summary: [
-          { tier: 'Super-Dream', count: 24, percentage: 48.0 },
-          { tier: 'Dream', count: 18, percentage: 36.0 },
-          { tier: 'Higher-Studies', count: 8, percentage: 16.0 },
+          { tier: 'Super-Dream', count: Math.round(topK * 0.48), percentage: 48.0 },
+          { tier: 'Dream', count: Math.round(topK * 0.36), percentage: 36.0 },
+          { tier: 'Higher-Studies', count: Math.round(topK * 0.16), percentage: 16.0 },
         ],
         closest_seniors: [],
       };

@@ -166,49 +166,84 @@ class GradeWorkloadPredictor:
         students_df: pd.DataFrame,
         enrollments_df: pd.DataFrame,
         catalog: Dict[str, Any],
+        val_students_df: Optional[pd.DataFrame] = None,
+        val_enrollments_df: Optional[pd.DataFrame] = None,
+        test_students_df: Optional[pd.DataFrame] = None,
+        test_enrollments_df: Optional[pd.DataFrame] = None,
     ) -> "GradeWorkloadPredictor":
-        """Train GradePredictor and WorkloadPredictor on TIET student-elective records."""
+        """
+        Train GradePredictor and WorkloadPredictor on TIET student-elective records
+        using a strict Student-Level (Leave-Students-Out) split to guarantee zero data leakage.
+        """
         self.course_meta_by_code = {
             c["course_code"]: c for c in catalog.get("all_courses", [])
         }
 
-        stu_lookup: Dict[str, Dict[str, Any]] = {}
-        for row in students_df.to_dict(orient="records"):
-            stu_lookup[str(row["student_id"])] = row
+        # Perform or utilize strict student-level partitioning (80% Train, 10% Val, 10% Test)
+        if test_students_df is None or test_enrollments_df is None:
+            unique_sids = students_df["student_id"].unique()
+            train_sids, test_sids = train_test_split(unique_sids, test_size=0.20, random_state=self.random_state)
+            val_sids, test_sids = train_test_split(test_sids, test_size=0.50, random_state=self.random_state)
 
-        X_rows: List[List[float]] = []
-        y_gp: List[float] = []
-        y_marks: List[float] = []
-        y_workload: List[float] = []
+            train_stu = students_df[students_df["student_id"].isin(train_sids)].copy().reset_index(drop=True)
+            val_stu = students_df[students_df["student_id"].isin(val_sids)].copy().reset_index(drop=True)
+            test_stu = students_df[students_df["student_id"].isin(test_sids)].copy().reset_index(drop=True)
 
-        enr_records = enrollments_df.to_dict(orient="records")
-        for rec in enr_records:
-            sid = str(rec.get("student_id", ""))
-            ccode = str(rec.get("course_code", ""))
-            stu = stu_lookup.get(sid)
-            c_meta = self.course_meta_by_code.get(ccode)
-            if stu is None or c_meta is None:
-                continue
+            train_enr = enrollments_df[enrollments_df["student_id"].isin(train_sids)].copy().reset_index(drop=True)
+            val_enr = enrollments_df[enrollments_df["student_id"].isin(val_sids)].copy().reset_index(drop=True)
+            test_enr = enrollments_df[enrollments_df["student_id"].isin(test_sids)].copy().reset_index(drop=True)
+        else:
+            train_stu = students_df.copy().reset_index(drop=True)
+            train_enr = enrollments_df.copy().reset_index(drop=True)
+            val_stu = val_students_df.copy().reset_index(drop=True) if val_students_df is not None else train_stu
+            val_enr = val_enrollments_df.copy().reset_index(drop=True) if val_enrollments_df is not None else train_enr
+            test_stu = test_students_df.copy().reset_index(drop=True)
+            test_enr = test_enrollments_df.copy().reset_index(drop=True)
 
-            feat = self._build_feature_row(stu, c_meta)
-            X_rows.append(feat)
-            y_gp.append(float(rec.get("final_grade_point", 8.0)))
-            y_marks.append(float(rec.get("total_marks", 72.0)))
-            y_workload.append(float(rec.get("workload_hours_per_week", 9.0)))
+        def _extract_matrices(
+            stu_data: pd.DataFrame, enr_data: pd.DataFrame
+        ) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+            stu_lookup: Dict[str, Dict[str, Any]] = {
+                str(r["student_id"]): r for r in stu_data.to_dict(orient="records")
+            }
+            X_rows: List[List[float]] = []
+            y_gp: List[float] = []
+            y_marks: List[float] = []
+            y_workload: List[float] = []
 
-        X_arr = np.asarray(X_rows, dtype=np.float32)
-        y_gp_arr = np.asarray(y_gp, dtype=np.float32)
-        y_marks_arr = np.asarray(y_marks, dtype=np.float32)
-        y_work_arr = np.asarray(y_workload, dtype=np.float32)
+            for rec in enr_data.to_dict(orient="records"):
+                sid = str(rec.get("student_id", ""))
+                ccode = str(rec.get("course_code", ""))
+                stu = stu_lookup.get(sid)
+                c_meta = self.course_meta_by_code.get(ccode)
+                if stu is None or c_meta is None:
+                    continue
 
-        # Store population feature means for TreeSHAP / baseline attribution comparison
-        col_means = np.mean(X_arr, axis=0)
+                feat = self._build_feature_row(stu, c_meta)
+                X_rows.append(feat)
+                y_gp.append(float(rec.get("final_grade_point", 8.0)))
+                y_marks.append(float(rec.get("total_marks", 72.0)))
+                y_workload.append(float(rec.get("workload_hours_per_week", 9.0)))
+
+            return (
+                np.asarray(X_rows, dtype=np.float32),
+                np.asarray(y_gp, dtype=np.float32),
+                np.asarray(y_marks, dtype=np.float32),
+                np.asarray(y_workload, dtype=np.float32),
+            )
+
+        X_train, y_gp_train, y_m_train, y_w_train = _extract_matrices(train_stu, train_enr)
+        X_val, y_gp_val, y_m_val, y_w_val = _extract_matrices(val_stu, val_enr)
+        X_test, y_gp_test, y_m_test, y_w_test = _extract_matrices(test_stu, test_enr)
+
+        # Compute population feature means strictly from training cohort
+        col_means = np.mean(X_train, axis=0) if len(X_train) > 0 else np.zeros(len(FEATURE_NAMES))
         self.feature_means = {
             name: float(col_means[idx]) for idx, name in enumerate(FEATURE_NAMES)
         }
 
-        # Historical stats per course
-        enr_df = enrollments_df.copy()
+        # Historical stats per course computed strictly on training enrollments to prevent leakage
+        enr_df = train_enr.copy()
         enr_df["final_grade_point"] = pd.to_numeric(enr_df["final_grade_point"], errors="coerce").fillna(7.8)
         enr_df["workload_hours_per_week"] = pd.to_numeric(
             enr_df["workload_hours_per_week"], errors="coerce"
@@ -226,48 +261,36 @@ class GradeWorkloadPredictor:
                 "enrollment_count": int(len(grp)),
             }
 
-        # Train/validation split for honest metric evaluation
-        (
-            X_train,
-            X_val,
-            y_gp_train,
-            y_gp_val,
-            y_m_train,
-            y_m_val,
-            y_w_train,
-            y_w_val,
-        ) = train_test_split(
-            X_arr,
-            y_gp_arr,
-            y_marks_arr,
-            y_work_arr,
-            test_size=0.20,
-            random_state=self.random_state,
-        )
-
+        # Fit models strictly on train student interactions
         self.grade_point_model.fit(X_train, y_gp_train)
         self.total_marks_model.fit(X_train, y_m_train)
         self.workload_model.fit(X_train, y_w_train)
 
-        gp_preds = np.clip(self.grade_point_model.predict(X_val), 0.0, 10.0)
-        work_preds = np.clip(self.workload_model.predict(X_val), 2.0, 20.0)
+        # Evaluate performance on strictly held-out test student cohort (Leave-Students-Out)
+        gp_preds = np.clip(self.grade_point_model.predict(X_test), 0.0, 10.0)
+        work_preds = np.clip(self.workload_model.predict(X_test), 2.0, 20.0)
 
-        gp_residuals = y_gp_val - gp_preds
-        work_residuals = y_w_val - work_preds
+        gp_residuals = y_gp_test - gp_preds
+        work_residuals = y_w_test - work_preds
         self.grade_residual_std = max(0.35, float(np.std(gp_residuals)))
         self.workload_residual_std = max(0.50, float(np.std(work_residuals)))
 
         self.validation_metrics = {
-            "grade_rmse": round(float(math.sqrt(mean_squared_error(y_gp_val, gp_preds))), 4),
-            "grade_mae": round(float(mean_absolute_error(y_gp_val, gp_preds)), 4),
-            "grade_r2": round(float(r2_score(y_gp_val, gp_preds)), 4),
-            "workload_rmse": round(float(math.sqrt(mean_squared_error(y_w_val, work_preds))), 4),
-            "workload_mae": round(float(mean_absolute_error(y_w_val, work_preds)), 4),
-            "workload_r2": round(float(r2_score(y_w_val, work_preds)), 4),
+            "grade_rmse": round(float(math.sqrt(mean_squared_error(y_gp_test, gp_preds))), 4),
+            "grade_mae": round(float(mean_absolute_error(y_gp_test, gp_preds)), 4),
+            "grade_r2": round(float(r2_score(y_gp_test, gp_preds)), 4),
+            "workload_rmse": round(float(math.sqrt(mean_squared_error(y_w_test, work_preds))), 4),
+            "workload_mae": round(float(mean_absolute_error(y_w_test, work_preds)), 4),
+            "workload_r2": round(float(r2_score(y_w_test, work_preds)), 4),
+            "split_strategy": "student_level_leave_students_out",
+            "train_students": int(len(train_stu)),
+            "val_students": int(len(val_stu)),
+            "test_students": int(len(test_stu)),
         }
 
         logger.info(
-            "GradeWorkloadPredictor trained (Grade RMSE=%.4f, MAE=%.4f, R2=%.4f | Workload RMSE=%.4f)",
+            "GradeWorkloadPredictor trained on %d students (Unbiased Test Grade RMSE=%.4f, MAE=%.4f, R2=%.4f | Workload RMSE=%.4f)",
+            len(train_stu),
             self.validation_metrics["grade_rmse"],
             self.validation_metrics["grade_mae"],
             self.validation_metrics["grade_r2"],

@@ -1023,10 +1023,21 @@ def build_courses_catalog() -> Dict[str, Any]:
 
     all_courses = core_courses + professional_electives + generic_electives
 
+    metadata = {
+        "dataset_type": "synthetic_statistically_correlated",
+        "curriculum": "TIET B.E. CSE 2026",
+        "total_students": 3500,
+        "total_enrollments": 17500,
+        "disclosure": "Generated for academic benchmarking and system verification",
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "evaluation_protocol": "Leave-Students-Out (80% Train / 10% Val / 10% Test)",
+    }
+
     return {
         "institution": "Thapar Institute of Engineering & Technology (TIET)",
         "program": "B.E. Computer Science and Engineering (2026 Scheme)",
         "generated_at": datetime.now(timezone.utc).isoformat(),
+        "metadata": metadata,
         "counts": {
             "core_courses": len(core_courses),
             "elective_focus_baskets": len(elective_baskets),
@@ -1042,12 +1053,14 @@ def build_courses_catalog() -> Dict[str, Any]:
     }
 
 
-# Archetypes driving realistic latent correlations across Sem I-IV grades, basket choice, and elective performance
+# Realistic student archetypes driving non-uniform elective market demand & domain specialization
+# Real-world Thapar CSE preferences: High demand for AIML, Data Science, Full-Stack Cloud, and Cyber Security
 STUDENT_ARCHETYPES: List[Dict[str, Any]] = [
     {
         "name": "AI_DATA_SCIENCE",
-        "weight": 0.16,
+        "weight": 0.34,  # AI/ML ~18.5%, Data Science ~15.5%
         "baskets": ["EF_BASKET_05", "EF_BASKET_09"],
+        "basket_weights": [0.544, 0.456],
         "career_tracks": ["Data Scientist", "Machine Learning Engineer", "Generative AI & LLM Engineer"],
         "skills_pool": ["Python", "PyTorch", "Scikit-Learn", "Pandas", "SQL", "HuggingFace", "CUDA"],
         "interests": [
@@ -1055,51 +1068,41 @@ STUDENT_ARCHETYPES: List[Dict[str, Any]] = [
             "Statistical modeling, computer vision, natural language processing, and generative AI pipelines",
         ],
         "preferred_ge": ["UMA069", "UMA070", "UHU017"],
-        "core_boosts": {"UCS321": 1.2, "UMA401": 1.1, "UMA021": 1.0, "UCS310": 0.6},
+        "core_boosts": {"UCS321": 1.4, "UMA401": 1.3, "UMA021": 1.2, "UCS415": 1.1, "UCS301": 0.9, "UCS310": 0.6},
     },
     {
-        "name": "SYSTEMS_HPC_DEVOPS",
-        "weight": 0.14,
-        "baskets": ["EF_BASKET_01", "EF_BASKET_07"],
-        "career_tracks": ["Cloud & Distributed Systems Architect", "Site Reliability Engineer (SRE)", "HPC & Systems Engineer"],
-        "skills_pool": ["C++", "Linux", "Docker", "Kubernetes", "Terraform", "CUDA", "Go", "Git"],
-        "interests": [
-            "Cloud computing, GPU parallelism, Kubernetes orchestration, and high-throughput distributed systems",
-            "DevOps automation, CI/CD pipelines, infrastructure as code, and Linux kernel optimization",
-        ],
-        "preferred_ge": ["UEN006", "UCS002", "UTD004"],
-        "core_boosts": {"UCS303": 1.3, "UCS414": 1.0, "UCS415": 0.9, "UES103": 0.8},
-    },
-    {
-        "name": "FULL_STACK_PRODUCT",
-        "weight": 0.15,
+        "name": "FULL_STACK_CLOUD",
+        "weight": 0.24,  # Full-Stack Web ~14.5%, Cloud DevOps ~9.5%
         "baskets": ["EF_BASKET_08", "EF_BASKET_07"],
-        "career_tracks": ["Full-Stack Software Engineer", "Data & Database Platform Engineer", "Cloud Product Engineer"],
-        "skills_pool": ["TypeScript", "React", "Node.js", "PostgreSQL", "MongoDB", "Redis", "Docker", "Playwright"],
+        "basket_weights": [0.604, 0.396],
+        "career_tracks": ["Full-Stack Software Engineer", "Data & Database Platform Engineer", "Cloud Product Engineer", "DevOps & SRE Specialist"],
+        "skills_pool": ["TypeScript", "React", "Node.js", "PostgreSQL", "MongoDB", "Redis", "Docker", "Playwright", "Kubernetes", "AWS"],
         "interests": [
             "Full-stack web engineering, scalable database design, UI/UX systems, and cloud-native microservices",
-            "Data engineering pipelines, distributed databases, automated testing, and enterprise SaaS architecture",
+            "Cloud computing, CI/CD pipelines, distributed databases, automated testing, and enterprise SaaS architecture",
         ],
-        "preferred_ge": ["UTD004", "UHU018", "UHU016"],
-        "core_boosts": {"UTA018": 1.3, "UCS310": 1.3, "UCS301": 0.9, "UCS414": 0.7},
+        "preferred_ge": ["UTD004", "UHU018", "UHU016", "UEN006"],
+        "core_boosts": {"UTA018": 1.4, "UCS310": 1.3, "UCS301": 1.1, "UCS415": 1.0, "UCS414": 0.9, "UCS303": 0.8},
     },
     {
-        "name": "CYBER_SECURITY_FORENSICS",
-        "weight": 0.13,
+        "name": "CYBER_SECURITY_BLOCKCHAIN",
+        "weight": 0.15,  # Cyber Security ~12.5%, Blockchain ~2.5%
         "baskets": ["EF_BASKET_03", "EF_BASKET_11"],
-        "career_tracks": ["Cybersecurity Architect", "Penetration Tester & Red Team Specialist", "Digital Forensics Investigator"],
-        "skills_pool": ["Kali Linux", "Wireshark", "Burp Suite", "Python", "C", "OpenSSL", "Solidity", "Splunk"],
+        "basket_weights": [0.833, 0.167],
+        "career_tracks": ["Cybersecurity Architect", "Penetration Tester & Red Team Specialist", "Digital Forensics Investigator", "Blockchain Protocol Engineer"],
+        "skills_pool": ["Kali Linux", "Wireshark", "Burp Suite", "Python", "C", "OpenSSL", "Solidity", "Splunk", "Rust"],
         "interests": [
             "Network security, ethical hacking, penetration testing, zero-trust defense, and digital forensics",
-            "Secure coding, vulnerability research, cryptography, blockchain security, and incident response",
+            "Secure coding, vulnerability research, cryptography, blockchain security, and smart contract auditing",
         ],
         "preferred_ge": ["UCS002", "UMA069", "UTD004"],
-        "core_boosts": {"UCS414": 1.4, "UCS303": 1.1, "UES103": 0.9, "UCS405": 0.8},
+        "core_boosts": {"UCS414": 1.5, "UCS303": 1.2, "UCS415": 1.0, "UES103": 0.9, "UCS405": 0.9},
     },
     {
         "name": "QUANT_MATH_FINANCE",
-        "weight": 0.14,
-        "baskets": ["EF_BASKET_04", "EF_BASKET_06"],
+        "weight": 0.11,  # FinTech ~8.0%, Math & Computing ~3.0%
+        "baskets": ["EF_BASKET_06", "EF_BASKET_04"],
+        "basket_weights": [0.727, 0.273],
         "career_tracks": ["Quantitative Trader & Derivatives Analyst", "Quantitative Researcher", "Algorithm & Quantum Computing Scientist"],
         "skills_pool": ["Python", "C++", "QuantLib", "NumPy", "R", "Qiskit", "MATLAB", "Stochastic Calculus"],
         "interests": [
@@ -1107,33 +1110,49 @@ STUDENT_ARCHETYPES: List[Dict[str, Any]] = [
             "Computational linear algebra, quantum computing algorithms, cryptography, and mathematical modeling",
         ],
         "preferred_ge": ["UHU018", "UMA070", "UMA069"],
-        "core_boosts": {"UMA021": 1.4, "UMA401": 1.4, "UMA022": 1.2, "UMA023": 1.2, "UCS405": 1.1, "UCS415": 1.0},
+        "core_boosts": {"UMA021": 1.5, "UMA401": 1.5, "UMA022": 1.3, "UMA023": 1.3, "UCS415": 1.2, "UCS405": 1.0},
+    },
+    {
+        "name": "SYSTEMS_HPC",
+        "weight": 0.05,  # HPC ~5.0%
+        "baskets": ["EF_BASKET_01"],
+        "basket_weights": [1.0],
+        "career_tracks": ["HPC & Systems Engineer", "GPU Computing Engineer", "Distributed Systems Infrastructure Architect"],
+        "skills_pool": ["C++", "C", "CUDA", "MPI", "OpenMP", "Linux Kernel", "Go", "Docker"],
+        "interests": [
+            "GPU parallelism, CUDA kernels, supercomputing clusters, and high-throughput low-latency systems",
+            "Linux kernel internals, memory cache hierarchy, distributed consensus, and micro-benchmarking",
+        ],
+        "preferred_ge": ["UMA070", "UCS002", "UEN006"],
+        "core_boosts": {"UCS303": 1.5, "UCS415": 1.3, "UCS301": 1.2, "UMA021": 1.1, "UES103": 1.0},
     },
     {
         "name": "VISION_GAMING_XR",
-        "weight": 0.10,
+        "weight": 0.045,  # Animation & Gaming ~4.5%
         "baskets": ["EF_BASKET_02"],
-        "career_tracks": ["Computer Vision & Graphics Engineer", "Game Engine & AR/VR Developer"],
-        "skills_pool": ["C++", "C#", "Unity 3D", "Unreal Engine", "OpenCV", "OpenGL", "Blender"],
+        "basket_weights": [1.0],
+        "career_tracks": ["Computer Vision & Graphics Engineer", "Game Engine & AR/VR Developer", "Interactive Media Engineer"],
+        "skills_pool": ["C++", "C#", "Unity 3D", "Unreal Engine", "OpenCV", "OpenGL", "GLSL", "Blender"],
         "interests": [
             "Computer vision, 3D graphics rendering, game engine physics, and augmented/virtual reality experiences",
             "Interactive simulation, shader programming, spatial computing, and real-time 3D animation",
         ],
-        "preferred_ge": ["UHU017", "UHU016", "UPH064"],
-        "core_boosts": {"UTA018": 1.2, "UCS301": 1.0, "UMA021": 0.9, "UCS321": 0.8},
+        "preferred_ge": ["UHU017", "UPH064", "UHU016"],
+        "core_boosts": {"UTA018": 1.3, "UCS301": 1.1, "UMA021": 1.1, "UCS321": 1.0, "UES103": 0.9},
     },
     {
-        "name": "ROBOTICS_EDGE_MOBILITY",
-        "weight": 0.18,
+        "name": "ROBOTICS_EDGE_IOT",
+        "weight": 0.065,  # Robotics ~4.5%, Edge IoT ~2.0%
         "baskets": ["EF_BASKET_10", "EF_BASKET_12"],
-        "career_tracks": ["Robotics & Autonomous Systems Engineer", "Edge AI & Embedded Vision Engineer", "Connected Mobility & V2X Engineer"],
-        "skills_pool": ["ROS 2", "C++", "Python", "NVIDIA Jetson", "OpenCV", "TensorRT", "SUMO", "Embedded C"],
+        "basket_weights": [0.692, 0.308],
+        "career_tracks": ["Robotics & Autonomous Systems Engineer", "Edge AI & Embedded Vision Engineer", "Connected Mobility & IoT Architect"],
+        "skills_pool": ["ROS 2", "C++", "Python", "NVIDIA Jetson", "OpenCV", "TensorRT", "Embedded C", "MQTT"],
         "interests": [
             "Autonomous robotics, embedded edge AI vision, reinforcement learning, and sensor fusion on NVIDIA Jetson",
-            "Intelligent transport systems, connected vehicles V2X communication, and automotive telemetry analytics",
+            "Internet of Things sensor telemetry, connected vehicle communication, and automotive firmware engineering",
         ],
         "preferred_ge": ["UPH064", "UEN006", "UBT510"],
-        "core_boosts": {"UCS321": 1.1, "UCS303": 1.0, "UCS414": 1.0, "UES103": 0.9, "UMA401": 0.8},
+        "core_boosts": {"UCS321": 1.2, "UCS303": 1.2, "UCS414": 1.1, "UCS415": 1.0, "UES103": 1.0},
     },
 ]
 
@@ -1172,28 +1191,47 @@ def generate_students_and_enrollments(
         base_ability = rng.gauss(7.65, 0.95)
         base_ability = max(5.55, min(9.85, base_ability))
 
-        # Generate Sem I-IV Core Course Grade Points (on Thapar 10-point scale)
+        # Latent domain aptitudes with covariance to foundational courses
+        prog_mastery = max(5.0, min(10.0, base_ability + archetype["core_boosts"].get("UES103", 0.0) * 0.4 + rng.gauss(0.0, 0.45)))
+        math_mastery = max(5.0, min(10.0, base_ability + archetype["core_boosts"].get("UMA022", 0.0) * 0.4 + rng.gauss(0.0, 0.45)))
+        systems_mastery = max(5.0, min(10.0, base_ability + archetype["core_boosts"].get("UCS303", 0.0) * 0.4 + rng.gauss(0.0, 0.45)))
+
+        # Generate Sem I-IV Core Course Grade Points (with authentic prerequisite & domain covariance)
         core_grades: Dict[str, int] = {}
-        weighted_sum = 0.0
-        total_credits = 0.0
 
-        for code in CORE_PREREQUISITE_CODES:
-            course_meta = courses_by_code[code]
-            credits = course_meta["credits"]
-            difficulty_penalty = (course_meta["difficulty_index"] - 3.2) * 3.5
-            archetype_boost = archetype["core_boosts"].get(code, 0.0) * 4.2
+        def _calc_core(code: str, latent_val: float, boost_key: str, prereq_val: Optional[float] = None) -> int:
+            c_meta = courses_by_code[code]
+            diff_penalty = (c_meta["difficulty_index"] - 3.2) * 3.5
+            boost = archetype["core_boosts"].get(boost_key, 0.0) * 4.2
+            if prereq_val is not None:
+                latent_drive = 0.55 * (latent_val * 9.2) + 0.45 * (prereq_val * 9.2)
+            else:
+                latent_drive = latent_val * 9.2
+            raw = latent_drive + boost - diff_penalty + rng.gauss(0.0, 4.0)
+            _, gp = marks_to_tiet_grade(max(38.0, min(99.0, raw)))
+            return gp
 
-            raw_score_100 = (
-                (base_ability * 9.2)
-                + archetype_boost
-                - difficulty_penalty
-                + rng.gauss(0.0, 4.8)
-            )
-            _, gp = marks_to_tiet_grade(max(38.0, min(99.0, raw_score_100)))
-            core_grades[code] = gp
-            weighted_sum += gp * credits
-            total_credits += credits
+        # Semester 1 & 2 Foundational courses
+        core_grades["UES103"] = _calc_core("UES103", prog_mastery, "UES103")
+        core_grades["UMA022"] = _calc_core("UMA022", math_mastery, "UMA022")
+        core_grades["UMA023"] = _calc_core("UMA023", math_mastery, "UMA023", prereq_val=core_grades["UMA022"])
 
+        # Semester 3 Courses (covariance with Sem 1-2 foundations)
+        core_grades["UCS301"] = _calc_core("UCS301", prog_mastery, "UCS301", prereq_val=core_grades["UES103"])
+        core_grades["UCS303"] = _calc_core("UCS303", systems_mastery, "UCS303", prereq_val=core_grades["UES103"])
+        core_grades["UTA018"] = _calc_core("UTA018", prog_mastery, "UTA018", prereq_val=core_grades["UES103"])
+
+        # Semester 4 Courses (strong covariance with Sem 3 & Sem 1-2 math/coding foundations)
+        core_grades["UCS405"] = _calc_core("UCS405", math_mastery, "UCS405", prereq_val=core_grades["UMA022"])
+        core_grades["UMA021"] = _calc_core("UMA021", math_mastery, "UMA021", prereq_val=(core_grades["UMA022"] + core_grades["UMA023"]) / 2.0)
+        core_grades["UCS415"] = _calc_core("UCS415", prog_mastery, "UCS415", prereq_val=(core_grades["UCS301"] * 0.6 + core_grades["UMA022"] * 0.4))
+        core_grades["UCS310"] = _calc_core("UCS310", prog_mastery, "UCS310", prereq_val=core_grades["UCS301"])
+        core_grades["UCS414"] = _calc_core("UCS414", systems_mastery, "UCS414", prereq_val=core_grades["UCS303"])
+        core_grades["UCS321"] = _calc_core("UCS321", prog_mastery, "UCS321", prereq_val=(core_grades["UCS301"] * 0.5 + core_grades["UMA021"] * 0.5))
+        core_grades["UMA401"] = _calc_core("UMA401", math_mastery, "UMA401", prereq_val=(core_grades["UMA022"] * 0.5 + core_grades["UMA021"] * 0.5))
+
+        weighted_sum = sum(core_grades[c] * courses_by_code[c]["credits"] for c in CORE_PREREQUISITE_CODES)
+        total_credits = sum(courses_by_code[c]["credits"] for c in CORE_PREREQUISITE_CODES)
         cgpa_sem4 = round(max(5.50, min(9.90, weighted_sum / total_credits)), 2)
 
         # Compute Coding Profile Score (0-100) and Math Aptitude Score (0-100) from core performance
@@ -1218,7 +1256,9 @@ def generate_students_and_enrollments(
             max(35.0, min(99.5, math_core_avg * 9.5 + rng.gauss(0.0, 3.5))), 1
         )
 
-        chosen_basket_id = rng.choice(archetype["baskets"])
+        # Non-uniform basket assignment reflecting real-world Thapar CSE elective demand
+        basket_weights = archetype.get("basket_weights", [1.0] * len(archetype["baskets"]))
+        chosen_basket_id = rng.choices(archetype["baskets"], weights=basket_weights, k=1)[0]
         # 82% choose archetype-aligned Generic Elective, 18% explore other Generic Electives
         if rng.random() < 0.82:
             chosen_ge = rng.choice(archetype["preferred_ge"])
@@ -1278,19 +1318,35 @@ def generate_students_and_enrollments(
             else:
                 prereq_avg_gp = cgpa_sem4
 
+            # Domain foundational pillar score driving realistic elective covariance
+            c_basket = str(c_meta.get("basket_id", ""))
+            if c_basket in ("EF_BASKET_05", "EF_BASKET_09") or c_code in ("UMA069", "UMA070"):
+                domain_pillar = 0.35 * core_grades["UCS321"] + 0.30 * core_grades["UMA401"] + 0.20 * core_grades["UMA021"] + 0.15 * core_grades["UCS415"]
+            elif c_basket in ("EF_BASKET_01", "EF_BASKET_07", "EF_BASKET_03", "EF_BASKET_12") or c_code == "UCS002":
+                domain_pillar = 0.35 * core_grades["UCS303"] + 0.25 * core_grades["UCS414"] + 0.25 * core_grades["UCS415"] + 0.15 * core_grades["UCS301"]
+            elif c_basket in ("EF_BASKET_08", "EF_BASKET_11"):
+                domain_pillar = 0.35 * core_grades["UCS310"] + 0.30 * core_grades["UTA018"] + 0.20 * core_grades["UCS301"] + 0.15 * core_grades["UCS415"]
+            elif c_basket in ("EF_BASKET_04", "EF_BASKET_06") or c_code == "UHU018":
+                domain_pillar = 0.35 * core_grades["UMA021"] + 0.35 * core_grades["UMA401"] + 0.15 * core_grades["UMA022"] + 0.15 * core_grades["UCS415"]
+            elif c_basket in ("EF_BASKET_02", "EF_BASKET_10"):
+                domain_pillar = 0.30 * core_grades["UCS321"] + 0.25 * core_grades["UCS303"] + 0.25 * core_grades["UCS301"] + 0.20 * core_grades["UMA021"]
+            else:
+                domain_pillar = (core_grades["UCS301"] + core_grades["UMA022"] + core_grades["UCS415"] + core_grades["UMA021"] + core_grades["UCS321"]) / 5.0
+
             # Alignment bonus when student takes courses matching their archetype basket
             alignment_bonus = 3.5 if c_meta.get("basket_id") in archetype["baskets"] else 1.5
             diff_index = c_meta["difficulty_index"]
 
-            # Expected score out of 100 driven by prerequisite mastery, CGPA, coding/math aptitude, and course difficulty
+            # Expected score out of 100 driven by prerequisite covariance, domain pillar mastery, CGPA, and aptitudes
             expected_score_100 = (
-                prereq_avg_gp * 5.4
-                + cgpa_sem4 * 3.1
-                + (coding_profile_score * 0.06)
-                + (math_aptitude_score * 0.06)
+                (prereq_avg_gp * 10.0) * 0.30
+                + (domain_pillar * 10.0) * 0.28
+                + (cgpa_sem4 * 10.0) * 0.20
+                + (coding_profile_score * 0.08)
+                + (math_aptitude_score * 0.08)
                 + alignment_bonus
-                - (diff_index - 3.0) * 4.2
-                + rng.gauss(0.0, 3.8)
+                - (diff_index - 3.0) * 4.0
+                + rng.gauss(0.0, 3.2)
             )
             clamped_score_100 = max(36.0, min(98.5, expected_score_100))
 
@@ -1446,6 +1502,14 @@ def write_processed_artifacts(
     }
 
 
+def _safe_create_index(col: Any, keys: Any, **kwargs: Any) -> None:
+    """Create an index ignoring key spec conflicts if index already exists with equivalent keys."""
+    try:
+        col.create_index(keys, **kwargs)
+    except Exception as exc:
+        logger.debug("Index on %s already exists or matches existing spec: %s", col.name, exc)
+
+
 def _chunked_bulk_upsert(collection: Any, operations: List[UpdateOne], batch_size: int = 1000) -> Tuple[int, int]:
     """Execute idempotent bulk UpdateOne(..., upsert=True) operations in batches."""
     upserted = 0
@@ -1493,14 +1557,25 @@ def sync_to_mongodb_atlas(
 
         # 1. Courses collection (`courses`)
         courses_col = db["courses"]
-        courses_col.create_index([("course_code", ASCENDING)], unique=True)
-        courses_col.create_index([("category", ASCENDING), ("semester", ASCENDING)])
-        courses_col.create_index([("basket_id", ASCENDING), ("elective_slot", ASCENDING)])
+        # Safely clean any incomplete legacy documents lacking `courseCode`
+        courses_col.delete_many({"$or": [{"courseCode": None}, {"courseCode": {"$exists": False}}]})
+        _safe_create_index(courses_col, [("courseCode", ASCENDING)], unique=True)
+        _safe_create_index(courses_col, [("course_code", ASCENDING)])
+        _safe_create_index(courses_col, [("category", ASCENDING), ("semester", ASCENDING)])
 
         course_ops = [
             UpdateOne(
-                {"course_code": c["course_code"]},
-                {"$set": {**c, "updated_at": synced_at}},
+                {"$or": [{"courseCode": c["course_code"]}, {"course_code": c["course_code"]}]},
+                {
+                    "$set": {
+                        **c,
+                        "courseCode": c["course_code"],
+                        "course_code": c["course_code"],
+                        "basketId": c.get("basket_id"),
+                        "electiveSlot": c.get("elective_slot"),
+                        "updated_at": synced_at,
+                    }
+                },
                 upsert=True,
             )
             for c in catalog["all_courses"]
@@ -1508,25 +1583,36 @@ def sync_to_mongodb_atlas(
         c_upserted, c_modified = _chunked_bulk_upsert(courses_col, course_ops)
         logger.info("MongoDB Atlas `courses`: %d upserted, %d modified", c_upserted, c_modified)
 
-        # 2. Elective Focus Baskets collection (`elective_baskets`)
-        baskets_col = db["elective_baskets"]
-        baskets_col.create_index([("basket_id", ASCENDING)], unique=True)
-        basket_ops = [
-            UpdateOne(
-                {"basket_id": b["basket_id"]},
-                {"$set": {**b, "updated_at": synced_at}},
-                upsert=True,
-            )
-            for b in catalog["elective_focus_baskets"]
-        ]
-        b_upserted, b_modified = _chunked_bulk_upsert(baskets_col, basket_ops)
-        logger.info("MongoDB Atlas `elective_baskets`: %d upserted, %d modified", b_upserted, b_modified)
+        # 2. Elective Focus Baskets collections (`baskets` and `elective_baskets`)
+        for col_name in ("baskets", "elective_baskets"):
+            baskets_col = db[col_name]
+            baskets_col.delete_many({"$or": [{"basketId": None}, {"basketId": {"$exists": False}}]})
+            _safe_create_index(baskets_col, [("basketId", ASCENDING)], unique=True)
+            _safe_create_index(baskets_col, [("basket_id", ASCENDING)])
+            basket_ops = [
+                UpdateOne(
+                    {"$or": [{"basketId": b["basket_id"]}, {"basket_id": b["basket_id"]}]},
+                    {
+                        "$set": {
+                            **b,
+                            "basketId": b["basket_id"],
+                            "basket_id": b["basket_id"],
+                            "basketNumber": b.get("basket_number"),
+                            "updated_at": synced_at,
+                        }
+                    },
+                    upsert=True,
+                )
+                for b in catalog["elective_focus_baskets"]
+            ]
+            b_upserted, b_modified = _chunked_bulk_upsert(baskets_col, basket_ops)
+            logger.info("MongoDB Atlas `%s`: %d upserted, %d modified", col_name, b_upserted, b_modified)
 
         # 3. Historical Students collection (`historical_students`)
         students_col = db["historical_students"]
-        students_col.create_index([("student_id", ASCENDING)], unique=True)
-        students_col.create_index([("roll_no", ASCENDING)], unique=True)
-        students_col.create_index([("chosen_basket_id", ASCENDING), ("cgpa_sem4", DESCENDING)])
+        _safe_create_index(students_col, [("student_id", ASCENDING)], unique=True)
+        _safe_create_index(students_col, [("roll_no", ASCENDING)], unique=True)
+        _safe_create_index(students_col, [("chosen_basket_id", ASCENDING), ("cgpa_sem4", DESCENDING)])
 
         student_ops = [
             UpdateOne(
@@ -1541,9 +1627,9 @@ def sync_to_mongodb_atlas(
 
         # 4. Historical Enrollments collection (`historical_enrollments`)
         enrollments_col = db["historical_enrollments"]
-        enrollments_col.create_index([("enrollment_id", ASCENDING)], unique=True)
-        enrollments_col.create_index([("student_id", ASCENDING), ("semester", ASCENDING)])
-        enrollments_col.create_index([("course_code", ASCENDING), ("final_grade_point", DESCENDING)])
+        _safe_create_index(enrollments_col, [("enrollment_id", ASCENDING)], unique=True)
+        _safe_create_index(enrollments_col, [("student_id", ASCENDING), ("semester", ASCENDING)])
+        _safe_create_index(enrollments_col, [("course_code", ASCENDING), ("final_grade_point", DESCENDING)])
 
         enrollment_ops = [
             UpdateOne(
@@ -1556,11 +1642,30 @@ def sync_to_mongodb_atlas(
         e_upserted, e_modified = _chunked_bulk_upsert(enrollments_col, enrollment_ops, batch_size=2000)
         logger.info("MongoDB Atlas `historical_enrollments`: %d upserted, %d modified", e_upserted, e_modified)
 
+        # 5. Dataset Metadata collection (`dataset_metadata`)
+        metadata_col = db["dataset_metadata"]
+        _safe_create_index(metadata_col, [("dataset_type", ASCENDING)], unique=True)
+        meta_dict = catalog.get("metadata", {
+            "dataset_type": "synthetic_statistically_correlated",
+            "curriculum": "TIET B.E. CSE 2026",
+            "total_students": len(students),
+            "total_enrollments": len(enrollments),
+            "disclosure": "Generated for academic benchmarking and system verification",
+            "evaluation_protocol": "Leave-Students-Out (80% Train / 10% Val / 10% Test)",
+        })
+        metadata_col.update_one(
+            {"dataset_type": meta_dict["dataset_type"]},
+            {"$set": {**meta_dict, "updated_at": synced_at}},
+            upsert=True,
+        )
+        logger.info("MongoDB Atlas `dataset_metadata`: upserted record for '%s'", meta_dict["dataset_type"])
+
         return {
             "courses": {"upserted": c_upserted, "modified": c_modified, "total": len(course_ops)},
             "elective_baskets": {"upserted": b_upserted, "modified": b_modified, "total": len(basket_ops)},
             "historical_students": {"upserted": s_upserted, "modified": s_modified, "total": len(student_ops)},
             "historical_enrollments": {"upserted": e_upserted, "modified": e_modified, "total": len(enrollment_ops)},
+            "dataset_metadata": {"status": "upserted", "type": meta_dict["dataset_type"]},
         }
     finally:
         client.close()

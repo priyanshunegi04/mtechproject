@@ -1,7 +1,16 @@
 {
   "institution": "Thapar Institute of Engineering & Technology (TIET)",
   "program": "B.E. Computer Science and Engineering (2026 Scheme)",
-  "generated_at": "2026-10-25T17:17:52.936499+00:00",
+  "generated_at": "2026-11-05T18:15:13.859626+00:00",
+  "metadata": {
+    "dataset_type": "synthetic_statistically_correlated",
+    "curriculum": "TIET B.E. CSE 2026",
+    "total_students": 3500,
+    "total_enrollments": 17500,
+    "disclosure": "Generated for academic benchmarking and system verification",
+    "generated_at": "2026-11-05T18:15:13.859615+00:00",
+    "evaluation_protocol": "Leave-Students-Out (80% Train / 10% Val / 10% Test)"
+  },
   "counts": {
     "core_courses": 14,
     "elective_focus_baskets": 12,
