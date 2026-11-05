@@ -1,3 +1,1 @@
-// Custom React Hooks Registry
-export {};
-
+export * from './useDebounce';

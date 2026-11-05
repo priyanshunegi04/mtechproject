@@ -36,6 +36,7 @@ import {
   getLiveBasketRecommendations,
   getLivePeerCohort,
 } from '../services/mlService';
+import { useDebounce } from '../hooks';
 
 export type ActiveNavigationTab =
   | 'studio'
@@ -336,6 +337,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [livePeerCohort, setLivePeerCohort] = useState<PeerCohortAnalytics | null>(null);
   const [isMlLoading, setIsMlLoading] = useState<boolean>(false);
 
+  // Debounce rapid slider and CGPA changes by 380ms before triggering heavy remote ML inference
+  const debouncedUser = useDebounce(currentUser, 380);
+  const debouncedWeights = useDebounce(preferenceWeights, 380);
+
   const fallbackRecommendations = useMemo(
     () => computeHybridRecommendations(currentUser, baskets, courses, preferenceWeights),
     [currentUser, baskets, courses, preferenceWeights]
@@ -350,10 +355,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     let isCancelled = false;
     const controller = new AbortController();
 
-    const timer = setTimeout(async () => {
+    const executeInference = async () => {
       try {
         setIsMlLoading(true);
-        const payload = convertUserToMLPayload(currentUser, preferenceWeights);
+        const payload = convertUserToMLPayload(debouncedUser, debouncedWeights);
 
         const [basketRes, peerRes] = await Promise.allSettled([
           getLiveBasketRecommendations(payload, controller.signal),
@@ -371,7 +376,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             basketRes.value,
             baskets,
             courses,
-            currentUser
+            debouncedUser
           );
           if (adapted.length > 0) {
             setLiveRankedBaskets(adapted);
@@ -399,14 +404,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           setIsMlLoading(false);
         }
       }
-    }, 400);
+    };
+
+    executeInference();
 
     return () => {
       isCancelled = true;
       controller.abort();
-      clearTimeout(timer);
     };
-  }, [currentUser, preferenceWeights, baskets, courses, fallbackPeerCohort]);
+  }, [debouncedUser, debouncedWeights, baskets, courses, fallbackPeerCohort]);
 
   const rankedBaskets =
     liveRankedBaskets && liveRankedBaskets.length > 0
