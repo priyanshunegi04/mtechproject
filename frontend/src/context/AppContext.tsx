@@ -24,7 +24,9 @@ import {
 import {
   checkCloudHealth,
   cloudHttp,
+  downloadAllotmentRosterCsvBlob,
   executeClientSideMeritAllocation,
+  executeDatabaseSeatAllocation,
   lockOfficialPreferencesCloud,
   queryAiAcademicAdvisor,
   switchShowcasePersonaCloud,
@@ -45,7 +47,7 @@ export type ActiveNavigationTab =
   | 'peers'
   | 'dean_command';
 
-interface AllocationSummaryState {
+export interface AllocationSummaryState {
   roundNumber: number;
   executedAt: string;
   seatCapPerBasket: number;
@@ -54,6 +56,8 @@ interface AllocationSummaryState {
   waitlistedBasketCount: number;
   roster: AllocationRosterRow[];
   basketCutoffs: BasketCutoffSummary[];
+  executionTimeMs?: number;
+  isLiveDatabase?: boolean;
 }
 
 interface AppContextValue {
@@ -530,20 +534,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const capToUse = customCap ?? seatCapPerBasket;
     setIsRunningAllocation(true);
 
-    try {
-      await cloudHttp.post('/admin/allocate-seats', {
-        roundNumber: allocationResult.roundNumber + 1,
-        overrideSeatCapPerBasket: capToUse,
-      });
-    } catch {
-      // Cloud fallback handled deterministically below
-    }
-
-    const sim = executeClientSideMeritAllocation(baskets, courses, personas, capToUse);
-    setBaskets(sim.updatedBaskets);
+    const allocResult = await executeDatabaseSeatAllocation(baskets, courses, personas, capToUse);
+    setBaskets(allocResult.updatedBaskets);
 
     // Also update showcase student allotment status
-    const rosterByRoll = new Map(sim.roster.map((r) => [r.rollNumber, r]));
+    const rosterByRoll = new Map(allocResult.roster.map((r) => [r.rollNumber, r]));
     setPersonas((prev) =>
       prev.map((p) => {
         if (p.role !== 'student' || !p.rollNumber) return p;
@@ -565,25 +560,54 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       roundNumber: nextRound,
       executedAt: new Date().toISOString(),
       seatCapPerBasket: capToUse,
-      totalStudentsProcessed: sim.totalStudentsProcessed,
-      allocatedBasketCount: sim.allocatedBasketCount,
-      waitlistedBasketCount: sim.waitlistedBasketCount,
-      roster: sim.roster,
-      basketCutoffs: sim.basketCutoffs,
+      totalStudentsProcessed: allocResult.totalStudentsProcessed,
+      allocatedBasketCount: allocResult.allocatedBasketCount,
+      waitlistedBasketCount: allocResult.waitlistedBasketCount,
+      roster: allocResult.roster,
+      basketCutoffs: allocResult.basketCutoffs,
+      executionTimeMs: allocResult.executionTimeMs,
+      isLiveDatabase: allocResult.isLiveDatabase,
     });
 
     appendAuditLog('ADMIN_MERIT_SEAT_ALLOCATION_EXECUTED', {
       roundNumber: nextRound,
       seatCapPerBasket: capToUse,
-      totalStudentsProcessed: sim.totalStudentsProcessed,
-      allocatedCount: sim.allocatedBasketCount,
-      waitlistedCount: sim.waitlistedBasketCount,
+      totalStudentsProcessed: allocResult.totalStudentsProcessed,
+      allocatedCount: allocResult.allocatedBasketCount,
+      waitlistedCount: allocResult.waitlistedBasketCount,
+      executionTimeMs: allocResult.executionTimeMs,
+      isLiveDatabase: allocResult.isLiveDatabase,
     });
 
     setIsRunningAllocation(false);
   };
 
-  const exportAllocationRosterCsv = () => {
+  const exportAllocationRosterCsv = async () => {
+    try {
+      const liveBlob = await downloadAllotmentRosterCsvBlob(`ROUND_2026_SEM5_R${allocationResult.roundNumber}`);
+      if (liveBlob && liveBlob.size > 0) {
+        const url = URL.createObjectURL(liveBlob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute(
+          'download',
+          `TIET_CSE_Batch2026_Allotment_Round${allocationResult.roundNumber}.csv`
+        );
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+
+        appendAuditLog('ADMIN_EXPORT_ALLOTMENT_ROSTER_CSV', {
+          roundNumber: allocationResult.roundNumber,
+          source: 'MONGODB_ATLAS_CSV_STREAM',
+        });
+        return;
+      }
+    } catch {
+      // fallback to client-side CSV generator below
+    }
+
     const headers = [
       'Merit_Rank',
       'Roll_Number',
@@ -630,6 +654,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     appendAuditLog('ADMIN_EXPORT_ALLOTMENT_ROSTER_CSV', {
       roundNumber: allocationResult.roundNumber,
       rowsExported: allocationResult.roster.length,
+      source: 'LOCAL_MEMORY_CSV',
     });
   };
 

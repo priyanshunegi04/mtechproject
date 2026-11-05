@@ -11,7 +11,10 @@ import {
 } from '../controllers';
 import { requireAuth, requireRole } from '../middlewares';
 import { MLGatewayService } from '../services';
+import { createAllocationRouter } from './allocationRoutes';
 import { createMlRouter } from './mlRoutes';
+
+export { createAllocationRouter };
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -115,6 +118,9 @@ export function createApiRouter(env: EnvConfig): Router {
 
   // Direct `/ml/*` Proxy Routes for Live Python ML Inference
   router.use('/ml', recommendationLimiter, createMlRouter(env));
+
+  // Direct `/allocation/*` Routes for Database-Backed Seat Allocation
+  router.use('/allocation', createAllocationRouter(env));
 
   // ---------------------------------------------------------------------------
   // 4. Faculty Advisor Routes (Advisee Roster & Documented Prerequisite Waivers)

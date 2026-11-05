@@ -67,6 +67,28 @@ export const DeanCommandCenter: React.FC = () => {
   const [isRetraining, setIsRetraining] = useState<boolean>(false);
   const [retrainMessage, setRetrainMessage] = useState<string | null>(null);
 
+  const [rosterSearch, setRosterSearch] = useState<string>('');
+  const [rosterPage, setRosterPage] = useState<number>(1);
+  const ROSTER_PAGE_SIZE = 25;
+
+  const filteredRoster = allocationResult.roster.filter((row) => {
+    if (!rosterSearch.trim()) return true;
+    const q = rosterSearch.toLowerCase();
+    return (
+      row.rollNumber.toLowerCase().includes(q) ||
+      row.studentName.toLowerCase().includes(q) ||
+      (row.allocatedBasketId && row.allocatedBasketId.toLowerCase().includes(q)) ||
+      (row.allocatedBasketName && row.allocatedBasketName.toLowerCase().includes(q))
+    );
+  });
+
+  const totalPages = Math.max(1, Math.ceil(filteredRoster.length / ROSTER_PAGE_SIZE));
+  const currentPage = Math.min(rosterPage, totalPages);
+  const paginatedRoster = filteredRoster.slice(
+    (currentPage - 1) * ROSTER_PAGE_SIZE,
+    currentPage * ROSTER_PAGE_SIZE
+  );
+
   // Demand vs Seat Capacity BarChart data across 12 EF Baskets
   const demandBarData = baskets.map((b) => ({
     shortCode: b.basketId.replace('EF_BASKET_', 'B'),
@@ -142,10 +164,21 @@ export const DeanCommandCenter: React.FC = () => {
               <span className="text-xs font-bold uppercase tracking-wider text-amber-300">
                 Seat Allocation Engine (Round #{allocationResult.roundNumber})
               </span>
-              <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[11px] font-bold">
-                ACID Transaction Ready
+              <span className={`px-2 py-0.5 rounded font-mono text-[11px] font-bold ${
+                allocationResult.isLiveDatabase
+                  ? 'bg-emerald-500/20 text-emerald-300'
+                  : 'bg-sky-500/20 text-sky-300'
+              }`}>
+                {allocationResult.isLiveDatabase ? 'MongoDB Atlas Live' : 'ACID Transaction Ready'}
               </span>
             </div>
+
+            {typeof allocationResult.executionTimeMs === 'number' && (
+              <div className="text-[11px] text-slate-300 flex items-center justify-between font-mono">
+                <span>Execution Latency:</span>
+                <span className="font-bold text-emerald-400">{allocationResult.executionTimeMs} ms</span>
+              </div>
+            )}
 
             <div className="flex items-center justify-between gap-3 text-xs">
               <label htmlFor="seat-cap-input" className="text-slate-300 font-semibold">
@@ -155,7 +188,7 @@ export const DeanCommandCenter: React.FC = () => {
                 id="seat-cap-input"
                 type="number"
                 min={60}
-                max={240}
+                max={500}
                 step={10}
                 value={seatCapPerBasket}
                 onChange={(e) => setSeatCapPerBasket(Number(e.target.value))}
@@ -167,12 +200,16 @@ export const DeanCommandCenter: React.FC = () => {
               <button
                 onClick={() => runMeritSeatAllocation(seatCapPerBasket)}
                 disabled={isRunningAllocation}
-                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs shadow-md transition cursor-pointer"
+                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-60 text-slate-950 font-extrabold text-xs shadow-md transition cursor-pointer"
               >
-                <Play className="w-4 h-4 fill-current" />
+                {isRunningAllocation ? (
+                  <RefreshCw className="w-4 h-4 animate-spin fill-current" />
+                ) : (
+                  <Play className="w-4 h-4 fill-current" />
+                )}
                 <span>
                   {isRunningAllocation
-                    ? 'Running CGPA Merit Engine...'
+                    ? 'Executing on MongoDB Atlas...'
                     : '1-Click Run Merit Seat Allocation'}
                 </span>
               </button>
@@ -352,19 +389,38 @@ export const DeanCommandCenter: React.FC = () => {
                   Official CGPA Merit Allotment Roster ({allocationResult.totalStudentsProcessed}{' '}
                   Batch Students)
                 </span>
+                <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                  allocationResult.isLiveDatabase
+                    ? 'bg-emerald-500/20 text-emerald-400'
+                    : 'bg-amber-500/20 text-amber-400'
+                }`}>
+                  {allocationResult.isLiveDatabase ? 'Database Live' : 'Simulation'}
+                </span>
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400">
                 Sorted by CGPA DESC, with tie-breaking via prerequisite GPA (`UCS301` + `UCS415` + `UMA021`).
               </p>
             </div>
 
-            <button
-              onClick={exportAllocationRosterCsv}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#8B1E24] text-white text-xs font-bold shadow-sm hover:bg-[#70161B] transition"
-            >
-              <Download className="w-3.5 h-3.5" />
-              <span>Download CSV Roster</span>
-            </button>
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                placeholder="Search roll, name, basket..."
+                value={rosterSearch}
+                onChange={(e) => {
+                  setRosterSearch(e.target.value);
+                  setRosterPage(1);
+                }}
+                className="px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs w-48 focus:outline-none"
+              />
+              <button
+                onClick={exportAllocationRosterCsv}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#8B1E24] text-white text-xs font-bold shadow-sm hover:bg-[#70161B] transition cursor-pointer"
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span>Download CSV</span>
+              </button>
+            </div>
           </div>
 
           <div className="overflow-x-auto max-h-96">
@@ -380,7 +436,7 @@ export const DeanCommandCenter: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200/70 dark:divide-slate-800">
-                {allocationResult.roster.slice(0, 25).map((row) => (
+                {paginatedRoster.map((row) => (
                   <tr
                     key={row.rollNumber}
                     className="hover:bg-slate-50/80 dark:hover:bg-slate-800/50"
@@ -437,6 +493,32 @@ export const DeanCommandCenter: React.FC = () => {
                 ))}
               </tbody>
             </table>
+          </div>
+
+          {/* Pagination bar */}
+          <div className="flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-200 dark:border-slate-800">
+            <span>
+              Showing {(currentPage - 1) * ROSTER_PAGE_SIZE + 1}–{Math.min(currentPage * ROSTER_PAGE_SIZE, filteredRoster.length)} of {filteredRoster.length} students
+            </span>
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={() => setRosterPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage <= 1}
+                className="px-2.5 py-1 rounded-lg border border-slate-300 dark:border-slate-700 disabled:opacity-40 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+              >
+                Prev
+              </button>
+              <span className="font-mono font-bold text-slate-700 dark:text-slate-300">
+                {currentPage} / {totalPages}
+              </span>
+              <button
+                onClick={() => setRosterPage((p) => Math.min(totalPages, p + 1))}
+                disabled={currentPage >= totalPages}
+                className="px-2.5 py-1 rounded-lg border border-slate-300 dark:border-slate-700 disabled:opacity-40 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+              >
+                Next
+              </button>
+            </div>
           </div>
         </div>
       </div>

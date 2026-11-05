@@ -247,9 +247,40 @@ export class AdminController {
         },
       });
 
+      const summary = {
+        total_applicants: round.summaryStats.totalEligibleStudents,
+        total_allocated: round.summaryStats.totalAllocated,
+        total_waitlisted: round.summaryStats.totalWaitlisted,
+        baskets_full: round.basketCutoffs.filter((b) => b.enrolledCount >= b.seatCapacity).length,
+      };
+
+      const basketStats = round.basketCutoffs.map((b) => ({
+        basket_id: b.code,
+        name: b.name,
+        capacity: b.seatCapacity,
+        allotted: b.enrolledCount,
+        fill_rate: b.seatCapacity > 0 ? Math.round((b.enrolledCount / b.seatCapacity) * 100) : 0,
+        cutoff_cgpa: b.closingCutoffCgpa,
+      }));
+
+      const roster = round.meritAllocationResults.map((r, idx) => ({
+        merit_rank: idx + 1,
+        student_id: r.studentId,
+        roll_no: r.rollNumber,
+        student_name: r.studentName,
+        allocated_basket: r.allocatedBasketId,
+        allocated_basket_name: r.allocatedBasketName,
+        cgpa: r.cgpa,
+        preference_rank: r.basketPreferenceRank,
+        status: r.allocationStatus,
+      }));
+
       res.status(200).json({
         success: true,
         message: 'Official TIET CGPA Merit-Based Seat Allocation completed successfully.',
+        summary,
+        basket_stats: basketStats,
+        roster,
         round,
       });
     } catch (error) {

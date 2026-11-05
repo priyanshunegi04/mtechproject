@@ -386,3 +386,115 @@ export function executeClientSideMeritAllocation(
   };
 }
 
+export interface AllocationRunResult {
+  roster: AllocationRosterRow[];
+  basketCutoffs: BasketCutoffSummary[];
+  updatedBaskets: ElectiveFocusBasketItem[];
+  totalStudentsProcessed: number;
+  allocatedBasketCount: number;
+  waitlistedBasketCount: number;
+  executionTimeMs?: number;
+  isLiveDatabase: boolean;
+}
+
+export async function executeDatabaseSeatAllocation(
+  baskets: ElectiveFocusBasketItem[],
+  courses: ElectiveCourseCatalogItem[],
+  showcaseStudents: UserProfile[],
+  customCapPerBasket: number
+): Promise<AllocationRunResult> {
+  try {
+    const res = await cloudHttp.post('/allocation/run', {
+      overrideSeatCapPerBasket: customCapPerBasket,
+    });
+
+    if (res.data?.success && (res.data?.round || res.data?.roster)) {
+      const round = res.data.round;
+      const rawRoster: any[] = res.data.roster || round?.meritAllocationResults || [];
+      const rawCutoffs: any[] = round?.basketCutoffs || res.data.basket_stats || [];
+
+      const roster: AllocationRosterRow[] = rawRoster.map((r, idx) => ({
+        meritRank: r.merit_rank ?? r.meritRank ?? (idx + 1),
+        studentId: r.student_id ?? r.studentId ?? `STU_${idx + 1}`,
+        rollNumber: r.roll_no ?? r.rollNumber ?? `102403${String(idx + 1).padStart(3, '0')}`,
+        studentName: r.student_name ?? r.studentName ?? `TIET Student ${idx + 1}`,
+        email: r.email ?? `student_${idx + 1}@thapar.edu`,
+        cgpa: Number(r.cgpa ?? 7.5),
+        tieBreakerCoreGpa: Number(r.tie_breaker_gpa ?? r.tieBreakerCoreGpa ?? r.cgpa ?? 7.5),
+        allocatedBasketId: r.allocated_basket ?? r.allocatedBasketId ?? null,
+        allocatedBasketName: r.allocated_basket_name ?? r.allocatedBasketName ?? null,
+        basketPreferenceRank: r.preference_rank ?? r.basketPreferenceRank ?? null,
+        allocatedGenericCourseCode: r.allocated_generic_code ?? r.allocatedGenericCourseCode ?? 'UMA069',
+        allocatedGenericTitle: r.allocated_generic_title ?? r.allocatedGenericTitle ?? 'Advance Numerical Methods',
+        genericPreferenceRank: r.generic_preference_rank ?? r.genericPreferenceRank ?? 1,
+        allocationStatus: (r.status ?? r.allocationStatus ?? 'allocated') === 'allocated' ? 'allocated' : 'waitlisted',
+        waitlistRank: r.waitlist_rank ?? r.waitlistRank ?? null,
+      }));
+
+      const basketMap = new Map(baskets.map((b) => [b.basketId, b]));
+      const basketCutoffs: BasketCutoffSummary[] = rawCutoffs.map((bc) => {
+        const code = bc.code || bc.basket_id;
+        const base = basketMap.get(code);
+        return {
+          code,
+          name: bc.name || base?.name || code,
+          industryPartner: base?.industryPartner || 'TIET',
+          seatCapacity: bc.seatCapacity ?? bc.capacity ?? customCapPerBasket,
+          enrolledCount: bc.enrolledCount ?? bc.allotted ?? 0,
+          waitlistCount: bc.waitlistCount ?? bc.waitlist ?? 0,
+          openingCgpa: bc.openingCgpa ?? bc.opening_cgpa ?? null,
+          closingCutoffCgpa: bc.closingCutoffCgpa ?? bc.cutoff_cgpa ?? null,
+        };
+      });
+
+      const cutoffMap = new Map(basketCutoffs.map((bc) => [bc.code, bc]));
+      const updatedBaskets = baskets.map((b) => {
+        const ct = cutoffMap.get(b.basketId);
+        return {
+          ...b,
+          seatCapacity: ct ? ct.seatCapacity : customCapPerBasket,
+          enrolledCount: ct ? ct.enrolledCount : b.enrolledCount,
+          waitlistCount: ct ? ct.waitlistCount : b.waitlistCount,
+          liveCutoffCgpa: ct?.closingCutoffCgpa ?? b.liveCutoffCgpa,
+        };
+      });
+
+      const summary = res.data.summary || round?.summaryStats;
+      const totalStudents = summary?.total_applicants ?? summary?.totalEligibleStudents ?? roster.length;
+      const allocatedCount = summary?.total_allocated ?? roster.filter((r) => r.allocationStatus === 'allocated').length;
+      const waitlistedCount = summary?.total_waitlisted ?? roster.filter((r) => r.allocationStatus === 'waitlisted').length;
+
+      return {
+        roster,
+        basketCutoffs,
+        updatedBaskets,
+        totalStudentsProcessed: totalStudents,
+        allocatedBasketCount: allocatedCount,
+        waitlistedBasketCount: waitlistedCount,
+        executionTimeMs: res.data.execution_time_ms,
+        isLiveDatabase: true,
+      };
+    }
+  } catch (err) {
+    console.warn('Backend /allocation/run call failed, utilizing deterministic client fallback', err);
+  }
+
+  const fallback = executeClientSideMeritAllocation(baskets, courses, showcaseStudents, customCapPerBasket);
+  return {
+    ...fallback,
+    isLiveDatabase: false,
+  };
+}
+
+export async function downloadAllotmentRosterCsvBlob(roundId: string = 'ROUND_2026_SEM5_R1'): Promise<Blob | null> {
+  try {
+    const res = await cloudHttp.get(`/allocation/export-csv?roundId=${roundId}`, {
+      responseType: 'blob',
+    });
+    return res.data;
+  } catch {
+    return null;
+  }
+}
+
+
