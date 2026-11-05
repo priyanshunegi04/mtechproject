@@ -25,15 +25,45 @@ export function createExpressApp(env: EnvConfig): Application {
   const mlGateway = new MLGatewayService(env);
 
   app.set('trust proxy', 1);
-  app.use(helmet());
   app.use(
-    cors({
-      origin: env.allowedOriginsList,
-      credentials: true,
-      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-      allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-ID'],
+    helmet({
+      crossOriginResourcePolicy: { policy: 'cross-origin' },
     })
   );
+
+  const allowedOrigins: (string | RegExp)[] = [
+    'https://mtechproject.vercel.app',
+    'http://localhost:5173',
+    'http://localhost:3000',
+    /\.vercel\.app$/, // Matches all Vercel preview environments
+    ...env.allowedOriginsList,
+  ];
+
+  const corsMiddleware = cors({
+    origin: (origin, callback) => {
+      // Allow server-to-server or curl requests with no origin
+      if (!origin) return callback(null, true);
+
+      const isAllowed = allowedOrigins.some((allowed) => {
+        if (typeof allowed === 'string') return allowed === origin;
+        if (allowed instanceof RegExp) return allowed.test(origin);
+        return false;
+      });
+
+      if (isAllowed) {
+        callback(null, true);
+      } else {
+        callback(new Error(`Origin ${origin} not allowed by CORS`));
+      }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-Request-ID'],
+  });
+
+  app.use(corsMiddleware);
+  // Ensure preflight OPTIONS requests are handled cleanly across all routes
+  app.options('*', corsMiddleware);
   app.use(compression());
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));
@@ -91,6 +121,10 @@ export function createExpressApp(env: EnvConfig): Application {
     });
   };
 
+  app.get('/ready', readinessHandler);
+  app.get('/health', readinessHandler);
+  app.get('/health/ready', readinessHandler);
+  app.get('/api/ready', readinessHandler);
   app.get('/api/health/live', livenessHandler);
   app.get('/api/v1/health/live', livenessHandler);
   app.get('/api/health/ready', readinessHandler);

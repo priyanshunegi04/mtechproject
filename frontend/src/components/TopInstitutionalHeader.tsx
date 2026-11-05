@@ -29,6 +29,7 @@ export const TopInstitutionalHeader: React.FC = () => {
     personas,
     currentUser,
     switchPersona,
+    updateCgpa,
     cloudHealth,
     refreshCloudHealth,
   } = useApp();
@@ -196,10 +197,19 @@ export const TopInstitutionalHeader: React.FC = () => {
                   <span className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400 font-semibold">
                     Current CGPA
                   </span>
-                  <span className="text-sm font-extrabold text-[#8B1E24] dark:text-rose-400 flex items-center gap-1">
-                    <Award className="w-3.5 h-3.5" />
-                    {currentUser.cgpa.toFixed(2)}
-                  </span>
+                  <div className="flex items-center gap-1">
+                    <Award className="w-3.5 h-3.5 text-[#8B1E24] dark:text-rose-400 shrink-0" />
+                    <input
+                      type="number"
+                      min={4.0}
+                      max={10.0}
+                      step={0.05}
+                      value={currentUser.cgpa}
+                      onChange={(e) => updateCgpa(parseFloat(e.target.value) || 0)}
+                      className="w-14 text-sm font-extrabold text-[#8B1E24] dark:text-rose-400 bg-transparent border-b border-dashed border-[#8B1E24]/40 dark:border-rose-400/40 focus:outline-none font-mono text-right hover:border-solid cursor-pointer"
+                      title="Adjust student CGPA (debounced live inference)"
+                    />
+                  </div>
                 </div>
               )}
             </div>

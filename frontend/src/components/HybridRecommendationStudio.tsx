@@ -63,6 +63,7 @@ const PARTNER_BADGE_STYLES: Record<
 export const HybridRecommendationStudio: React.FC = () => {
   const {
     currentUser,
+    updateCgpa,
     preferenceWeights,
     updatePreferenceWeight,
     applyPresetWeights,
@@ -179,9 +180,19 @@ export const HybridRecommendationStudio: React.FC = () => {
               <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
                 Sem I–IV Core Prerequisite Vector
               </span>
-              <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-xs font-bold font-mono">
-                CGPA: {currentUser.cgpa.toFixed(2)}
-              </span>
+              <div className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-emerald-500/20 border border-emerald-500/30">
+                <span className="text-[10px] uppercase font-bold text-emerald-300">CGPA:</span>
+                <input
+                  type="number"
+                  min={4.0}
+                  max={10.0}
+                  step={0.05}
+                  value={currentUser.cgpa}
+                  onChange={(e) => updateCgpa(parseFloat(e.target.value) || 0)}
+                  className="w-14 bg-transparent text-emerald-300 text-xs font-bold font-mono focus:outline-none text-right cursor-pointer"
+                  title="Adjust CGPA (debounced live inference)"
+                />
+              </div>
             </div>
             <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
               {Object.entries(currentUser.coreGrades).map(([code, grade]) => (

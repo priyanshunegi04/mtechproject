@@ -29,6 +29,13 @@ import {
   queryAiAcademicAdvisor,
   switchShowcasePersonaCloud,
 } from '../services/apiClient';
+import {
+  adaptLiveBasketsToRecommendations,
+  adaptLivePeerCohortToAnalytics,
+  convertUserToMLPayload,
+  getLiveBasketRecommendations,
+  getLivePeerCohort,
+} from '../services/mlService';
 
 export type ActiveNavigationTab =
   | 'studio'
@@ -59,6 +66,7 @@ interface AppContextValue {
   personas: UserProfile[];
   currentUser: UserProfile;
   switchPersona: (personaKey: string) => Promise<void>;
+  updateCgpa: (cgpa: number) => void;
 
   cloudHealth: CloudHealthStatus;
   refreshCloudHealth: () => Promise<void>;
@@ -73,6 +81,7 @@ interface AppContextValue {
   rankedBaskets: ScoredBasketRecommendation[];
   rankedCourses: ScoredCourseRecommendation[];
   peerCohort: PeerCohortAnalytics;
+  isMlLoading?: boolean;
 
   selectedBasketPrefs: string[];
   setSelectedBasketPrefs: React.Dispatch<React.SetStateAction<string[]>>;
@@ -247,6 +256,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const target = personas.find((p) => p.personaKey === personaKey);
     if (!target) return;
 
+    setLiveRankedBaskets(null);
+    setLivePeerCohort(null);
     setActivePersonaKey(personaKey);
     setPreferenceWeights(target.preferenceWeights);
     setSelectedBasketPrefs(target.rankedBasketPreferences);
@@ -268,6 +279,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         cgpa: target.cgpa,
       },
       target
+    );
+  };
+
+  const updateCgpa = (newCgpa: number) => {
+    const clamped = Math.max(0, Math.min(10, Number(newCgpa.toFixed(2))));
+    setPersonas((prev) =>
+      prev.map((p) =>
+        p.personaKey === currentUser.personaKey ? { ...p, cgpa: clamped } : p
+      )
     );
   };
 
@@ -312,15 +332,90 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
-  const { rankedBaskets, rankedCourses } = useMemo(
+  const [liveRankedBaskets, setLiveRankedBaskets] = useState<ScoredBasketRecommendation[] | null>(null);
+  const [livePeerCohort, setLivePeerCohort] = useState<PeerCohortAnalytics | null>(null);
+  const [isMlLoading, setIsMlLoading] = useState<boolean>(false);
+
+  const fallbackRecommendations = useMemo(
     () => computeHybridRecommendations(currentUser, baskets, courses, preferenceWeights),
     [currentUser, baskets, courses, preferenceWeights]
   );
 
-  const peerCohort = useMemo(
+  const fallbackPeerCohort = useMemo(
     () => buildPeerCohortAnalytics(currentUser, baskets),
     [currentUser, baskets]
   );
+
+  useEffect(() => {
+    let isCancelled = false;
+    const controller = new AbortController();
+
+    const timer = setTimeout(async () => {
+      try {
+        setIsMlLoading(true);
+        const payload = convertUserToMLPayload(currentUser, preferenceWeights);
+
+        const [basketRes, peerRes] = await Promise.allSettled([
+          getLiveBasketRecommendations(payload, controller.signal),
+          getLivePeerCohort(payload, controller.signal),
+        ]);
+
+        if (isCancelled || controller.signal.aborted) return;
+
+        if (
+          basketRes.status === 'fulfilled' &&
+          basketRes.value?.success &&
+          basketRes.value?.ranked_baskets
+        ) {
+          const adapted = adaptLiveBasketsToRecommendations(
+            basketRes.value,
+            baskets,
+            courses,
+            currentUser
+          );
+          if (adapted.length > 0) {
+            setLiveRankedBaskets(adapted);
+          }
+        }
+
+        if (peerRes.status === 'fulfilled' && peerRes.value?.success) {
+          const adaptedCohort = adaptLivePeerCohortToAnalytics(
+            peerRes.value,
+            fallbackPeerCohort
+          );
+          setLivePeerCohort(adaptedCohort);
+        }
+      } catch (err: any) {
+        if (err?.name === 'CanceledError' || err?.name === 'AbortError') {
+          return;
+        }
+        // Fallback remains active
+        console.warn(
+          'Live ML inference unreachable or cold-starting; using deterministic fallback',
+          err
+        );
+      } finally {
+        if (!isCancelled && !controller.signal.aborted) {
+          setIsMlLoading(false);
+        }
+      }
+    }, 400);
+
+    return () => {
+      isCancelled = true;
+      controller.abort();
+      clearTimeout(timer);
+    };
+  }, [currentUser, preferenceWeights, baskets, courses, fallbackPeerCohort]);
+
+  const rankedBaskets =
+    liveRankedBaskets && liveRankedBaskets.length > 0
+      ? liveRankedBaskets
+      : fallbackRecommendations.rankedBaskets;
+
+  const rankedCourses = fallbackRecommendations.rankedCourses;
+
+  const peerCohort = livePeerCohort || fallbackPeerCohort;
 
   const lockOfficialPreferences = async (): Promise<{
     lockedAt: string;
@@ -646,6 +741,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         personas,
         currentUser,
         switchPersona,
+        updateCgpa,
         cloudHealth,
         refreshCloudHealth,
         baskets,
@@ -656,6 +752,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         rankedBaskets,
         rankedCourses,
         peerCohort,
+        isMlLoading,
         selectedBasketPrefs,
         setSelectedBasketPrefs,
         selectedGenericPrefs,

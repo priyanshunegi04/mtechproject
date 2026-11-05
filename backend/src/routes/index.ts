@@ -11,6 +11,7 @@ import {
 } from '../controllers';
 import { requireAuth, requireRole } from '../middlewares';
 import { MLGatewayService } from '../services';
+import { createMlRouter } from './mlRoutes';
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -111,6 +112,9 @@ export function createApiRouter(env: EnvConfig): Router {
   router.post('/recommendations/courses', authGuard, studentController.recommendCourses);
   router.post('/recommendations/predict', authGuard, studentController.predictPerformance);
   router.post('/recommendations/peer-cohort', authGuard, studentController.peerCohortInsights);
+
+  // Direct `/ml/*` Proxy Routes for Live Python ML Inference
+  router.use('/ml', recommendationLimiter, createMlRouter(env));
 
   // ---------------------------------------------------------------------------
   // 4. Faculty Advisor Routes (Advisee Roster & Documented Prerequisite Waivers)

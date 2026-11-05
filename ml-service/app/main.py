@@ -78,7 +78,8 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings_boot.allowed_origins_list,
+    allow_origins=settings_boot.allowed_origins_list + ["https://mtechproject.vercel.app"],
+    allow_origin_regex=r"^https://.*\.vercel\.app$",
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Content-Type", "Authorization", "X-ML-Service-Key", "X-ML-Api-Key"],
