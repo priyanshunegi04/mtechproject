@@ -130,6 +130,7 @@ async def health_check(request: Request) -> Dict[str, Any]:
 
     metrics = ranker.evaluation_metrics if ranker else {}
     return {
+        "status": "healthy" if models_ready else "degraded",
         "success": models_ready,
         "service": "thapar-elective-ai-ml-service",
         "institution": "Thapar Institute of Engineering & Technology (TIET) — B.E. CSE 2026",

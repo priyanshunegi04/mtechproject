@@ -53,6 +53,7 @@ export class StudentController {
       res.status(200).json({
         success: true,
         student: serializeUser(user),
+        user: serializeUser(user),
         allotmentDetails: {
           status: user.allocationStatus,
           allocatedBasket,

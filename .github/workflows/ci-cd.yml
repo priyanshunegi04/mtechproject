@@ -9,13 +9,13 @@ on:
 env:
   NODE_VERSION: "20"
   PYTHON_VERSION: "3.11"
-  MONGODB_URI: "mongodb+srv://tiet_ci_runner:TietCloud2026Secure@tiet-elective-cluster.mongodb.net/thapar_elective_ai?retryWrites=true&w=majority&appName=ThaparElectiveAI"
-  ML_SERVICE_URL: "https://thapar-elective-ml-service.onrender.com"
-  ML_SERVICE_API_KEY: "tiet_ml_internal_secret_key_change_in_production_minimum_32_chars"
-  JWT_ACCESS_SECRET: "tiet_jwt_access_secret_key_minimum_32_characters_required_prod"
-  JWT_REFRESH_SECRET: "tiet_jwt_refresh_secret_key_minimum_32_characters_required_prod"
-  FRONTEND_ORIGIN: "https://electives.thapar.edu,https://thapar-elective-ai.vercel.app"
-  VITE_API_BASE_URL: "https://thapar-elective-backend.onrender.com/api/v1"
+  MONGODB_URI: ${{ secrets.MONGODB_URI }}
+  ML_SERVICE_URL: ${{ secrets.ML_SERVICE_URL || 'https://thapar-elective-ml.onrender.com' }}
+  ML_SERVICE_API_KEY: ${{ secrets.ML_SERVICE_API_KEY }}
+  JWT_ACCESS_SECRET: ${{ secrets.JWT_ACCESS_SECRET }}
+  JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
+  FRONTEND_ORIGIN: ${{ secrets.FRONTEND_ORIGIN || 'https://electives.thapar.edu,https://mtechproject.vercel.app' }}
+  VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL || 'https://thapar-elective-backend.onrender.com/api/v1' }}
 
 jobs:
   backend-and-frontend-build:
@@ -63,4 +63,7 @@ jobs:
 
       - name: Run Pytest Verification Suite
         run: pytest -v
+        env:
+          APP_ENV: test
+          ML_SERVICE_API_KEY: ${{ secrets.ML_SERVICE_API_KEY || 'ci-test-key-minimum-32-characters-length' }}
 

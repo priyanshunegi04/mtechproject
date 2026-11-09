@@ -566,6 +566,8 @@ class HybridElectiveRanker:
                     "key_prerequisites": key_prereqs,
                     "student_prerequisite_summary": prereq_summary,
                     "composite_match_score": composite_match_pct,
+                    "hybrid_score": composite_match_pct,
+                    "predicted_grade": round(avg_expected_gp, 2),
                     "score_breakdown": {
                         "content_score": round(content_score * 100.0, 1),
                         "collaborative_score": round(collab_score * 100.0, 1),
@@ -581,6 +583,8 @@ class HybridElectiveRanker:
                     "seat_competition": seat_comp,
                     "four_semester_trajectory": trajectory_preview,
                     "top_shap_reasons": basket_shap,
+                    "shap_values": basket_shap,
+                    "shap_explanations": basket_shap,
                 }
             )
 

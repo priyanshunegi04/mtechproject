@@ -15,6 +15,9 @@
     "dev:frontend": "npm run dev --workspace=frontend",
     "start:backend": "npm run start --workspace=backend",
     "seed:atlas": "npm run seed:atlas --workspace=backend",
+    "test:ml": "cd ml-service && (.venv\\Scripts\\pytest.exe -v || pytest -v || .venv/bin/pytest -v || python -m pytest -v)",
+    "test:backend": "cd backend && npm run test",
+    "test:all": "npm run test:backend && npm run test:ml",
     "typecheck": "npm run typecheck --workspace=backend && npm run typecheck --workspace=frontend",
     "lint": "npm run lint --workspace=backend && npm run lint --workspace=frontend"
   },

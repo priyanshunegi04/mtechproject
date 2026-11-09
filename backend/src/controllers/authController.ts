@@ -148,6 +148,7 @@ export class AuthController {
       res.status(201).json({
         success: true,
         accessToken,
+        tokens: { accessToken, refreshToken },
         user: serializeUser(user),
       });
     } catch (error) {
@@ -184,6 +185,7 @@ export class AuthController {
       res.status(200).json({
         success: true,
         accessToken,
+        tokens: { accessToken, refreshToken },
         user: serializeUser(user),
       });
     } catch (error) {
@@ -206,10 +208,11 @@ export class AuthController {
         throw new AppError('User account no longer active', 401);
       }
 
-      const { accessToken } = this.issueTokensAndSetCookie(res, user);
+      const { accessToken, refreshToken } = this.issueTokensAndSetCookie(res, user);
       res.status(200).json({
         success: true,
         accessToken,
+        tokens: { accessToken, refreshToken },
         user: serializeUser(user),
       });
     } catch (_error) {

@@ -1,0 +1,10 @@
+node_modules/
+dist/
+build/
+*.tsbuildinfo
+*.log
+
+# Sensitive environments
+.env
+.env.*
+!.env.example

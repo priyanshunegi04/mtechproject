@@ -26,13 +26,22 @@ build/
 
 # Environment variables (Strict Cloud Security)
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
+!**/.env.example
 **/.env
-**/.env.local
-**/.env.production
+**/.env.*
+*.pem
+*.key
+*.cert
+*.crt
+
+# Test Coverage & Tool Caching
+coverage/
+**/coverage/
+.coverage
+htmlcov/
+.turbo/
 
 # ML Artifacts & Local Cache (Synced with MongoDB Atlas / S3 in prod)
 ml-service/artifacts/*.pkl

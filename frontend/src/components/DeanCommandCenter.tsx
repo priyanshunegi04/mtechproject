@@ -227,6 +227,104 @@ export const DeanCommandCenter: React.FC = () => {
         </div>
       </section>
 
+      {/* Transaction Lock Modal during MongoDB Atlas ACID Execution */}
+      {isRunningAllocation && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 backdrop-blur-sm p-4">
+          <div className="max-w-md w-full rounded-2xl bg-slate-900 border border-emerald-500/30 p-6 shadow-2xl text-center space-y-4">
+            <div className="mx-auto w-14 h-14 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+              <RefreshCw className="w-7 h-7 animate-spin" />
+            </div>
+            <div className="space-y-1.5">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-mono text-[11px] font-bold">
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span>MongoDB Atlas ACID Session Active</span>
+              </div>
+              <h3 className="text-lg font-extrabold text-white">
+                Executing CGPA Merit Seat Allocation
+              </h3>
+              <p className="text-xs text-slate-300">
+                Executing serial dictatorship across 12 Elective Focus baskets with primary Sem-IV CGPA and core prerequisite GPA tie-breakers (<code className="text-amber-300">UCS301</code>, <code className="text-amber-300">UCS415</code>, <code className="text-amber-300">UMA021</code>, <code className="text-amber-300">UMA401</code>)...
+              </p>
+            </div>
+            <div className="p-3 rounded-xl bg-slate-800/80 border border-slate-700 text-left font-mono text-[11px] text-slate-400 space-y-1">
+              <div className="flex justify-between">
+                <span>Cluster:</span>
+                <span className="text-slate-200">todo.ef9ip9u.mongodb.net</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Transaction Isolation:</span>
+                <span className="text-emerald-400 font-bold">Read-Committed ACID</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Target Round:</span>
+                <span className="text-amber-400">ROUND_2026_SEM5_R{allocationResult.roundNumber + 1}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Summary Metric Cards: Total Applicants, Allocated %, Waitlisted, Full Baskets */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+          <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center justify-between">
+            <span>Total Applicants</span>
+            <Users className="w-4 h-4 text-slate-400" />
+          </div>
+          <div className="mt-2 text-2xl font-black text-slate-900 dark:text-white font-mono">
+            {allocationResult.totalStudentsProcessed.toLocaleString()}
+          </div>
+          <div className="mt-1 text-[11px] text-slate-500 flex items-center gap-1 font-semibold">
+            <span>Batch 2024–2026</span>
+            <span>•</span>
+            <span className="text-emerald-600 dark:text-emerald-400">Sem-IV Completed</span>
+          </div>
+        </div>
+
+        <div className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+          <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center justify-between">
+            <span>Total Allocated</span>
+            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+          </div>
+          <div className="mt-2 text-2xl font-black text-emerald-600 dark:text-emerald-400 font-mono">
+            {allocationResult.allocatedBasketCount.toLocaleString()}
+          </div>
+          <div className="mt-1 text-[11px] text-emerald-700 dark:text-emerald-300 font-bold">
+            {allocationResult.totalStudentsProcessed > 0
+              ? Math.round((allocationResult.allocatedBasketCount / allocationResult.totalStudentsProcessed) * 100)
+              : 0}% Allocation Rate
+          </div>
+        </div>
+
+        <div className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+          <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center justify-between">
+            <span>Waitlisted Students</span>
+            <ShieldAlert className="w-4 h-4 text-amber-500" />
+          </div>
+          <div className="mt-2 text-2xl font-black text-amber-600 dark:text-amber-400 font-mono">
+            {allocationResult.waitlistedBasketCount.toLocaleString()}
+          </div>
+          <div className="mt-1 text-[11px] text-amber-700 dark:text-amber-300 font-bold">
+            {allocationResult.totalStudentsProcessed > 0
+              ? Math.round((allocationResult.waitlistedBasketCount / allocationResult.totalStudentsProcessed) * 100)
+              : 0}% Pending Round 2
+          </div>
+        </div>
+
+        <div className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+          <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center justify-between">
+            <span>Baskets at Capacity</span>
+            <Award className="w-4 h-4 text-[#8B1E24] dark:text-rose-400" />
+          </div>
+          <div className="mt-2 text-2xl font-black text-slate-900 dark:text-white font-mono">
+            {allocationResult.basketCutoffs.filter((b) => b.enrolledCount >= b.seatCapacity).length} / {allocationResult.basketCutoffs.length || 12}
+          </div>
+          <div className="mt-1 text-[11px] text-slate-500 font-semibold font-mono">
+            {allocationResult.isLiveDatabase ? 'Live Database Audit' : 'Client Mode'}
+          </div>
+        </div>
+      </div>
+
       {/* Batch Demand & Seat Capacity Heatmap (Recharts BarChart + Treemap) */}
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
         {/* BarChart: First-Choice Demand vs Seat Capacity vs Enrolled (7 cols) */}
@@ -364,7 +462,30 @@ export const DeanCommandCenter: React.FC = () => {
                       </div>
                     </td>
                     <td className="py-2.5 px-2 font-mono">
-                      {bc.enrolledCount}/{bc.seatCapacity}
+                      <div className="flex items-center justify-between text-[11px] mb-1">
+                        <span>{bc.enrolledCount}/{bc.seatCapacity}</span>
+                        <span className={`font-bold ${
+                          bc.enrolledCount >= bc.seatCapacity
+                            ? 'text-rose-600 dark:text-rose-400'
+                            : 'text-emerald-600 dark:text-emerald-400'
+                        }`}>
+                          {bc.seatCapacity > 0 ? Math.round((bc.enrolledCount / bc.seatCapacity) * 100) : 0}%
+                        </span>
+                      </div>
+                      <div className="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden">
+                        <div
+                          className={`h-full rounded-full transition-all duration-300 ${
+                            bc.enrolledCount >= bc.seatCapacity
+                              ? 'bg-rose-500'
+                              : bc.enrolledCount >= bc.seatCapacity * 0.85
+                              ? 'bg-amber-500'
+                              : 'bg-emerald-500'
+                          }`}
+                          style={{
+                            width: `${Math.min(100, bc.seatCapacity > 0 ? Math.round((bc.enrolledCount / bc.seatCapacity) * 100) : 0)}%`,
+                          }}
+                        />
+                      </div>
                     </td>
                     <td className="py-2.5 px-2 font-mono text-emerald-600 dark:text-emerald-400 font-bold">
                       {bc.openingCgpa?.toFixed(2) ?? '9.50'}

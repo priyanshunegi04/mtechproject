@@ -5,7 +5,7 @@ Typed Pydantic v2 Request and Response Schemas for ThaparElectiveAI FastAPI ML M
 from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class FusionWeightsInput(BaseModel):
@@ -54,6 +54,18 @@ class StudentMLProfileInput(BaseModel):
     statement_of_purpose: Optional[str] = Field(default="")
     completed_credits: float = Field(default=82.0, ge=0.0, le=160.0)
     max_weekly_hours: float = Field(default=24.0, ge=8.0, le=50.0)
+
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_aliases(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            if "cgpa" in data and "cgpa_sem4" not in data:
+                data["cgpa_sem4"] = data["cgpa"]
+            if "career_interest" in data and "preferred_career_track" not in data:
+                data["preferred_career_track"] = data["career_interest"]
+            if "skills" in data and "technical_skills" not in data:
+                data["technical_skills"] = data["skills"]
+        return data
 
     def to_ranker_dict(self) -> Dict[str, Any]:
         data = self.model_dump()

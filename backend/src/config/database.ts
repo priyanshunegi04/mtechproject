@@ -1,7 +1,14 @@
+import dns from 'dns';
 import mongoose from 'mongoose';
 import pino from 'pino';
 import { EnvConfig } from './env';
 import { disconnectManagedRedis } from './redis';
+
+try {
+  dns.setServers(['8.8.8.8', '1.1.1.1']);
+} catch {
+  // Ignore in sandboxed or air-gapped environments
+}
 
 const logger = pino({ name: 'mongodb-atlas-singleton' });
 

@@ -18,7 +18,7 @@ const envSchema = z
       .trim()
       .min(1, 'MONGODB_URI is required and must point to a remote MongoDB Atlas cluster')
       .default(
-        'mongodb+srv://tiet_app_service:TietCloud2026Secure@tiet-elective-cluster.mongodb.net/thapar_elective_ai?retryWrites=true&w=majority&appName=ThaparElectiveAI'
+        'mongodb+srv://<username>:<password>@tiet-elective-cluster.mongodb.net/thapar_elective_ai?retryWrites=true&w=majority&appName=ThaparElectiveAI'
       ),
     MONGODB_DB_NAME: z.string().trim().default('thapar_elective_ai'),
     MONGODB_MAX_POOL_SIZE: z.coerce.number().int().min(5).max(500).default(50),
@@ -83,6 +83,56 @@ const envSchema = z
           'In production mode, MONGODB_URI must use the mongodb+srv:// protocol pointing to a remote MongoDB Atlas cluster.',
       });
     }
+
+    // Production credential security hardening: enforce non-default cryptographic tokens
+    if (data.NODE_ENV === 'production') {
+      const insecureUriPlaceholders = ['<username>', '<password>', '<db_username>', '<db_password>', 'TietCloud2026Secure'];
+      if (insecureUriPlaceholders.some((ph) => data.MONGODB_URI.includes(ph))) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['MONGODB_URI'],
+          message:
+            'Security Hardening Violation: In production mode, MONGODB_URI must contain valid Atlas cluster credentials and cannot use default placeholders or mock tokens.',
+        });
+      }
+
+      const isInsecureToken = (token: string, identifier: string) => {
+        return (
+          token.includes(identifier) ||
+          token.includes('replace_with') ||
+          token.includes('change_in_production') ||
+          token.includes('<generate')
+        );
+      };
+
+      if (isInsecureToken(data.JWT_ACCESS_SECRET, 'tiet_jwt_access_secret')) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['JWT_ACCESS_SECRET'],
+          message:
+            'Security Hardening Violation: In production mode, JWT_ACCESS_SECRET must not use insecure default placeholder tokens.',
+        });
+      }
+
+      if (isInsecureToken(data.JWT_REFRESH_SECRET, 'tiet_jwt_refresh_secret')) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['JWT_REFRESH_SECRET'],
+          message:
+            'Security Hardening Violation: In production mode, JWT_REFRESH_SECRET must not use insecure default placeholder tokens.',
+        });
+      }
+
+      if (isInsecureToken(data.ML_SERVICE_API_KEY, 'tiet_ml_internal_secret')) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['ML_SERVICE_API_KEY'],
+          message:
+            'Security Hardening Violation: In production mode, ML_SERVICE_API_KEY must not use insecure default placeholder tokens.',
+        });
+      }
+    }
+
     if (loopbackRegex.test(data.ML_SERVICE_URL)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
