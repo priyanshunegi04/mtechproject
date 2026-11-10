@@ -350,8 +350,8 @@ export function createMlRouter(env: EnvConfig): Router {
     }
   });
 
-  // POST /api/ml/predict-performance
-  router.post('/predict-performance', async (req: Request, res: Response) => {
+  // POST /api/ml/predict-performance (with aliases for /predict-course-performance and /predict-grades)
+  const handlePredictPerformance = async (req: Request, res: Response) => {
     const endpointPath = '/api/ml/predict-performance';
     const studentProfile = parseStudentProfile(req.body);
     const selectedCourseCodes =
@@ -415,10 +415,14 @@ export function createMlRouter(env: EnvConfig): Router {
         },
       });
     }
-  });
+  };
 
-  // POST /api/ml/peer-cohort-insights
-  router.post('/peer-cohort-insights', async (req: Request, res: Response) => {
+  router.post('/predict-performance', handlePredictPerformance);
+  router.post('/predict-course-performance', handlePredictPerformance);
+  router.post('/predict-grades', handlePredictPerformance);
+
+  // POST /api/ml/peer-cohort-insights (with alias for /peer-cohort)
+  const handlePeerCohortInsights = async (req: Request, res: Response) => {
     const endpointPath = '/api/ml/peer-cohort-insights';
     const studentProfile = parseStudentProfile(req.body);
     const topK = Number(req.body.top_k || req.body.topK || 50);
@@ -502,7 +506,10 @@ export function createMlRouter(env: EnvConfig): Router {
         closest_seniors: [],
       });
     }
-  });
+  };
+
+  router.post('/peer-cohort-insights', handlePeerCohortInsights);
+  router.post('/peer-cohort', handlePeerCohortInsights);
 
   return router;
 }
