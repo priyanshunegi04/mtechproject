@@ -3,8 +3,14 @@ import { getFrontendEnv } from '../config/env';
 
 const envConfig = getFrontendEnv();
 
-let accessTokenMemory: string | null = null;
-let refreshTokenMemory: string | null = null;
+export const STORAGE_ACCESS_TOKEN_KEY = 'tiet_access_token';
+export const STORAGE_REFRESH_TOKEN_KEY = 'tiet_refresh_token';
+export const STORAGE_USER_PROFILE_KEY = 'tiet_authenticated_user';
+
+let accessTokenMemory: string | null =
+  typeof window !== 'undefined' ? window.localStorage.getItem(STORAGE_ACCESS_TOKEN_KEY) : null;
+let refreshTokenMemory: string | null =
+  typeof window !== 'undefined' ? window.localStorage.getItem(STORAGE_REFRESH_TOKEN_KEY) : null;
 let isRefreshing = false;
 let pendingQueue: {
   resolve: (token: string | null) => void;
@@ -13,12 +19,29 @@ let pendingQueue: {
 
 export function setAuthTokens(accessToken: string | null, refreshToken?: string | null): void {
   accessTokenMemory = accessToken;
+  if (typeof window !== 'undefined') {
+    if (accessToken) {
+      window.localStorage.setItem(STORAGE_ACCESS_TOKEN_KEY, accessToken);
+    } else {
+      window.localStorage.removeItem(STORAGE_ACCESS_TOKEN_KEY);
+    }
+  }
   if (refreshToken !== undefined) {
     refreshTokenMemory = refreshToken;
+    if (typeof window !== 'undefined') {
+      if (refreshToken) {
+        window.localStorage.setItem(STORAGE_REFRESH_TOKEN_KEY, refreshToken);
+      } else {
+        window.localStorage.removeItem(STORAGE_REFRESH_TOKEN_KEY);
+      }
+    }
   }
 }
 
 export function getAccessToken(): string | null {
+  if (!accessTokenMemory && typeof window !== 'undefined') {
+    accessTokenMemory = window.localStorage.getItem(STORAGE_ACCESS_TOKEN_KEY);
+  }
   return accessTokenMemory;
 }
 

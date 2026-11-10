@@ -7,6 +7,7 @@ import {
   CloudHealthStatus,
   ElectiveCourseCatalogItem,
   ElectiveFocusBasketItem,
+  InstitutionalRole,
   MLSourceMetadata,
   PeerCohortAnalytics,
   PreferenceWeights,
@@ -57,6 +58,7 @@ export type ActiveNavigationTab =
   | 'skill_assessment'
   | 'profile_editor'
   | 'teacher_workspace'
+  | 'course_manager'
   | 'dean_command';
 
 export interface AllocationSummaryState {
@@ -85,7 +87,11 @@ interface AppContextValue {
   isAuthenticated: boolean;
   showAuthModal: boolean;
   setShowAuthModal: (show: boolean) => void;
-  loginWithCredentials: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  loginWithCredentials: (
+    email: string,
+    password: string,
+    expectedRole?: 'student' | 'faculty_advisor'
+  ) => Promise<{ success: boolean; role?: InstitutionalRole; error?: string }>;
   registerNewUser: (payload: {
     name: string;
     email: string;
@@ -96,11 +102,12 @@ interface AppContextValue {
     batchYear?: number;
     currentSemester?: number;
     cgpa?: number;
+    coreGrades?: Record<string, number>;
     employeeId?: string;
     department?: string;
     designation?: string;
     primarySpecializationBasket?: string;
-  }) => Promise<{ success: boolean; error?: string }>;
+  }) => Promise<{ success: boolean; role?: InstitutionalRole; error?: string }>;
   logoutUser: () => void;
   switchPersona: (personaKey: string) => Promise<void>;
   updateCgpa: (cgpa: number) => void;
@@ -189,9 +196,45 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [activeTab, setActiveTab] = useState<ActiveNavigationTab>('studio');
   const [isAdvisorOpen, setIsAdvisorOpen] = useState<boolean>(false);
 
-  const [personas, setPersonas] = useState<UserProfile[]>(SHOWCASE_PERSONAS);
-  const [activePersonaKey, setActivePersonaKey] = useState<string>('student_aarav');
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true);
+  const [personas, setPersonas] = useState<UserProfile[]>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = window.localStorage.getItem('tiet_authenticated_user');
+        if (saved) {
+          const parsed = JSON.parse(saved) as UserProfile;
+          const exists = SHOWCASE_PERSONAS.some((p) => p.personaKey === parsed.personaKey);
+          return exists
+            ? SHOWCASE_PERSONAS.map((p) => (p.personaKey === parsed.personaKey ? parsed : p))
+            : [parsed, ...SHOWCASE_PERSONAS];
+        }
+      } catch {
+        // ignore JSON parse errors
+      }
+    }
+    return SHOWCASE_PERSONAS;
+  });
+
+  const [activePersonaKey, setActivePersonaKey] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = window.localStorage.getItem('tiet_authenticated_user');
+        if (saved) {
+          const parsed = JSON.parse(saved) as UserProfile;
+          if (parsed.personaKey) return parsed.personaKey;
+        }
+      } catch {
+        // ignore
+      }
+    }
+    return 'student_aarav';
+  });
+
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return Boolean(window.localStorage.getItem('tiet_access_token'));
+    }
+    return false;
+  });
   const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
 
   const currentUser = useMemo(
@@ -355,12 +398,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const loginWithCredentials = async (
     email: string,
-    password: string
-  ): Promise<{ success: boolean; error?: string }> => {
+    password: string,
+    expectedRole?: 'student' | 'faculty_advisor'
+  ): Promise<{ success: boolean; role?: InstitutionalRole; error?: string }> => {
     const cleanEmail = email.trim().toLowerCase();
-    if (!cleanEmail.endsWith('@thapar.edu')) {
-      return { success: false, error: 'Institutional email must belong to @thapar.edu domain.' };
-    }
     try {
       const res = await cloudHttp.post('/auth/login', { email: cleanEmail, password });
       if (res.data?.accessToken) {
@@ -380,7 +421,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
               : `${srvUser.designation || 'Faculty Advisor'} (${srvUser.department || 'CSED'})`,
         };
         setPersonas((prev) => {
-          const exists = prev.some((p) => p.email.toLowerCase() === cleanEmail || p.personaKey === pKey);
+          const exists = prev.some(
+            (p) => p.email.toLowerCase() === cleanEmail || p.personaKey === pKey
+          );
           if (exists) {
             return prev.map((p) =>
               p.email.toLowerCase() === cleanEmail || p.personaKey === pKey ? mapped : p
@@ -391,6 +434,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setActivePersonaKey(pKey);
         setIsAuthenticated(true);
         setShowAuthModal(false);
+        if (typeof window !== 'undefined') {
+          window.localStorage.setItem('tiet_authenticated_user', JSON.stringify(mapped));
+        }
         setActiveTab(
           mapped.role === 'faculty_advisor'
             ? 'teacher_workspace'
@@ -398,20 +444,43 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
               ? 'dean_command'
               : 'studio'
         );
-        return { success: true };
+        return { success: true, role: mapped.role };
       }
     } catch {
-      // Check local personas if backend is unreachable
+      // Fallback to local registered / seeded institutional accounts if backend is offline
     }
 
     const existing = personas.find((p) => p.email.toLowerCase() === cleanEmail);
     if (existing) {
+      if (
+        expectedRole === 'student' &&
+        existing.role !== 'student'
+      ) {
+        return {
+          success: false,
+          error: 'This email belongs to a Faculty/Admin account. Switch to the Faculty / Teacher Login tab.',
+        };
+      }
+      if (
+        expectedRole === 'faculty_advisor' &&
+        existing.role === 'student'
+      ) {
+        return {
+          success: false,
+          error: 'This email belongs to a Student account. Switch to the Student Login tab.',
+        };
+      }
+      setAuthToken(`local-jwt-${existing.personaKey}-${Date.now()}`);
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem('tiet_authenticated_user', JSON.stringify(existing));
+      }
       await switchPersona(existing.personaKey);
-      return { success: true };
+      return { success: true, role: existing.role };
     }
+
     return {
       success: false,
-      error: 'Account not found. Please Sign Up or use Instant Demo Login.',
+      error: 'Invalid institutional email or password. Please verify your @thapar.edu credentials or Sign Up.',
     };
   };
 
@@ -425,26 +494,34 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     batchYear?: number;
     currentSemester?: number;
     cgpa?: number;
+    coreGrades?: Record<string, number>;
     employeeId?: string;
     department?: string;
     designation?: string;
     primarySpecializationBasket?: string;
-  }): Promise<{ success: boolean; error?: string }> => {
+  }): Promise<{ success: boolean; role?: InstitutionalRole; error?: string }> => {
     const cleanEmail = payload.email.trim().toLowerCase();
     if (!cleanEmail.endsWith('@thapar.edu')) {
       return { success: false, error: 'Institutional email must end with @thapar.edu' };
     }
 
+    let tokenIssued = `local-jwt-${Date.now()}`;
     try {
       const res = await cloudHttp.post('/auth/register', payload);
       if (res.data?.accessToken) {
-        setAuthToken(res.data.accessToken);
+        tokenIssued = res.data.accessToken;
       }
     } catch {
-      // Continue with instant client-side registration if offline
+      // Continue with client registration if cloud backend is unreachable
     }
+    setAuthToken(tokenIssued);
 
     const pKey = `custom_${Date.now()}`;
+    const defaultCoreGrades = {
+      ...SHOWCASE_PERSONAS[0].coreGrades,
+      ...(payload.coreGrades || {}),
+    };
+
     const newProfile: UserProfile = {
       ...SHOWCASE_PERSONAS[0],
       id: `USR_${Date.now()}`,
@@ -461,6 +538,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       batchYear: payload.batchYear || 2024,
       currentSemester: payload.currentSemester || 4,
       cgpa: payload.cgpa ?? 8.25,
+      coreGrades: defaultCoreGrades,
       label: payload.name.trim(),
       subtitle:
         payload.role === 'student'
@@ -474,19 +552,27 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setActivePersonaKey(pKey);
     setIsAuthenticated(true);
     setShowAuthModal(false);
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem('tiet_authenticated_user', JSON.stringify(newProfile));
+    }
     setActiveTab(payload.role === 'faculty_advisor' ? 'teacher_workspace' : 'studio');
     appendAuditLog('USER_REGISTERED', {
       email: cleanEmail,
       role: payload.role,
       rollOrEmpId: newProfile.rollNumber || newProfile.employeeId,
     });
-    return { success: true };
+    return { success: true, role: payload.role };
   };
 
   const logoutUser = () => {
     setAuthToken(null);
+    if (typeof window !== 'undefined') {
+      window.localStorage.removeItem('tiet_access_token');
+      window.localStorage.removeItem('tiet_refresh_token');
+      window.localStorage.removeItem('tiet_authenticated_user');
+    }
     setIsAuthenticated(false);
-    setShowAuthModal(true);
+    setShowAuthModal(false);
   };
 
   const updateCurrentUserProfile = async (
@@ -501,11 +587,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setPersonas((prev) =>
       prev.map((p) => {
         if (p.personaKey !== currentUser.personaKey) return p;
-        return {
+        const updated = {
           ...p,
           ...updates,
           coreGrades: updates.coreGrades ? { ...p.coreGrades, ...updates.coreGrades } : p.coreGrades,
         };
+        if (typeof window !== 'undefined') {
+          window.localStorage.setItem('tiet_authenticated_user', JSON.stringify(updated));
+        }
+        return updated;
       })
     );
 

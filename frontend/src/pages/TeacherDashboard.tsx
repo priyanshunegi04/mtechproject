@@ -14,10 +14,12 @@ import {
   Users,
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { DeanCommandCenter } from '../components';
 import { ElectiveCourseCatalogItem, IndustryPartner } from '../types';
 
 export const TeacherDashboard: React.FC = () => {
   const {
+    activeTab,
     currentUser,
     baskets,
     courses,
@@ -190,8 +192,13 @@ export const TeacherDashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Section 1: Course & Syllabus Management */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      {activeTab === 'dean_command' && currentUser.role === 'dean_admin' ? (
+        <DeanCommandCenter />
+      ) : (
+        <>
+          {/* Section 1: Course & Syllabus Management */}
+          {activeTab === 'course_manager' && (
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div className="lg:col-span-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -466,9 +473,11 @@ export const TeacherDashboard: React.FC = () => {
           </div>
         </div>
       </div>
+      )}
 
       {/* Section 2: Student Mentee & Assessment Insights Table */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-4">
+      {(activeTab === 'teacher_workspace' || activeTab !== 'course_manager') && (
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           <div>
             <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -651,6 +660,9 @@ export const TeacherDashboard: React.FC = () => {
           </table>
         </div>
       </div>
+      )}
+        </>
+      )}
     </div>
   );
 };

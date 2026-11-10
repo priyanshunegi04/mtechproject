@@ -62,7 +62,8 @@ export class StudentController {
 
   public getMyProfile = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const user = await User.findById(req.user?.userId);
+      const targetUserId = req.user?.id || req.user?.userId;
+      const user = await User.findById(targetUserId);
       if (!user) {
         throw new AppError('Student profile not found in MongoDB Atlas', 404);
       }
@@ -98,7 +99,8 @@ export class StudentController {
   ): Promise<void> => {
     try {
       const data = updateProfileSchema.parse(req.body);
-      const user = await User.findById(req.user?.userId);
+      const targetUserId = req.user?.id || req.user?.userId;
+      const user = await User.findById(targetUserId);
       if (!user) {
         throw new AppError('Student profile not found', 404);
       }

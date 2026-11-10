@@ -874,10 +874,98 @@ export const StudentProfileAndGradesEditorTab: React.FC = () => {
 };
 
 export const StudentDashboard: React.FC = () => {
-  const { activeTab } = useApp();
+  const { activeTab, setActiveTab, currentUser } = useApp();
+
+  const coreEntries = Object.entries(currentUser.coreGrades || {});
 
   return (
     <div className="space-y-6">
+      {/* Personal Student Welcome Banner & Sem I–IV Core Prerequisite Grades Vector Grid */}
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-4">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+                Welcome, {currentUser.name} ({currentUser.rollNumber || '102403042'})
+              </h2>
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#8B1E24]/10 text-[#8B1E24] dark:bg-rose-500/20 dark:text-rose-300 border border-[#8B1E24]/20">
+                Semester {currentUser.currentSemester} • Batch {currentUser.batchYear}
+              </span>
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+                Contact: {currentUser.contactNumber || '+91-9876543210'}
+              </span>
+            </div>
+
+            <p className="text-xs text-slate-600 dark:text-slate-300 max-w-3xl">
+              {currentUser.statementOfPurpose ||
+                'B.E. Computer Science & Engineering student at Thapar Institute of Engineering & Technology (TIET) specializing in data-driven elective planning.'}
+            </p>
+
+            <div className="flex flex-wrap items-center gap-1.5 pt-1">
+              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mr-1">
+                Target Roles:
+              </span>
+              {(currentUser.targetCareerRoles || ['Software Development Engineer']).map((role) => (
+                <span
+                  key={role}
+                  className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-[11px] font-semibold border border-slate-200 dark:border-slate-700"
+                >
+                  {role}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4 shrink-0">
+            <div className="px-4 py-3 rounded-xl bg-gradient-to-br from-[#8B1E24] to-[#5B1115] text-white text-right shadow-md">
+              <div className="text-[10px] uppercase tracking-wider opacity-80 font-semibold">
+                Cumulative CGPA
+              </div>
+              <div className="text-2xl font-extrabold font-mono">
+                {currentUser.cgpa.toFixed(2)}
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab('profile_editor')}
+              className="px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 hover:border-[#8B1E24] text-xs font-bold text-slate-800 dark:text-slate-200 transition flex items-center gap-1.5"
+            >
+              <Edit3 className="w-3.5 h-3.5 text-[#8B1E24] dark:text-rose-400" />
+              Edit My Grades &amp; Profile
+            </button>
+          </div>
+        </div>
+
+        {/* Personal Sem I–IV Core Prerequisite Grades Vector Grid */}
+        <div className="pt-3 border-t border-slate-200 dark:border-slate-800">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              Personal Semesters I–IV Core Prerequisite Grades Vector ({coreEntries.length} Subjects)
+            </span>
+            <span className="text-[10px] text-slate-400 font-mono">
+              Strictly isolated to {currentUser.email}
+            </span>
+          </div>
+          <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-13 gap-1.5">
+            {coreEntries.map(([code, gp]) => (
+              <div
+                key={code}
+                title={CORE_SUBJECT_TITLES[code] || code}
+                className="px-2 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700 text-center"
+              >
+                <div className="text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400">
+                  {code}
+                </div>
+                <div className="text-xs font-extrabold font-mono text-[#8B1E24] dark:text-rose-400">
+                  {gp}/10
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {activeTab === 'studio' && <HybridRecommendationStudio />}
       {activeTab === 'roadmap' && <ElectiveRoadmapAndLocker />}
       {activeTab === 'comparator' && <SideBySideComparator />}

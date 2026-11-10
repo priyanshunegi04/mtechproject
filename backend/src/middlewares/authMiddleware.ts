@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import { InstitutionalRole } from '../types';
 
 export interface AuthenticatedUserPayload {
+  id?: string;
   userId: string;
   email: string;
   name: string;
@@ -45,7 +46,11 @@ export function requireAuth(jwtAccessSecret: string) {
 
     try {
       const decoded = jwt.verify(token, jwtAccessSecret) as AuthenticatedUserPayload;
-      req.user = decoded;
+      req.user = {
+        ...decoded,
+        id: decoded.id || decoded.userId,
+        userId: decoded.userId || decoded.id || '',
+      };
       next();
     } catch (_err) {
       res.status(401).json({

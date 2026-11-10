@@ -28,6 +28,7 @@ const registerSchema = z.object({
   batchYear: z.coerce.number().int().min(2018).max(2032).default(2024),
   currentSemester: z.coerce.number().int().min(1).max(8).default(4),
   cgpa: z.coerce.number().min(0).max(10).default(7.8),
+  coreGrades: z.record(z.string(), z.coerce.number().min(0).max(10)).optional(),
   role: z.enum(['student', 'faculty_advisor', 'dean_admin']).default('student'),
   skills: z.array(z.string()).optional(),
   areasOfInterest: z.array(z.string()).optional(),
@@ -133,6 +134,7 @@ export class AuthController {
 
   private issueTokensAndSetCookie(res: Response, user: IUser): { accessToken: string; refreshToken: string } {
     const payload: AuthenticatedUserPayload = {
+      id: String(user._id),
       userId: String(user._id),
       email: user.email,
       name: user.name,
@@ -167,6 +169,27 @@ export class AuthController {
       const data = registerSchema.parse(req.body);
       const passwordHash = await bcrypt.hash(data.password, 12);
 
+      const defaultCoreGrades = new Map<string, number>([
+        ['UES103', 8],
+        ['UMA022', 8],
+        ['UMA023', 8],
+        ['UCS301', 8],
+        ['UCS303', 8],
+        ['UTA018', 8],
+        ['UCS405', 8],
+        ['UMA021', 8],
+        ['UCS415', 8],
+        ['UCS310', 8],
+        ['UCS414', 8],
+        ['UCS321', 8],
+        ['UMA401', 8],
+      ]);
+      if (data.coreGrades && typeof data.coreGrades === 'object') {
+        for (const [k, v] of Object.entries(data.coreGrades)) {
+          defaultCoreGrades.set(k.trim().toUpperCase(), Math.max(0, Math.min(10, Number(v))));
+        }
+      }
+
       const user = await User.create({
         name: data.name,
         email: data.email.toLowerCase(),
@@ -181,6 +204,7 @@ export class AuthController {
         batchYear: data.batchYear,
         currentSemester: data.currentSemester,
         cgpa: data.cgpa,
+        coreGrades: defaultCoreGrades,
         skills: data.skills || ['Python', 'C++', 'Data Structures', 'SQL'],
         areasOfInterest: data.areasOfInterest || ['Data Science', 'Artificial Intelligence'],
       });
