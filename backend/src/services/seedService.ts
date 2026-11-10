@@ -10,8 +10,10 @@ import {
   CourseCategoryType,
   IElectiveSequenceMap,
   IndustryPartnerType,
+  TeacherProfile,
   User,
 } from '../models';
+import { runCollectionMigration } from '../seed/fixCollections';
 import { InstitutionalRole } from '../types';
 
 const logger = pino({ name: 'tiet-seed-service' });
@@ -421,45 +423,87 @@ export async function ensureInstitutionalSeedData(): Promise<void> {
     await Course.bulkWrite(courseOps, { ordered: false });
   }
 
-  // Upsert the 6 Showcase Personas
+  // Upsert the 6 Showcase Personas separated strictly into `users` (students) and `teacher_profiles` (faculty)
   const defaultPasswordHash = await bcrypt.hash('Thapar@2026', 10);
   const now = new Date();
 
   for (const p of SHOWCASE_PERSONAS) {
-    await User.updateOne(
-      { email: p.email },
-      {
-        $setOnInsert: {
-          passwordHash: defaultPasswordHash,
-          allocationStatus: 'pending',
-          allocatedBasketId: null,
-          allocatedGenericCourseCode: null,
-          preferenceLockedAt: p.role === 'student' ? now : null,
+    if (p.role === 'faculty_advisor' || p.role === 'dean_admin') {
+      await TeacherProfile.updateOne(
+        { email: p.email },
+        {
+          $setOnInsert: {
+            passwordHash: defaultPasswordHash,
+            contactNumber: '+91-9876543210',
+            assignedCourses: [],
+            assignedMentees: [],
+          },
+          $set: {
+            personaKey: p.personaKey,
+            name: p.name,
+            email: p.email,
+            role: p.role,
+            employeeId: p.employeeId || 'FAC-CSED-104',
+            designation:
+              p.role === 'dean_admin'
+                ? 'Professor & Dean of Academic Affairs'
+                : 'Associate Professor',
+            department: 'CSED',
+            officeRoom: 'CSED Block-B Room 304',
+            primarySpecializationBasket: 'EF_BASKET_05',
+            assignedBasketId: 5,
+            assignedBasketName: 'Artificial Intelligence and Machine Learning (AIML)',
+            specializationArea: 'Artificial Intelligence & Machine Learning',
+          },
         },
-        $set: {
-          personaKey: p.personaKey,
-          name: p.name,
-          role: p.role,
-          ...(p.rollNumber ? { rollNumber: p.rollNumber } : {}),
-          ...(p.employeeId ? { employeeId: p.employeeId } : {}),
-          branch: 'B.E. Computer Science & Engineering (COPC)',
-          batchYear: p.batchYear,
-          currentSemester: p.currentSemester,
-          cgpa: p.cgpa,
-          sgpaHistory: p.sgpaHistory,
-          coreGrades: p.coreGrades,
-          codingProfileScore: p.codingProfileScore,
-          mathAptitudeScore: p.mathAptitudeScore,
-          skills: p.skills,
-          targetCareerRoles: p.targetCareerRoles,
-          statementOfPurpose: p.statementOfPurpose,
-          preferenceWeights: p.preferenceWeights,
-          rankedBasketPreferences: p.rankedBasketPreferences,
-          rankedGenericPreferences: p.rankedGenericPreferences,
+        { upsert: true }
+      );
+      // Clean up any legacy faculty record from the student `users` collection
+      await User.deleteOne({ email: p.email });
+    } else {
+      await User.updateOne(
+        { email: p.email },
+        {
+          $setOnInsert: {
+            passwordHash: defaultPasswordHash,
+            allocationStatus: 'pending',
+            allocatedBasketId: null,
+            allocatedGenericCourseCode: null,
+            preferenceLockedAt: now,
+          },
+          $set: {
+            personaKey: p.personaKey,
+            name: p.name,
+            role: 'student',
+            designation: 'Student',
+            rollNumber: p.rollNumber || '1024030012',
+            branch: 'B.E. Computer Science & Engineering (COPC)',
+            batchYear: p.batchYear,
+            currentSemester: p.currentSemester,
+            cgpa: p.cgpa,
+            sgpaHistory: p.sgpaHistory,
+            coreGrades: p.coreGrades,
+            codingProfileScore: p.codingProfileScore,
+            mathAptitudeScore: p.mathAptitudeScore,
+            skills: p.skills,
+            targetCareerRoles: p.targetCareerRoles,
+            statementOfPurpose: p.statementOfPurpose,
+            preferenceWeights: p.preferenceWeights,
+            rankedBasketPreferences: p.rankedBasketPreferences,
+            rankedGenericPreferences: p.rankedGenericPreferences,
+          },
+          $unset: {
+            officeRoom: 1,
+            assignedBasketId: 1,
+            assignedBasketName: 1,
+            primarySpecializationBasket: 1,
+            specializationArea: 1,
+            employeeId: 1,
+          },
         },
-      },
-      { upsert: true }
-    );
+        { upsert: true }
+      );
+    }
   }
 
   // Seed 56 additional Sem 4 student cohort profiles if fewer than 20 students exist so Merit Seat Allocation has a realistic batch
@@ -535,6 +579,7 @@ export async function ensureInstitutionalSeedData(): Promise<void> {
               email,
               passwordHash: defaultPasswordHash,
               role: 'student' as InstitutionalRole,
+              designation: 'Student',
               rollNumber: roll,
               branch: 'B.E. Computer Science & Engineering (COPC)',
               batchYear: 2024,
@@ -601,6 +646,14 @@ export async function ensureInstitutionalSeedData(): Promise<void> {
     },
     { upsert: true }
   );
+
+  // Run collection cleanup & migration so any existing faculty in `users` move to `teacher_profiles`
+  // and all students in `users` have `designation: "Student"` with zero teacher fields
+  try {
+    await runCollectionMigration();
+  } catch (migErr) {
+    logger.warn({ err: (migErr as Error).message }, 'Collection migration warning during seed');
+  }
 
   logger.info('Verified TIET B.E. CSE 2026 courses, 12 EF Baskets, and Showcase Personas in MongoDB Atlas');
 }

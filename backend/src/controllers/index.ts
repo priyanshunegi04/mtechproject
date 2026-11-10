@@ -1,4 +1,4 @@
-export { AuthController, serializeUser } from './authController';
+export { AuthController, serializeUser, serializeTeacher } from './authController';
 export { StudentController } from './studentController';
 export { CurriculumController } from './curriculumController';
 export { AdminController } from './adminController';

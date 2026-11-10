@@ -9,35 +9,60 @@ import {
   signAccessToken,
   signRefreshToken,
 } from '../middlewares';
-import { IUser, User } from '../models';
+import { ITeacherProfile, IUser, TeacherProfile, User } from '../models';
 import { recordAuditLog, SHOWCASE_PERSONAS } from '../services';
 
-const registerSchema = z.object({
+const studentRegisterSchema = z.object({
   name: z.string().min(2).max(120),
   email: z
     .string()
     .email()
     .regex(/^[a-zA-Z0-9._%+-]+@thapar\.edu$/i, 'Email must belong to the @thapar.edu domain'),
   password: z.string().min(8).max(100),
+  role: z.literal('student').default('student'),
   contactNumber: z.string().max(30).optional().default('+91-9876543210'),
-  rollNumber: z.string().min(3).max(30).optional(),
-  employeeId: z.string().min(2).max(30).optional(),
+  rollNumber: z.string().min(3, 'Roll Number is required for student registration').max(30),
   department: z.string().max(80).optional().default('CSED'),
-  designation: z.string().max(80).optional().default('Associate Professor'),
-  primarySpecializationBasket: z.string().max(40).optional().default('EF_BASKET_05'),
-  assignedBasketId: z.coerce.number().int().min(1).max(12).optional().default(5),
-  assignedBasketName: z.string().max(120).optional().default('Artificial Intelligence and Machine Learning (AIML)'),
-  officeRoom: z.string().max(80).optional().default('CSED Block-B Room 304'),
-  specializationArea: z.string().max(120).optional().default('Artificial Intelligence & Machine Learning'),
+  branch: z
+    .string()
+    .max(120)
+    .optional()
+    .default('B.E. Computer Science & Engineering (COPC)'),
   batchYear: z.coerce.number().int().min(2018).max(2032).default(2024),
   currentSemester: z.coerce.number().int().min(1).max(8).default(4),
   cgpa: z.coerce.number().min(0).max(10).default(7.8),
   coreGrades: z.record(z.string(), z.coerce.number().min(0).max(10)).optional(),
-  role: z.enum(['student', 'faculty_advisor', 'dean_admin']).default('student'),
   skills: z.array(z.string()).optional(),
   areasOfInterest: z.array(z.string()).optional(),
   targetRoles: z.array(z.string()).optional(),
   bio: z.string().max(2500).optional(),
+});
+
+const teacherRegisterSchema = z.object({
+  name: z.string().min(2).max(120),
+  email: z
+    .string()
+    .email()
+    .regex(/^[a-zA-Z0-9._%+-]+@thapar\.edu$/i, 'Email must belong to the @thapar.edu domain'),
+  password: z.string().min(8).max(100),
+  role: z.enum(['faculty_advisor', 'dean_admin']).default('faculty_advisor'),
+  contactNumber: z.string().max(30).optional().default('+91-9876543210'),
+  employeeId: z.string().min(2, 'Employee ID is required for faculty registration').max(30),
+  designation: z.string().min(2).max(80).default('Associate Professor'),
+  department: z.string().max(80).optional().default('CSED'),
+  officeRoom: z.string().max(80).optional().default('CSED Block-B Room 304'),
+  primarySpecializationBasket: z.string().max(40).optional().default('EF_BASKET_05'),
+  assignedBasketId: z.coerce.number().int().min(1).max(12).optional().default(5),
+  assignedBasketName: z
+    .string()
+    .max(120)
+    .optional()
+    .default('Artificial Intelligence and Machine Learning (AIML)'),
+  specializationArea: z
+    .string()
+    .max(120)
+    .optional()
+    .default('Artificial Intelligence & Machine Learning'),
 });
 
 const loginSchema = z.object({
@@ -66,19 +91,11 @@ export function serializeUser(user: IUser): Record<string, unknown> {
     email: user.email,
     contactNumber: user.contactNumber || '+91-9876543210',
     department: user.department || 'CSED',
-    designation: user.designation || 'Associate Professor',
-    primarySpecializationBasket: user.primarySpecializationBasket || 'EF_BASKET_05',
-    assignedBasketId: user.assignedBasketId || 5,
-    assignedBasketName:
-      user.assignedBasketName || 'Artificial Intelligence and Machine Learning (AIML)',
-    officeRoom: user.officeRoom || 'CSED Block-B Room 304',
-    specializationArea:
-      user.specializationArea || 'Artificial Intelligence & Machine Learning',
-    role: user.role,
-    rollNumber: user.rollNumber || null,
-    employeeId: user.employeeId || null,
+    designation: 'Student',
+    role: 'student',
+    rollNumber: user.rollNumber,
     personaKey: user.personaKey || null,
-    branch: user.branch,
+    branch: user.branch || 'B.E. Computer Science & Engineering (COPC)',
     batchYear: user.batchYear,
     currentSemester: user.currentSemester,
     cgpa: user.cgpa,
@@ -90,8 +107,7 @@ export function serializeUser(user: IUser): Record<string, unknown> {
       contactNumber: user.contactNumber || '+91-9876543210',
       batchYear: user.batchYear,
       currentSemester: user.currentSemester,
-      rollNumber: user.rollNumber || undefined,
-      employeeId: user.employeeId || undefined,
+      rollNumber: user.rollNumber,
       department: user.department || 'CSED',
     },
     academicData: {
@@ -102,7 +118,9 @@ export function serializeUser(user: IUser): Record<string, unknown> {
     mathAptitudeScore: user.mathAptitudeScore,
     skills: user.skills || [],
     areasOfInterest: user.areasOfInterest || ['Conversational AI (NVIDIA)', 'Data Science'],
-    targetRoles: user.targetRoles || user.targetCareerRoles || ['Generative AI & LLM Engineer', 'Data Scientist'],
+    targetRoles:
+      user.targetRoles ||
+      user.targetCareerRoles || ['Generative AI & LLM Engineer', 'Data Scientist'],
     bio:
       user.bio ||
       user.statementOfPurpose ||
@@ -147,18 +165,51 @@ export function serializeUser(user: IUser): Record<string, unknown> {
   };
 }
 
+export function serializeTeacher(teacher: ITeacherProfile): Record<string, unknown> {
+  return {
+    id: String(teacher._id),
+    name: teacher.name,
+    email: teacher.email,
+    role: teacher.role || 'faculty_advisor',
+    contactNumber: teacher.contactNumber || '+91-9876543210',
+    employeeId: teacher.employeeId,
+    designation: teacher.designation || 'Associate Professor',
+    department: teacher.department || 'CSED',
+    officeRoom: teacher.officeRoom || 'CSED Block-B Room 304',
+    primarySpecializationBasket: teacher.primarySpecializationBasket || 'EF_BASKET_05',
+    assignedBasketId: teacher.assignedBasketId || 5,
+    assignedBasketName:
+      teacher.assignedBasketName || 'Artificial Intelligence and Machine Learning (AIML)',
+    specializationArea:
+      teacher.specializationArea || 'Artificial Intelligence & Machine Learning',
+    assignedCourses: teacher.assignedCourses || [],
+    assignedMentees: (teacher.assignedMentees || []).map((id) => String(id)),
+    personaKey: teacher.personaKey || null,
+  };
+}
+
 export class AuthController {
   constructor(private readonly env: EnvConfig) {}
 
-  private issueTokensAndSetCookie(res: Response, user: IUser): { accessToken: string; refreshToken: string } {
+  private issueTokensAndSetCookie(
+    res: Response,
+    account: {
+      _id: unknown;
+      email: string;
+      name: string;
+      role: 'student' | 'faculty_advisor' | 'dean_admin';
+      rollNumber?: string;
+      personaKey?: string;
+    }
+  ): { accessToken: string; refreshToken: string } {
     const payload: AuthenticatedUserPayload = {
-      id: String(user._id),
-      userId: String(user._id),
-      email: user.email,
-      name: user.name,
-      role: user.role,
-      rollNumber: user.rollNumber,
-      personaKey: user.personaKey,
+      id: String(account._id),
+      userId: String(account._id),
+      email: account.email,
+      name: account.name,
+      role: account.role,
+      rollNumber: account.rollNumber,
+      personaKey: account.personaKey,
     };
 
     const accessToken = signAccessToken(
@@ -184,28 +235,112 @@ export class AuthController {
 
   public register = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const data = registerSchema.parse(req.body);
+      const requestedRole = req.body?.role || 'student';
+
+      if (requestedRole === 'faculty_advisor' || requestedRole === 'dean_admin') {
+        const data = teacherRegisterSchema.parse({
+          ...req.body,
+          role: requestedRole,
+        });
+        const cleanEmail = data.email.trim().toLowerCase();
+        const cleanEmployeeId = data.employeeId.trim();
+
+        const [existingTeacher, existingStudentEmail] = await Promise.all([
+          TeacherProfile.findOne({
+            $or: [{ email: cleanEmail }, { employeeId: cleanEmployeeId }],
+          }),
+          User.findOne({ email: cleanEmail }),
+        ]);
+
+        if (existingTeacher?.email === cleanEmail || existingStudentEmail) {
+          throw new AppError(
+            `An account with email ${cleanEmail} already exists in MongoDB Atlas.`,
+            409
+          );
+        }
+        if (existingTeacher?.employeeId === cleanEmployeeId) {
+          throw new AppError(
+            `Employee ID ${cleanEmployeeId} is already registered in MongoDB Atlas.`,
+            409
+          );
+        }
+
+        const passwordHash = await bcrypt.hash(data.password, 12);
+        const basketNumMatch = String(
+          data.primarySpecializationBasket || 'EF_BASKET_05'
+        ).match(/\d+/);
+        const assignedBasketNum =
+          data.assignedBasketId || (basketNumMatch ? parseInt(basketNumMatch[0], 10) : 5);
+        const normalizedBasketCode =
+          data.primarySpecializationBasket ||
+          `EF_BASKET_${String(assignedBasketNum).padStart(2, '0')}`;
+
+        const teacher = await TeacherProfile.create({
+          name: data.name.trim(),
+          email: cleanEmail,
+          passwordHash,
+          role: data.role,
+          contactNumber: data.contactNumber,
+          employeeId: cleanEmployeeId,
+          designation: data.designation.trim(),
+          department: data.department,
+          officeRoom: data.officeRoom,
+          primarySpecializationBasket: normalizedBasketCode,
+          assignedBasketId: assignedBasketNum,
+          assignedBasketName: data.assignedBasketName,
+          specializationArea: data.specializationArea,
+          assignedCourses: [],
+          assignedMentees: [],
+        });
+
+        const { accessToken, refreshToken } = this.issueTokensAndSetCookie(res, teacher);
+        teacher.refreshTokenHash = await bcrypt.hash(refreshToken, 8);
+        await teacher.save();
+
+        await recordAuditLog({
+          actorId: String(teacher._id),
+          actorEmail: teacher.email,
+          actorRole: teacher.role,
+          action: 'TEACHER_REGISTERED',
+          req,
+          metadata: { employeeId: teacher.employeeId, role: teacher.role },
+        });
+
+        res.status(201).json({
+          success: true,
+          accessToken,
+          tokens: { accessToken, refreshToken },
+          user: serializeTeacher(teacher),
+        });
+        return;
+      }
+
+      // Otherwise role === 'student'
+      const data = studentRegisterSchema.parse({
+        ...req.body,
+        role: 'student',
+      });
       const cleanEmail = data.email.trim().toLowerCase();
+      const cleanRollNumber = data.rollNumber.trim();
 
-      const conflictConditions: Record<string, unknown>[] = [{ email: cleanEmail }];
-      if (data.rollNumber) {
-        conflictConditions.push({ rollNumber: data.rollNumber.trim() });
-      }
-      if (data.employeeId) {
-        conflictConditions.push({ employeeId: data.employeeId.trim() });
-      }
+      const [existingStudent, existingTeacherEmail] = await Promise.all([
+        User.findOne({
+          $or: [{ email: cleanEmail }, { rollNumber: cleanRollNumber }],
+        }),
+        TeacherProfile.findOne({ email: cleanEmail }),
+      ]);
 
-      const existingUser = await User.findOne({ $or: conflictConditions });
-      if (existingUser) {
-        if (existingUser.email === cleanEmail) {
-          throw new AppError(`An account with email ${cleanEmail} already exists in MongoDB Atlas.`, 409);
-        }
-        if (data.rollNumber && existingUser.rollNumber === data.rollNumber.trim()) {
-          throw new AppError(`Roll Number ${data.rollNumber.trim()} is already registered in MongoDB Atlas.`, 409);
-        }
-        if (data.employeeId && existingUser.employeeId === data.employeeId.trim()) {
-          throw new AppError(`Employee ID ${data.employeeId.trim()} is already registered in MongoDB Atlas.`, 409);
-        }
+      if (existingStudent?.email === cleanEmail || existingTeacherEmail) {
+        throw new AppError(
+          `An account with email ${cleanEmail} already exists in MongoDB Atlas.`,
+          409
+        );
+      }
+      if (existingStudent?.rollNumber === cleanRollNumber) {
+        throw new AppError(
+          `Roll Number ${cleanRollNumber} is already registered in MongoDB Atlas.`,
+          409
+        );
       }
 
       const passwordHash = await bcrypt.hash(data.password, 12);
@@ -231,24 +366,16 @@ export class AuthController {
         }
       }
 
-      const basketNumMatch = String(data.primarySpecializationBasket || 'EF_BASKET_05').match(/\d+/);
-      const assignedBasketNum = data.assignedBasketId || (basketNumMatch ? parseInt(basketNumMatch[0], 10) : 5);
-
-      const user = await User.create({
-        name: data.name,
+      const student = await User.create({
+        name: data.name.trim(),
         email: cleanEmail,
         passwordHash,
+        role: 'student',
+        designation: 'Student',
         contactNumber: data.contactNumber,
+        rollNumber: cleanRollNumber,
         department: data.department,
-        designation: data.designation,
-        primarySpecializationBasket: data.primarySpecializationBasket,
-        assignedBasketId: assignedBasketNum,
-        assignedBasketName: data.assignedBasketName,
-        officeRoom: data.officeRoom,
-        specializationArea: data.specializationArea,
-        role: data.role,
-        rollNumber: data.rollNumber ? data.rollNumber.trim() : undefined,
-        employeeId: data.employeeId ? data.employeeId.trim() : undefined,
+        branch: data.branch,
         batchYear: data.batchYear,
         currentSemester: data.currentSemester,
         cgpa: data.cgpa,
@@ -265,24 +392,24 @@ export class AuthController {
           'B.E. Computer Science & Engineering student at Thapar Institute of Engineering & Technology (TIET) specializing in data-driven elective planning.',
       });
 
-      const { accessToken, refreshToken } = this.issueTokensAndSetCookie(res, user);
-      user.refreshTokenHash = await bcrypt.hash(refreshToken, 8);
-      await user.save();
+      const { accessToken, refreshToken } = this.issueTokensAndSetCookie(res, student);
+      student.refreshTokenHash = await bcrypt.hash(refreshToken, 8);
+      await student.save();
 
       await recordAuditLog({
-        actorId: String(user._id),
-        actorEmail: user.email,
-        actorRole: user.role,
+        actorId: String(student._id),
+        actorEmail: student.email,
+        actorRole: student.role,
         action: 'USER_REGISTERED',
         req,
-        metadata: { rollNumber: user.rollNumber, role: user.role },
+        metadata: { rollNumber: student.rollNumber, role: student.role },
       });
 
       res.status(201).json({
         success: true,
         accessToken,
         tokens: { accessToken, refreshToken },
-        user: serializeUser(user),
+        user: serializeUser(student),
       });
     } catch (error) {
       next(error);
@@ -298,32 +425,62 @@ export class AuthController {
       }
 
       const lowerIdentifier = rawIdentifier.toLowerCase();
-      const user = await User.findOne({
-        $or: [
-          { email: lowerIdentifier },
-          { rollNumber: rawIdentifier },
-          { employeeId: rawIdentifier },
-        ],
+
+      // 1. Check Student collection (`users`) first
+      const student = await User.findOne({
+        $or: [{ email: lowerIdentifier }, { rollNumber: rawIdentifier }],
       }).select('+passwordHash');
 
-      if (!user) {
-        throw new AppError('Invalid @thapar.edu email, roll number, or password', 401);
+      if (student && student.role === 'student') {
+        const validPassword = await bcrypt.compare(parsed.password, student.passwordHash);
+        if (!validPassword) {
+          throw new AppError('Invalid @thapar.edu email, roll number, or password', 401);
+        }
+
+        const { accessToken, refreshToken } = this.issueTokensAndSetCookie(res, student);
+        student.refreshTokenHash = await bcrypt.hash(refreshToken, 8);
+        await student.save();
+
+        await recordAuditLog({
+          actorId: String(student._id),
+          actorEmail: student.email,
+          actorRole: student.role,
+          action: 'USER_LOGIN',
+          req,
+        });
+
+        res.status(200).json({
+          success: true,
+          accessToken,
+          tokens: { accessToken, refreshToken },
+          user: serializeUser(student),
+        });
+        return;
       }
 
-      const validPassword = await bcrypt.compare(parsed.password, user.passwordHash);
+      // 2. Check TeacherProfile collection (`teacher_profiles`)
+      const teacher = await TeacherProfile.findOne({
+        $or: [{ email: lowerIdentifier }, { employeeId: rawIdentifier }],
+      }).select('+passwordHash');
+
+      if (!teacher) {
+        throw new AppError('Invalid @thapar.edu email, roll number, employee ID, or password', 401);
+      }
+
+      const validPassword = await bcrypt.compare(parsed.password, teacher.passwordHash);
       if (!validPassword) {
-        throw new AppError('Invalid @thapar.edu email, roll number, or password', 401);
+        throw new AppError('Invalid @thapar.edu email, roll number, employee ID, or password', 401);
       }
 
-      const { accessToken, refreshToken } = this.issueTokensAndSetCookie(res, user);
-      user.refreshTokenHash = await bcrypt.hash(refreshToken, 8);
-      await user.save();
+      const { accessToken, refreshToken } = this.issueTokensAndSetCookie(res, teacher);
+      teacher.refreshTokenHash = await bcrypt.hash(refreshToken, 8);
+      await teacher.save();
 
       await recordAuditLog({
-        actorId: String(user._id),
-        actorEmail: user.email,
-        actorRole: user.role,
-        action: 'USER_LOGIN',
+        actorId: String(teacher._id),
+        actorEmail: teacher.email,
+        actorRole: teacher.role,
+        action: 'TEACHER_LOGIN',
         req,
       });
 
@@ -331,7 +488,7 @@ export class AuthController {
         success: true,
         accessToken,
         tokens: { accessToken, refreshToken },
-        user: serializeUser(user),
+        user: serializeTeacher(teacher),
       });
     } catch (error) {
       next(error);
@@ -348,17 +505,34 @@ export class AuthController {
       }
 
       const decoded = jwt.verify(token, this.env.JWT_REFRESH_SECRET) as AuthenticatedUserPayload;
-      const user = await User.findById(decoded.userId);
-      if (!user) {
-        throw new AppError('User account no longer active', 401);
+      const targetId = decoded.id || decoded.userId;
+
+      if (decoded.role === 'faculty_advisor' || decoded.role === 'dean_admin') {
+        const teacher = await TeacherProfile.findById(targetId);
+        if (!teacher) {
+          throw new AppError('Faculty account no longer active', 401);
+        }
+        const { accessToken, refreshToken } = this.issueTokensAndSetCookie(res, teacher);
+        res.status(200).json({
+          success: true,
+          accessToken,
+          tokens: { accessToken, refreshToken },
+          user: serializeTeacher(teacher),
+        });
+        return;
       }
 
-      const { accessToken, refreshToken } = this.issueTokensAndSetCookie(res, user);
+      const student = await User.findById(targetId);
+      if (!student) {
+        throw new AppError('Student account no longer active', 401);
+      }
+
+      const { accessToken, refreshToken } = this.issueTokensAndSetCookie(res, student);
       res.status(200).json({
         success: true,
         accessToken,
         tokens: { accessToken, refreshToken },
-        user: serializeUser(user),
+        user: serializeUser(student),
       });
     } catch (_error) {
       next(new AppError('Invalid or expired refresh token', 401));
@@ -367,8 +541,13 @@ export class AuthController {
 
   public logout = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      if (req.user?.userId) {
-        await User.findByIdAndUpdate(req.user.userId, { $set: { refreshTokenHash: null } });
+      const targetId = req.user?.id || req.user?.userId;
+      if (targetId) {
+        if (req.user?.role === 'faculty_advisor' || req.user?.role === 'dean_admin') {
+          await TeacherProfile.findByIdAndUpdate(targetId, { $set: { refreshTokenHash: null } });
+        } else {
+          await User.findByIdAndUpdate(targetId, { $set: { refreshTokenHash: null } });
+        }
       }
       res.clearCookie('tiet_refresh_token');
       res.status(200).json({
@@ -383,13 +562,26 @@ export class AuthController {
   public getMe = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const targetId = req.user?.id || req.user?.userId;
-      const user = await User.findById(targetId).select('-passwordHash');
-      if (!user) {
-        throw new AppError('Authenticated user profile not found', 404);
+
+      if (req.user?.role === 'faculty_advisor' || req.user?.role === 'dean_admin') {
+        const teacher = await TeacherProfile.findById(targetId).select('-passwordHash');
+        if (!teacher) {
+          throw new AppError('Authenticated faculty profile not found in teacher_profiles', 404);
+        }
+        res.status(200).json({
+          success: true,
+          user: serializeTeacher(teacher),
+        });
+        return;
+      }
+
+      const student = await User.findById(targetId).select('-passwordHash');
+      if (!student) {
+        throw new AppError('Authenticated student profile not found in users', 404);
       }
       res.status(200).json({
         success: true,
-        user: serializeUser(user),
+        user: serializeUser(student),
       });
     } catch (error) {
       next(error);
@@ -431,19 +623,19 @@ export class AuthController {
         updateData.assignedBasketName = String(req.body.assignedBasketName).trim();
       }
 
-      const updatedUser = await User.findByIdAndUpdate(
+      const updatedTeacher = await TeacherProfile.findByIdAndUpdate(
         targetId,
         { $set: updateData },
         { new: true }
       ).select('-passwordHash');
 
-      if (!updatedUser) {
-        throw new AppError('Faculty profile not found in MongoDB Atlas', 404);
+      if (!updatedTeacher) {
+        throw new AppError('Faculty profile not found in teacher_profiles collection', 404);
       }
 
       res.status(200).json({
         success: true,
-        user: serializeUser(updatedUser),
+        user: serializeTeacher(updatedTeacher),
       });
     } catch (error) {
       next(error);
@@ -492,28 +684,85 @@ export class AuthController {
         throw new AppError(`Unknown TIET Showcase Persona key: ${personaKey}`, 404);
       }
 
-      let user = await User.findOne({ email: seedMeta.email });
-      if (!user) {
+      if (seedMeta.role === 'faculty_advisor' || seedMeta.role === 'dean_admin') {
+        let teacher = await TeacherProfile.findOne({ email: seedMeta.email });
+        if (!teacher) {
+          const passwordHash = await bcrypt.hash('Thapar@2026', 10);
+          teacher = await TeacherProfile.create({
+            name: seedMeta.name,
+            email: seedMeta.email,
+            passwordHash,
+            role: seedMeta.role,
+            employeeId: seedMeta.employeeId || 'TIET-CSED-FA01',
+            designation:
+              seedMeta.role === 'dean_admin'
+                ? 'Professor & Dean of Academic Affairs'
+                : 'Associate Professor',
+            department: 'CSED',
+            officeRoom: 'CSED Block-B Room 304',
+            primarySpecializationBasket: 'EF_BASKET_05',
+            assignedBasketId: 5,
+            assignedBasketName: 'Artificial Intelligence and Machine Learning (AIML)',
+            specializationArea: 'Artificial Intelligence & Machine Learning',
+            personaKey: seedMeta.personaKey,
+          });
+        }
+
+        const { accessToken, refreshToken } = this.issueTokensAndSetCookie(res, teacher);
+        teacher.refreshTokenHash = await bcrypt.hash(refreshToken, 8);
+        await teacher.save();
+
+        res.status(200).json({
+          success: true,
+          personaKey: seedMeta.personaKey,
+          label: seedMeta.label,
+          subtitle: seedMeta.subtitle,
+          accessToken,
+          user: serializeTeacher(teacher),
+        });
+        return;
+      }
+
+      let student = await User.findOne({ email: seedMeta.email });
+      if (!student) {
         const passwordHash = await bcrypt.hash('Thapar@2026', 10);
-        user = await User.create({
-          ...seedMeta,
+        student = await User.create({
+          name: seedMeta.name,
+          email: seedMeta.email,
           passwordHash,
+          role: 'student',
+          designation: 'Student',
+          rollNumber: seedMeta.rollNumber || '1024030012',
           branch: 'B.E. Computer Science & Engineering (COPC)',
-          preferenceLockedAt: seedMeta.role === 'student' ? new Date() : null,
+          batchYear: seedMeta.batchYear,
+          currentSemester: seedMeta.currentSemester,
+          cgpa: seedMeta.cgpa,
+          sgpaHistory: seedMeta.sgpaHistory,
+          coreGrades: seedMeta.coreGrades,
+          codingProfileScore: seedMeta.codingProfileScore,
+          mathAptitudeScore: seedMeta.mathAptitudeScore,
+          skills: seedMeta.skills,
+          targetCareerRoles: seedMeta.targetCareerRoles,
+          statementOfPurpose: seedMeta.statementOfPurpose,
+          preferenceWeights: seedMeta.preferenceWeights,
+          rankedBasketPreferences: seedMeta.rankedBasketPreferences,
+          rankedGenericPreferences: seedMeta.rankedGenericPreferences,
+          preferenceLockedAt: new Date(),
+          personaKey: seedMeta.personaKey,
         });
       }
 
-      const { accessToken, refreshToken } = this.issueTokensAndSetCookie(res, user);
-      user.refreshTokenHash = await bcrypt.hash(refreshToken, 8);
-      await user.save();
+      const { accessToken, refreshToken } = this.issueTokensAndSetCookie(res, student);
+      student.refreshTokenHash = await bcrypt.hash(refreshToken, 8);
+      await student.save();
 
       await recordAuditLog({
-        actorId: String(user._id),
-        actorEmail: user.email,
-        actorRole: user.role,
+        actorId: String(student._id),
+        actorEmail: student.email,
+        actorRole: student.role,
         action: 'SHOWCASE_PERSONA_SWITCH',
         req,
-        metadata: { personaKey: seedMeta.personaKey, role: user.role, cgpa: user.cgpa },
+        metadata: { personaKey: seedMeta.personaKey, role: student.role, cgpa: student.cgpa },
       });
 
       res.status(200).json({
@@ -522,7 +771,7 @@ export class AuthController {
         label: seedMeta.label,
         subtitle: seedMeta.subtitle,
         accessToken,
-        user: serializeUser(user),
+        user: serializeUser(student),
       });
     } catch (error) {
       next(error);

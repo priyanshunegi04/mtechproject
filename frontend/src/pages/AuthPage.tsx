@@ -288,28 +288,38 @@ export const SignupPage: React.FC = () => {
     const basketNum = chosenBasketObj?.basketNumber || 5;
 
     setIsSubmitting(true);
-    const res = await signup({
-      name: fullName.trim(),
-      email: email.trim().toLowerCase(),
-      password,
-      contactNumber: contactNumber.trim() || '+91-9876543210',
-      role,
-      rollNumber: role === 'student' ? rollNumber.trim() : undefined,
-      batchYear: role === 'student' ? batchYear : undefined,
-      currentSemester: role === 'student' ? currentSemester : undefined,
-      cgpa: role === 'student' ? cgpa : undefined,
-      coreGrades: role === 'student' ? coreGrades : undefined,
-      employeeId: role === 'faculty_advisor' ? employeeId.trim() : undefined,
-      department: role === 'faculty_advisor' ? department.trim() : 'CSED',
-      designation: role === 'faculty_advisor' ? designation.trim() : undefined,
-      primarySpecializationBasket:
-        role === 'faculty_advisor' ? primarySpecializationBasket : undefined,
-      assignedBasketId: role === 'faculty_advisor' ? basketNum : undefined,
-      assignedBasketName:
-        role === 'faculty_advisor' ? chosenBasketObj?.name || 'AIML' : undefined,
-      officeRoom: role === 'faculty_advisor' ? officeRoom.trim() : undefined,
-      specializationArea: role === 'faculty_advisor' ? specializationArea.trim() : undefined,
-    });
+    const res =
+      role === 'student'
+        ? await signup({
+            name: fullName.trim(),
+            email: email.trim().toLowerCase(),
+            password,
+            contactNumber: contactNumber.trim() || '+91-9876543210',
+            role: 'student',
+            designation: 'Student',
+            department: 'CSED',
+            rollNumber: rollNumber.trim(),
+            batchYear,
+            currentSemester,
+            cgpa,
+            coreGrades,
+          })
+        : await signup({
+            name: fullName.trim(),
+            email: email.trim().toLowerCase(),
+            password,
+            contactNumber: contactNumber.trim() || '+91-9876543210',
+            role: 'faculty_advisor',
+            employeeId: employeeId.trim(),
+            department: department.trim() || 'CSED',
+            designation: designation.trim() || 'Associate Professor',
+            primarySpecializationBasket,
+            assignedBasketId: basketNum,
+            assignedBasketName: chosenBasketObj?.name || 'AIML',
+            officeRoom: officeRoom.trim() || 'CSED Block-B Room 304',
+            specializationArea:
+              specializationArea.trim() || 'Artificial Intelligence & Machine Learning',
+          });
     setIsSubmitting(false);
 
     if (!res.success) {

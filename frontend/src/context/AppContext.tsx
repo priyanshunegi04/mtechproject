@@ -666,14 +666,26 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       rollNumber: payload.role === 'student' ? payload.rollNumber || '102403012' : null,
       employeeId: payload.role === 'faculty_advisor' ? payload.employeeId || 'FAC-CSED-104' : null,
       department: payload.department || 'CSED',
-      designation: payload.designation || 'Associate Professor',
-      primarySpecializationBasket: payload.primarySpecializationBasket || 'EF_BASKET_05',
-      assignedBasketId: payload.assignedBasketId || 5,
+      designation:
+        payload.role === 'student' ? 'Student' : payload.designation || 'Associate Professor',
+      primarySpecializationBasket:
+        payload.role === 'faculty_advisor'
+          ? payload.primarySpecializationBasket || 'EF_BASKET_05'
+          : undefined,
+      assignedBasketId:
+        payload.role === 'faculty_advisor' ? payload.assignedBasketId || 5 : undefined,
       assignedBasketName:
-        payload.assignedBasketName || 'Artificial Intelligence and Machine Learning (AIML)',
-      officeRoom: payload.officeRoom || 'CSED Block-B Room 304',
+        payload.role === 'faculty_advisor'
+          ? payload.assignedBasketName || 'Artificial Intelligence and Machine Learning (AIML)'
+          : undefined,
+      officeRoom:
+        payload.role === 'faculty_advisor'
+          ? payload.officeRoom || 'CSED Block-B Room 304'
+          : undefined,
       specializationArea:
-        payload.specializationArea || 'Artificial Intelligence & Machine Learning',
+        payload.role === 'faculty_advisor'
+          ? payload.specializationArea || 'Artificial Intelligence & Machine Learning'
+          : undefined,
       batchYear: payload.batchYear || 2024,
       currentSemester: payload.currentSemester || 4,
       cgpa: payload.cgpa ?? 9.12,

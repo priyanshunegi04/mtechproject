@@ -55,7 +55,6 @@ export interface IPersonalInfo {
   batchYear?: number;
   currentSemester?: number;
   rollNumber?: string;
-  employeeId?: string;
   department?: string;
 }
 
@@ -78,17 +77,11 @@ export interface IUser extends Document {
   name: string;
   email: string;
   passwordHash: string;
-  contactNumber?: string;
+  contactNumber: string;
   department: string;
-  designation?: string;
-  primarySpecializationBasket?: string;
-  assignedBasketId?: number;
-  assignedBasketName?: string;
-  officeRoom?: string;
-  specializationArea?: string;
+  designation: string;
   role: InstitutionalRole;
-  rollNumber?: string;
-  employeeId?: string;
+  rollNumber: string;
   branch: string;
   batchYear: number;
   currentSemester: number;
@@ -233,6 +226,7 @@ const userSchema = new Schema<IUser>(
     },
     contactNumber: {
       type: String,
+      required: true,
       default: '+91-9876543210',
       trim: true,
     },
@@ -243,51 +237,19 @@ const userSchema = new Schema<IUser>(
     },
     designation: {
       type: String,
-      default: 'Associate Professor',
-      trim: true,
-    },
-    primarySpecializationBasket: {
-      type: String,
-      default: 'EF_BASKET_05',
-      trim: true,
-    },
-    assignedBasketId: {
-      type: Number,
-      default: 5,
-      min: 1,
-      max: 12,
-    },
-    assignedBasketName: {
-      type: String,
-      default: 'Artificial Intelligence and Machine Learning (AIML)',
-      trim: true,
-    },
-    officeRoom: {
-      type: String,
-      default: 'CSED Block-B Room 304',
-      trim: true,
-    },
-    specializationArea: {
-      type: String,
-      default: 'Artificial Intelligence & Machine Learning',
+      default: 'Student',
       trim: true,
     },
     role: {
       type: String,
-      enum: ['student', 'faculty_advisor', 'dean_admin'],
+      enum: ['student'],
       default: 'student',
       required: true,
     },
     rollNumber: {
       type: String,
+      required: true,
       trim: true,
-      sparse: true,
-      unique: true,
-    },
-    employeeId: {
-      type: String,
-      trim: true,
-      sparse: true,
       unique: true,
     },
     branch: {

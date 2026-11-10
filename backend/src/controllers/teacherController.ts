@@ -230,8 +230,9 @@ export class TeacherController {
         : undefined;
 
       let teacherBasket = requestedBasket;
-      if (!teacherBasket && req.user?.userId) {
-        const teacherDoc = await User.findById(req.user.userId);
+      const teacherId = req.user?.id || req.user?.userId;
+      if (!teacherBasket && teacherId) {
+        const teacherDoc = await TeacherProfile.findById(teacherId);
         if (teacherDoc?.primarySpecializationBasket) {
           teacherBasket = normalizeBasketId(teacherDoc.primarySpecializationBasket);
         }
