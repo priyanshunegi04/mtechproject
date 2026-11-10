@@ -9,7 +9,7 @@ on:
 env:
   NODE_VERSION: "20"
   PYTHON_VERSION: "3.11"
-  MONGODB_URI: ${{ secrets.MONGODB_URI }}
+  MONGODB_URI: ${{ secrets.MONGODB_URI || 'mongodb+srv://ci_test:ci_test@cluster0.mongodb.net/thapar_elective_ai?retryWrites=true&w=majority' }}
   ML_SERVICE_URL: ${{ secrets.ML_SERVICE_URL || 'https://thapar-elective-ml.onrender.com' }}
   ML_SERVICE_API_KEY: ${{ secrets.ML_SERVICE_API_KEY }}
   JWT_ACCESS_SECRET: ${{ secrets.JWT_ACCESS_SECRET }}
@@ -65,5 +65,6 @@ jobs:
         run: pytest -v
         env:
           APP_ENV: test
+          MONGODB_URI: "mongodb+srv://ci_test:ci_test@cluster0.mongodb.net/thapar_elective_ai?retryWrites=true&w=majority"
           ML_SERVICE_API_KEY: ${{ secrets.ML_SERVICE_API_KEY || 'ci-test-key-minimum-32-characters-length' }}
 

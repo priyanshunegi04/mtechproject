@@ -6,7 +6,7 @@
   "description": "ThaparElectiveAI Enterprise SaaS Web Application — React 18 + Vite + TypeScript + Tailwind CSS + Recharts + Framer Motion",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",

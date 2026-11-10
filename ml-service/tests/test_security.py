@@ -1,6 +1,11 @@
 """
 Unit tests for strict production security and credential hardening in ml-service.
 """
+import os
+if not os.environ.get("MONGODB_URI"):
+    os.environ["MONGODB_URI"] = "mongodb+srv://ci_test:ci_test@cluster0.mongodb.net/thapar_elective_ai?retryWrites=true&w=majority"
+os.environ.setdefault("MONGODB_URI", "mongodb+srv://ci_test:ci_test@cluster0.mongodb.net/thapar_elective_ai?retryWrites=true&w=majority")
+
 import pytest
 from pydantic import ValidationError
 from app.config import MLServiceSettings
