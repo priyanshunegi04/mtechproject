@@ -29,6 +29,12 @@ from sklearn.model_selection import train_test_split
 from app.ml.collaborative_recommender import CollaborativeRecommender
 from app.ml.content_recommender import ContentBasedRecommender
 from app.ml.grade_workload_predictor import FEATURE_NAMES, GradeWorkloadPredictor
+from app.ml.ranking_metrics import (
+    hit_rate_at_k,
+    ndcg_at_k,
+    precision_at_k,
+    recall_at_k,
+)
 
 logger = logging.getLogger("thapar-ml.hybrid-ranker")
 
@@ -166,8 +172,10 @@ class HybridElectiveRanker:
             "test_enrollments_count": int(len(test_enrollments)),
         }
 
-        # Evaluate ranking quality (Precision@3, Recall@3, NDCG@5) strictly on held-out test students
-        precision_at_3, recall_at_3, ndcg_at_5 = self._evaluate_ranking_metrics(test_students, test_enrollments)
+        # Evaluate ranking quality (Precision@3, Recall@3, HitRate@3, NDCG@5) strictly on held-out test students
+        precision_at_3, recall_at_3, hit_rate_at_3, ndcg_at_5 = self._evaluate_ranking_metrics(
+            test_students, test_enrollments
+        )
 
         gw_metrics = self.grade_workload_engine.validation_metrics
         self.evaluation_metrics = {
@@ -179,6 +187,7 @@ class HybridElectiveRanker:
             "workload_r2": gw_metrics.get("workload_r2", 0.79),
             "precision_at_3": round(precision_at_3, 4),
             "recall_at_3": round(recall_at_3, 4),
+            "hit_rate_at_3": round(hit_rate_at_3, 4),
             "ndcg_at_5": round(ndcg_at_5, 4),
             "split_strategy": "leave_students_out_80_10_10",
             "test_students_evaluated": int(len(test_students)),
@@ -189,12 +198,13 @@ class HybridElectiveRanker:
         self.is_ready = True
 
         logger.info(
-            "HybridElectiveRanker ready (version=%s, RMSE=%.4f, MAE=%.4f, Precision@3=%.4f, Recall@3=%.4f, NDCG@5=%.4f)",
+            "HybridElectiveRanker ready (version=%s, RMSE=%.4f, MAE=%.4f, Precision@3=%.4f, Recall@3=%.4f, HitRate@3=%.4f, NDCG@5=%.4f)",
             self.model_version,
             self.evaluation_metrics["rmse"],
             self.evaluation_metrics["mae"],
             self.evaluation_metrics["precision_at_3"],
             self.evaluation_metrics["recall_at_3"],
+            self.evaluation_metrics["hit_rate_at_3"],
             self.evaluation_metrics["ndcg_at_5"],
         )
         return self
@@ -203,20 +213,25 @@ class HybridElectiveRanker:
         self,
         test_students_df: pd.DataFrame,
         test_enrollments_df: pd.DataFrame,
-    ) -> Tuple[float, float, float]:
+    ) -> Tuple[float, float, float, float]:
         """
-        Compute honest, unbiased Precision@3, Recall@3, and NDCG@5 on strictly held-out test students.
+        Compute honest, mathematically correct Precision@3, Recall@3, HitRate@3, and NDCG@5
+        on strictly held-out test students.
         Simulates cold-start scenario using only Sem I-IV core prerequisite records.
         """
         eval_students = test_students_df.to_dict(orient="records")
 
         precisions: List[float] = []
         recalls: List[float] = []
+        hit_rates: List[float] = []
         ndcgs: List[float] = []
+        skipped_count: int = 0
 
         for stu in eval_students:
-            actual_basket = str(stu.get("chosen_basket_id", ""))
+            actual_basket = str(stu.get("chosen_basket_id", "")).strip()
             if not actual_basket:
+                # Evaluation Policy: Exclude students with no ground truth relevant items
+                skipped_count += 1
                 continue
 
             # Parse technical skills if stored as JSON string
@@ -243,26 +258,28 @@ class HybridElectiveRanker:
                 scored_baskets.append((b_id, comb))
             scored_baskets.sort(key=lambda x: x[1], reverse=True)
 
-            top3_baskets = [b for b, _ in scored_baskets[:3]]
-            top5_baskets = [b for b, _ in scored_baskets[:5]]
+            ranked_basket_ids = [b for b, _ in scored_baskets]
+            relevant_items = {actual_basket}
 
-            # Hit in top-3 baskets
-            hit_top3 = 1.0 if actual_basket in top3_baskets else 0.0
-            precisions.append(hit_top3)
-            recalls.append(hit_top3)
+            # Mathematically rigorous ranking evaluation:
+            # Precision@3 = |Top3 ∩ Relevant| / 3
+            # Recall@3 = |Top3 ∩ Relevant| / |Relevant|
+            # HitRate@3 = 1.0 if |Top3 ∩ Relevant| > 0 else 0.0
+            # NDCG@5 = DCG@5 / IDCG@5 with logarithmic position discounting
+            precisions.append(precision_at_k(ranked_basket_ids, relevant_items, k=3))
+            recalls.append(recall_at_k(ranked_basket_ids, relevant_items, k=3))
+            hit_rates.append(hit_rate_at_k(ranked_basket_ids, relevant_items, k=3))
+            ndcgs.append(ndcg_at_k(ranked_basket_ids, relevant_items, k=5))
 
-            # NDCG@5 calculation
-            dcg = 0.0
-            for rank_idx, b_id in enumerate(top5_baskets):
-                rel_gain = 3.0 if b_id == actual_basket else 0.0
-                dcg += (2.0**rel_gain - 1.0) / math.log2(rank_idx + 2.0)
-            idcg = (2.0**3.0 - 1.0) / math.log2(2.0)
-            ndcgs.append(min(1.0, dcg / max(1e-6, idcg)))
+        if skipped_count > 0:
+            logger.info("Evaluation policy: skipped %d test students without ground truth chosen basket", skipped_count)
 
-        mean_p3 = float(np.mean(precisions)) if precisions else 0.82
-        mean_r3 = float(np.mean(recalls)) if recalls else 0.82
-        mean_ndcg5 = float(np.mean(ndcgs)) if ndcgs else 0.78
-        return mean_p3, mean_r3, mean_ndcg5
+        mean_p3 = float(np.mean(precisions)) if precisions else 0.0
+        mean_r3 = float(np.mean(recalls)) if recalls else 0.0
+        mean_hit3 = float(np.mean(hit_rates)) if hit_rates else 0.0
+        mean_ndcg5 = float(np.mean(ndcgs)) if ndcgs else 0.0
+
+        return mean_p3, mean_r3, mean_hit3, mean_ndcg5
 
     def compute_seat_competition_probability(
         self, student_cgpa: float, cutoff_cgpa: float, demand_multiplier: float = 1.0
@@ -601,6 +618,7 @@ class HybridElectiveRanker:
                 "delta_career_alignment": round(delta, 3),
             },
             "recommendations": ranked_baskets,
+            "ranked_baskets": ranked_baskets,
         }
 
     def recommend_courses(
@@ -923,6 +941,7 @@ class HybridElectiveRanker:
             "workload_r2": self.evaluation_metrics.get("workload_r2"),
             "precision_at_3": self.evaluation_metrics.get("precision_at_3"),
             "recall_at_3": self.evaluation_metrics.get("recall_at_3"),
+            "hit_rate_at_3": self.evaluation_metrics.get("hit_rate_at_3"),
             "ndcg_at_5": self.evaluation_metrics.get("ndcg_at_5"),
             "evaluation_metrics": self.evaluation_metrics,
         }

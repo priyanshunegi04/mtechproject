@@ -1,5 +1,16 @@
 export type InstitutionalRole = 'student' | 'faculty_advisor' | 'dean_admin';
 
+export type RecommendationSource = 'ml_service' | 'synthetic_fallback' | 'local_fallback';
+
+export interface MLSourceMetadata {
+  source: RecommendationSource;
+  model_version: string;
+  generated_at: string;
+  is_fallback: boolean;
+  data_nature?: 'synthetic_development' | 'heuristic_fallback' | 'live_ml_service' | string;
+  disclaimer?: string;
+}
+
 export type IndustryPartner = 'NVIDIA' | 'Xebia' | 'EC-Council' | 'Future First' | 'TIET';
 
 export interface SgpaEntry {
@@ -177,6 +188,7 @@ export interface ScoredBasketRecommendation {
   trajectoryCourses: TrajectoryCoursePreview[];
   shapReasons: ShapAttributionItem[];
   radarMetrics: RadarSixMetrics;
+  sourceMetadata?: MLSourceMetadata;
 }
 
 export interface ScoredCourseRecommendation {
@@ -197,6 +209,7 @@ export interface ScoredCourseRecommendation {
   estimatedCutoffCgpa: number;
   shapReasons: ShapAttributionItem[];
   radarMetrics: RadarSixMetrics;
+  sourceMetadata?: MLSourceMetadata;
 }
 
 export interface PeerSeniorRecord {
@@ -234,6 +247,7 @@ export interface PeerCohortAnalytics {
   basketDistribution: PeerBasketDistItem[];
   placementSummary: { tier: string; count: number; percentage: number }[];
   closestSeniors: PeerSeniorRecord[];
+  sourceMetadata?: MLSourceMetadata;
 }
 
 export interface AllocationRosterRow {

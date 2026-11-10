@@ -105,8 +105,21 @@ export class MLGatewayService {
         student_profile: this.buildStudentMLProfile(user),
         weights,
       });
-      await this.setCache(cacheKey, response.data);
-      return response.data as Record<string, unknown>;
+      const data = response.data as Record<string, any>;
+      const recs = Array.isArray(data.recommendations)
+        ? data.recommendations
+        : Array.isArray(data.ranked_baskets)
+        ? data.ranked_baskets
+        : [];
+      const standardized = {
+        ...data,
+        success: data.success !== undefined ? data.success : true,
+        fallback: false,
+        recommendations: recs,
+        ranked_baskets: recs,
+      };
+      await this.setCache(cacheKey, standardized);
+      return standardized;
     } catch (error: any) {
       console.error('ML Service proxy error:', {
         message: error.message,
@@ -139,7 +152,19 @@ export class MLGatewayService {
         student_profile: this.buildStudentMLProfile(user),
         ...filters,
       });
-      return response.data as Record<string, unknown>;
+      const data = response.data as Record<string, any>;
+      const recs = Array.isArray(data.recommendations)
+        ? data.recommendations
+        : Array.isArray(data.ranked_courses)
+        ? data.ranked_courses
+        : [];
+      return {
+        ...data,
+        success: data.success !== undefined ? data.success : true,
+        fallback: false,
+        recommendations: recs,
+        ranked_courses: recs,
+      };
     } catch (error: any) {
       console.error('ML Service proxy error:', {
         message: error.message,

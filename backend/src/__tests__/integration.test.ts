@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import request from 'supertest';
 import { validateEnv } from '../config/env';
 import { createExpressApp } from '../index';
+import { signAccessToken } from '../middlewares';
 import { User } from '../models';
 import { ensureInstitutionalSeedData } from '../services';
 
@@ -12,16 +13,6 @@ try {
   dns.setServers(['8.8.8.8', '1.1.1.1']);
 } catch {
   // Ignore in sandboxed environments
-}
-
-function checkNetworkConnectivity(): Promise<boolean> {
-  return new Promise((resolve) => {
-    const timer = setTimeout(() => resolve(false), 1200);
-    dns.lookup('dns.google', (err) => {
-      clearTimeout(timer);
-      resolve(!err);
-    });
-  });
 }
 
 describe('ThaparElectiveAI Backend End-to-End Integration Tests', () => {
@@ -35,22 +26,14 @@ describe('ThaparElectiveAI Backend End-to-End Integration Tests', () => {
   let isDbConnected = false;
 
   beforeAll(async () => {
-    const hasNetwork = await checkNetworkConnectivity();
-    if (!hasNetwork) {
-      console.warn(
-        '[Integration Tests] Sandboxed / offline environment detected. Live Atlas database connection skipped.'
-      );
-      isDbConnected = false;
-      return;
-    }
-
     try {
       // Connect to Atlas database if reachable
       if (mongoose.connection.readyState === 0) {
         await mongoose.connect(env.MONGODB_URI.trim(), {
           dbName: env.MONGODB_DB_NAME || 'thapar_elective_ai',
-          serverSelectionTimeoutMS: 5000,
-          socketTimeoutMS: 5000,
+          serverSelectionTimeoutMS: 3000,
+          connectTimeoutMS: 3000,
+          socketTimeoutMS: 3000,
         });
       }
       await ensureInstitutionalSeedData();
@@ -61,7 +44,7 @@ describe('ThaparElectiveAI Backend End-to-End Integration Tests', () => {
       );
       isDbConnected = false;
     }
-  }, 20000);
+  }, 30000);
 
   afterAll(async () => {
     try {
@@ -74,7 +57,7 @@ describe('ThaparElectiveAI Backend End-to-End Integration Tests', () => {
         await mongoose.disconnect();
       }
     } catch {}
-  }, 10000);
+  }, 20000);
 
   // ---------------------------------------------------------------------------
   // 1. Institutional Authentication Tests
@@ -277,8 +260,19 @@ describe('ThaparElectiveAI Backend End-to-End Integration Tests', () => {
         console.warn('Skipping live database test: database connection not available in this test environment');
         return;
       }
+      const adminToken = signAccessToken(
+        {
+          userId: 'admin_dean',
+          email: 'dean.academic@thapar.edu',
+          name: 'Prof. (Dr.) Vikramaditya Singh',
+          role: 'dean_admin',
+        },
+        env.JWT_ACCESS_SECRET
+      );
+
       const res = await request(app)
         .post('/api/allocation/run')
+        .set('Authorization', `Bearer ${adminToken}`)
         .send({
           overrideSeatCapPerBasket: 120,
         });

@@ -7,6 +7,7 @@ import {
   CloudHealthStatus,
   ElectiveCourseCatalogItem,
   ElectiveFocusBasketItem,
+  MLSourceMetadata,
   PeerCohortAnalytics,
   PreferenceWeights,
   ScoredBasketRecommendation,
@@ -33,10 +34,14 @@ import {
 } from '../services/apiClient';
 import {
   adaptLiveBasketsToRecommendations,
+  adaptLiveCoursesToRecommendations,
   adaptLivePeerCohortToAnalytics,
   convertUserToMLPayload,
   getLiveBasketRecommendations,
+  getLiveCoursePredictions,
+  getLiveCourseRecommendations,
   getLivePeerCohort,
+  LivePerformancePredictionResponse,
 } from '../services/mlService';
 import { useDebounce } from '../hooks';
 
@@ -87,6 +92,13 @@ interface AppContextValue {
   rankedCourses: ScoredCourseRecommendation[];
   peerCohort: PeerCohortAnalytics;
   isMlLoading?: boolean;
+  isLiveBaskets?: boolean;
+  isLiveCourses?: boolean;
+  basketSourceMetadata?: MLSourceMetadata;
+  courseSourceMetadata?: MLSourceMetadata;
+  peerCohortSourceMetadata?: MLSourceMetadata;
+  livePerformancePrediction?: LivePerformancePredictionResponse | null;
+  fetchCourseCombinationPerformance?: (courseCodes: string[]) => Promise<LivePerformancePredictionResponse | null>;
 
   selectedBasketPrefs: string[];
   setSelectedBasketPrefs: React.Dispatch<React.SetStateAction<string[]>>;
@@ -338,7 +350,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const [liveRankedBaskets, setLiveRankedBaskets] = useState<ScoredBasketRecommendation[] | null>(null);
+  const [liveRankedCourses, setLiveRankedCourses] = useState<ScoredCourseRecommendation[] | null>(null);
   const [livePeerCohort, setLivePeerCohort] = useState<PeerCohortAnalytics | null>(null);
+  const [livePerformancePrediction, setLivePerformancePrediction] = useState<LivePerformancePredictionResponse | null>(null);
+  const [isLiveBaskets, setIsLiveBaskets] = useState<boolean>(false);
+  const [isLiveCourses, setIsLiveCourses] = useState<boolean>(false);
   const [isMlLoading, setIsMlLoading] = useState<boolean>(false);
 
   // Debounce rapid slider and CGPA changes by 380ms before triggering heavy remote ML inference
@@ -364,26 +380,109 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setIsMlLoading(true);
         const payload = convertUserToMLPayload(debouncedUser, debouncedWeights);
 
-        const [basketRes, peerRes] = await Promise.allSettled([
+        const [basketRes, courseRes, peerRes] = await Promise.allSettled([
           getLiveBasketRecommendations(payload, controller.signal),
+          getLiveCourseRecommendations(payload, controller.signal),
           getLivePeerCohort(payload, controller.signal),
         ]);
 
         if (isCancelled || controller.signal.aborted) return;
 
-        if (
-          basketRes.status === 'fulfilled' &&
-          basketRes.value?.success &&
-          basketRes.value?.ranked_baskets
-        ) {
-          const adapted = adaptLiveBasketsToRecommendations(
-            basketRes.value,
-            baskets,
-            courses,
-            debouncedUser
-          );
-          if (adapted.length > 0) {
-            setLiveRankedBaskets(adapted);
+        if (basketRes.status === 'fulfilled') {
+          const res = basketRes.value;
+          // Verify presence of recommendations from canonical `recommendations` or alias `ranked_baskets`
+          const hasRecommendations =
+            (Array.isArray(res?.recommendations) && res.recommendations.length > 0) ||
+            (Array.isArray(res?.ranked_baskets) && res.ranked_baskets.length > 0);
+
+          if (res?.success && !res?.fallback && hasRecommendations) {
+            const adapted = adaptLiveBasketsToRecommendations(
+              res,
+              baskets,
+              courses,
+              debouncedUser
+            );
+            if (adapted.length > 0) {
+              setLiveRankedBaskets(adapted);
+              setIsLiveBaskets(true);
+              console.info(
+                `[ML Recommendation Flow] Successfully loaded ${adapted.length} live ML recommendations (Model: ${res.model_version || 'live'})`
+              );
+            } else {
+              setLiveRankedBaskets(null);
+              setIsLiveBaskets(false);
+            }
+          } else {
+            // Fallback flag set, success is false, or recommendations array is empty/invalid
+            setLiveRankedBaskets(null);
+            setIsLiveBaskets(false);
+            if (res?.fallback) {
+              console.warn(
+                '[ML Recommendation Flow] Backend returned fallback recommendations because live ML service is cold-starting or unavailable.'
+              );
+            } else if (!hasRecommendations) {
+              console.warn(
+                '[ML Recommendation Flow] ML service returned empty recommendations; using fallback.'
+              );
+            }
+          }
+        } else {
+          // Request rejected (e.g. timeout, network offline, 502 Bad Gateway)
+          const reason = basketRes.reason;
+          if (reason?.name !== 'CanceledError' && reason?.name !== 'AbortError') {
+            console.warn(
+              '[ML Recommendation Flow] ML request failed or timed out; using deterministic fallback.',
+              reason?.message || reason
+            );
+          }
+          setLiveRankedBaskets(null);
+          setIsLiveBaskets(false);
+        }
+
+        if (courseRes.status === 'fulfilled') {
+          const res = courseRes.value;
+          const hasCourses =
+            (Array.isArray(res?.recommendations) && res.recommendations.length > 0) ||
+            (Array.isArray(res?.ranked_courses) && res.ranked_courses.length > 0);
+
+          if (res?.success && !res?.fallback && hasCourses) {
+            const adapted = adaptLiveCoursesToRecommendations(
+              res,
+              courses,
+              debouncedUser
+            );
+            if (adapted.length > 0) {
+              setLiveRankedCourses(adapted);
+              setIsLiveCourses(true);
+              console.info(
+                `[ML Course Prediction Flow] Successfully loaded ${adapted.length} live ML course predictions (Model: ${res.model_version || 'live'})`
+              );
+            } else {
+              setLiveRankedCourses(null);
+              setIsLiveCourses(false);
+            }
+          } else {
+            setLiveRankedCourses(null);
+            setIsLiveCourses(false);
+            if (res?.fallback) {
+              console.warn(
+                '[ML Course Prediction Flow] Backend returned fallback course predictions because live ML service is cold-starting or unavailable.'
+              );
+            } else if (!hasCourses) {
+              console.warn(
+                '[ML Course Prediction Flow] ML service returned empty course recommendations; using fallback.'
+              );
+            }
+          }
+        } else {
+          setLiveRankedCourses(null);
+          setIsLiveCourses(false);
+          const reason = courseRes.reason;
+          if (reason?.name !== 'CanceledError' && reason?.name !== 'AbortError') {
+            console.warn(
+              '[ML Course Prediction Flow] ML course request failed or timed out; using deterministic fallback.',
+              reason?.message || reason
+            );
           }
         }
 
@@ -423,9 +522,78 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       ? liveRankedBaskets
       : fallbackRecommendations.rankedBaskets;
 
-  const rankedCourses = fallbackRecommendations.rankedCourses;
+  const rankedCourses =
+    liveRankedCourses && liveRankedCourses.length > 0
+      ? liveRankedCourses
+      : fallbackRecommendations.rankedCourses;
 
   const peerCohort = livePeerCohort || fallbackPeerCohort;
+
+  const basketSourceMetadata: MLSourceMetadata = useMemo(() => {
+    if (liveRankedBaskets && liveRankedBaskets.length > 0 && liveRankedBaskets[0]?.sourceMetadata) {
+      return liveRankedBaskets[0].sourceMetadata;
+    }
+    return (
+      fallbackRecommendations.rankedBaskets[0]?.sourceMetadata || {
+        source: 'local_fallback',
+        model_version: 'client-heuristic-v1.0',
+        generated_at: new Date().toISOString(),
+        is_fallback: true,
+        data_nature: 'heuristic_fallback',
+        disclaimer: 'Generated by client-side catalog heuristics.',
+      }
+    );
+  }, [liveRankedBaskets, fallbackRecommendations]);
+
+  const courseSourceMetadata: MLSourceMetadata = useMemo(() => {
+    if (liveRankedCourses && liveRankedCourses.length > 0 && liveRankedCourses[0]?.sourceMetadata) {
+      return liveRankedCourses[0].sourceMetadata;
+    }
+    return (
+      fallbackRecommendations.rankedCourses[0]?.sourceMetadata || {
+        source: 'local_fallback',
+        model_version: 'client-heuristic-v1.0',
+        generated_at: new Date().toISOString(),
+        is_fallback: true,
+        data_nature: 'heuristic_fallback',
+        disclaimer: 'Generated by client-side catalog heuristics.',
+      }
+    );
+  }, [liveRankedCourses, fallbackRecommendations]);
+
+  const peerCohortSourceMetadata: MLSourceMetadata = useMemo(() => {
+    if (livePeerCohort?.sourceMetadata) {
+      return livePeerCohort.sourceMetadata;
+    }
+    return (
+      fallbackPeerCohort.sourceMetadata || {
+        source: 'local_fallback',
+        model_version: 'client-cohort-v1.0',
+        generated_at: new Date().toISOString(),
+        is_fallback: true,
+        data_nature: 'heuristic_fallback',
+        disclaimer: 'Generated by client-side cohort heuristics.',
+      }
+    );
+  }, [livePeerCohort, fallbackPeerCohort]);
+
+  const fetchCourseCombinationPerformance = async (
+    courseCodes: string[]
+  ): Promise<LivePerformancePredictionResponse | null> => {
+    if (!courseCodes || courseCodes.length === 0) return null;
+    try {
+      const payload = convertUserToMLPayload(currentUser, preferenceWeights);
+      const res = await getLiveCoursePredictions(payload, courseCodes);
+      if (res?.success && !res?.fallback) {
+        setLivePerformancePrediction(res);
+        return res;
+      }
+      return null;
+    } catch (err) {
+      console.warn('[ML Combination Performance] Prediction failed; using baseline estimate', err);
+      return null;
+    }
+  };
 
   const lockOfficialPreferences = async (): Promise<{
     lockedAt: string;
@@ -784,6 +952,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         rankedCourses,
         peerCohort,
         isMlLoading,
+        isLiveBaskets,
+        isLiveCourses,
+        basketSourceMetadata,
+        courseSourceMetadata,
+        peerCohortSourceMetadata,
+        livePerformancePrediction,
+        fetchCourseCombinationPerformance,
         selectedBasketPrefs,
         setSelectedBasketPrefs,
         selectedGenericPrefs,

@@ -76,6 +76,11 @@ export const HybridRecommendationStudio: React.FC = () => {
     comparedBasketIds,
     toggleCompareBasket,
     setActiveTab,
+    isMlLoading,
+    isLiveBaskets,
+    isLiveCourses,
+    basketSourceMetadata,
+    courseSourceMetadata,
   } = useApp();
 
   const [expandedShapBaskets, setExpandedShapBaskets] = useState<Record<string, boolean>>({
@@ -364,13 +369,52 @@ export const HybridRecommendationStudio: React.FC = () => {
 
       {/* Top Recommended Elective Focus Baskets Section */}
       <section className="space-y-4">
+        {/* Academic Data Transparency Banner */}
+        <div className="rounded-xl p-3.5 text-xs bg-slate-100/90 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-700 dark:text-slate-300 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shadow-xs">
+          <div className="flex items-start gap-2.5">
+            <Info className="w-4 h-4 text-sky-500 dark:text-sky-400 mt-0.5 shrink-0" />
+            <div>
+              <span className="font-bold text-slate-900 dark:text-white">Academic Data Transparency & Privacy Notice:</span>{' '}
+              {basketSourceMetadata?.source === 'ml_service' ? (
+                <span>
+                  Recommendations are computed live by the Python ML Hybrid Ranker (Model: <code className="font-mono text-emerald-600 dark:text-emerald-400">{basketSourceMetadata.model_version}</code>) evaluated on a synthetic development dataset for academic benchmarking. No unanonymized student records are processed.
+                </span>
+              ) : (
+                <span>
+                  Remote ML microservice is cold-starting or offline; displaying deterministic catalog fallback recommendations based on prerequisite matching and CGPA.
+                </span>
+              )}
+            </div>
+          </div>
+          <span className="inline-flex shrink-0 items-center gap-1.5 px-2.5 py-1 rounded text-[11px] font-mono bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300">
+            Source: <strong className="text-slate-900 dark:text-white">{basketSourceMetadata?.source || (isLiveBaskets ? 'ml_service' : 'local_fallback')}</strong>
+          </span>
+        </div>
+
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
-            <h3 className="text-xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
-              <Layers className="w-5 h-5 text-[#8B1E24] dark:text-rose-400" />
-              <span>Official TIET Elective Focus Baskets (Ranked 1–12 for {currentUser.name})</span>
-            </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <div className="flex flex-wrap items-center gap-2">
+              <h3 className="text-xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                <Layers className="w-5 h-5 text-[#8B1E24] dark:text-rose-400" />
+                <span>Official TIET Elective Focus Baskets (Ranked 1–12 for {currentUser.name})</span>
+              </h3>
+              {basketSourceMetadata?.source === 'ml_service' || isLiveBaskets ? (
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
+                  </span>
+                  <Sparkles className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                  ML-Generated (Synthetic Dev Model)
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30">
+                  <Info className="w-3 h-3 text-amber-600 dark:text-amber-400" />
+                  Demo Fallback (Catalog Heuristics)
+                </span>
+              )}
+            </div>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               Each Elective Focus Basket sequences 4 Professional Electives across Sem V (PE-I), Sem VI (PE-II & PE-III), and Sem VII (PE-IV).
             </p>
           </div>
@@ -436,6 +480,16 @@ export const HybridRecommendationStudio: React.FC = () => {
                           className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${partnerStyle.bg} ${partnerStyle.text} ${partnerStyle.border}`}
                         >
                           {partnerStyle.label}
+                        </span>
+                        <span
+                          className={`px-2 py-0.5 rounded text-[10px] font-semibold tracking-wide uppercase border ${
+                            item.sourceMetadata?.source === 'ml_service' || isLiveBaskets
+                              ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30'
+                              : 'bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/30'
+                          }`}
+                          title={item.sourceMetadata?.disclaimer || 'Recommendation provenance'}
+                        >
+                          {item.sourceMetadata?.source === 'ml_service' || isLiveBaskets ? 'ML-Generated' : 'Demo Fallback'}
                         </span>
                       </div>
 
@@ -699,11 +753,28 @@ export const HybridRecommendationStudio: React.FC = () => {
       <section className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-5">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
-            <h3 className="text-lg font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
-              <BookOpen className="w-5 h-5 text-[#8B1E24] dark:text-rose-400" />
-              <span>Individual TIET Course Predictions & Sem V Generic Electives (58 Courses)</span>
-            </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <div className="flex flex-wrap items-center gap-2">
+              <h3 className="text-lg font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                <BookOpen className="w-5 h-5 text-[#8B1E24] dark:text-rose-400" />
+                <span>Individual TIET Course Predictions & Sem V Generic Electives (58 Courses)</span>
+              </h3>
+              {courseSourceMetadata?.source === 'ml_service' || isLiveCourses ? (
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
+                  </span>
+                  <Sparkles className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                  ML-Generated (GBDT Regressor)
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30">
+                  <Info className="w-3 h-3 text-amber-600 dark:text-amber-400" />
+                  Demo Fallback (Catalog Heuristics)
+                </span>
+              )}
+            </div>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               Filter by Professional Elective slot (`PE-I` to `PE-IV`) or Semester V Generic Electives (`GE-SEM5`) with predicted MST/EST/Sessional scores.
             </p>
           </div>
@@ -754,7 +825,23 @@ export const HybridRecommendationStudio: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200/70 dark:divide-slate-800 text-xs">
-              {filteredCourses.slice(0, 18).map((sc) => {
+              {isMlLoading && rankedCourses.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="py-12 text-center text-slate-500 dark:text-slate-400">
+                    <div className="flex flex-col items-center justify-center gap-2">
+                      <div className="w-6 h-6 border-2 border-[#8B1E24] border-t-transparent rounded-full animate-spin" />
+                      <span className="text-xs font-medium">Computing live course grade and workload predictions...</span>
+                    </div>
+                  </td>
+                </tr>
+              ) : filteredCourses.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="py-8 text-center text-slate-500 dark:text-slate-400 text-xs">
+                    No elective courses found matching &quot;{courseSearch}&quot; in slot {slotFilter}.
+                  </td>
+                </tr>
+              ) : (
+                filteredCourses.slice(0, 18).map((sc) => {
                 const { course } = sc;
                 const isGeSelected = selectedGenericPrefs.includes(course.courseCode);
                 return (
@@ -842,7 +929,8 @@ export const HybridRecommendationStudio: React.FC = () => {
                     </td>
                   </tr>
                 );
-              })}
+              })
+            )}
             </tbody>
           </table>
         </div>

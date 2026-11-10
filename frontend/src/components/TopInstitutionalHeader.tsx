@@ -15,6 +15,8 @@ import {
   Sparkles,
   Sun,
   Users,
+  Info,
+  X,
 } from 'lucide-react';
 import { ActiveNavigationTab, useApp } from '../context/AppContext';
 
@@ -40,6 +42,8 @@ export const TopInstitutionalHeader: React.FC = () => {
       : currentUser.role === 'faculty_advisor'
         ? 'Faculty Advisor'
         : 'Dean / HOD Admin';
+
+  const [showProvenanceModal, setShowProvenanceModal] = React.useState<boolean>(false);
 
   const navItems: {
     id: ActiveNavigationTab;
@@ -121,6 +125,16 @@ export const TopInstitutionalHeader: React.FC = () => {
               <Cpu className="w-3.5 h-3.5 text-sky-400" />
               <span className="text-[11px] font-mono">{cloudHealth.mlModelVersion}</span>
             </div>
+
+            <button
+              onClick={() => setShowProvenanceModal(true)}
+              title="Click to view Machine Learning provenance and academic data disclosures"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/70 border border-slate-600/50 text-slate-200 hover:bg-slate-800 transition text-[11px]"
+            >
+              <Info className="w-3.5 h-3.5 text-amber-400" />
+              <span className="hidden md:inline">Data Provenance & Privacy</span>
+              <span className="md:hidden">Provenance</span>
+            </button>
           </div>
         </div>
       </div>
@@ -301,6 +315,69 @@ export const TopInstitutionalHeader: React.FC = () => {
           })}
         </nav>
       </div>
+
+      {/* Data Provenance & Academic Privacy Disclosure Modal */}
+      {showProvenanceModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-5 h-5 text-[#8B1E24] dark:text-rose-400" />
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                  Data Provenance & Privacy Disclosures
+                </h3>
+              </div>
+              <button
+                onClick={() => setShowProvenanceModal(false)}
+                className="p-1 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-3.5 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-900 dark:text-amber-200">
+                <span className="font-bold">Synthetic Development Dataset Disclosure:</span> All student profiles, historical enrollments (17,500 records), and senior peer cohorts displayed in this application are generated for academic research, testing, and benchmarking purposes.
+              </div>
+
+              <div>
+                <h4 className="font-bold text-slate-900 dark:text-white mb-1">1. FERPA & Digital Personal Data Protection (DPDP) Compliance</h4>
+                <p>
+                  To respect student data privacy and comply with higher education data ethics regulations, unanonymized real student academic transcripts are never stored, published, or transmitted to client browsers without prior institutional clearance.
+                </p>
+              </div>
+
+              <div>
+                <h4 className="font-bold text-slate-900 dark:text-white mb-1">2. How to Distinguish Real ML Output from Fallbacks</h4>
+                <ul className="list-disc list-inside space-y-1">
+                  <li>
+                    <strong className="text-emerald-600 dark:text-emerald-400">ML-Generated:</strong> Computed in real time by the remote Python FastAPI microservice (TF-IDF Content Recommender, TruncatedSVD Collaborative Filtering, HistGradientBoosting Grade Regressor, and TreeSHAP explainability).
+                  </li>
+                  <li>
+                    <strong className="text-amber-600 dark:text-amber-400">Demo Fallback:</strong> If the ML service is cold-starting or offline, deterministic catalog heuristics based on prerequisite matching and CGPA are returned to ensure zero downtime.
+                  </li>
+                </ul>
+              </div>
+
+              <div>
+                <h4 className="font-bold text-slate-900 dark:text-white mb-1">3. Path to Verified Institutional Deployment</h4>
+                <p>
+                  Transitioning from academic development benchmark to verified registrar deployment requires formal approval from Thapar Institute&apos;s Academic Senate to ingest fully de-identified transcript matrices (anonymized hash tokens, semester grade points from 2020–2024 batches) via the Dean Command Center Webkiosk Ingestion pipeline.
+                </p>
+              </div>
+            </div>
+
+            <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex justify-end">
+              <button
+                onClick={() => setShowProvenanceModal(false)}
+                className="px-4 py-2 rounded-xl text-xs font-semibold bg-[#8B1E24] hover:bg-[#70161B] text-white transition"
+              >
+                Understood & Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 };

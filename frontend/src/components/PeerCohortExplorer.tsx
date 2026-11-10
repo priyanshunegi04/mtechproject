@@ -25,7 +25,8 @@ import { useApp } from '../context/AppContext';
 const PIE_COLORS = ['#8B1E24', '#0284C7', '#10B981', '#F59E0B'];
 
 export const PeerCohortExplorer: React.FC = () => {
-  const { currentUser, peerCohort, isMlLoading } = useApp();
+  const { currentUser, peerCohort, isMlLoading, peerCohortSourceMetadata } = useApp();
+  const isMlLive = (peerCohortSourceMetadata?.source === 'ml_service') || (peerCohort.sourceMetadata?.source === 'ml_service');
 
   return (
     <div className="space-y-8">
@@ -43,18 +44,23 @@ export const PeerCohortExplorer: React.FC = () => {
                   <span className="w-2 h-2 rounded-full bg-sky-400 animate-ping" />
                   <span>Computing Live k-NN Trajectories...</span>
                 </div>
-              ) : (
+              ) : isMlLive ? (
                 <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-[11px] font-semibold text-emerald-300 border border-emerald-400/30">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                  <span>Live Python Model Active</span>
+                  <span>ML-Generated Cohort (Synthetic Dev Data)</span>
+                </div>
+              ) : (
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/20 text-[11px] font-semibold text-amber-300 border border-amber-400/30">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                  <span>Demo Fallback Cohort (Catalog Heuristics)</span>
                 </div>
               )}
             </div>
             <h2 className="text-2xl font-extrabold">
-              Nearest 50 Historical TIET CSE Seniors Cohort Explorer
+              Nearest 50 TIET CSE Seniors Cohort Explorer
             </h2>
             <p className="text-xs sm:text-sm text-slate-200">
-              Matched against 3,500 historical Thapar CSE graduates (Batches 2022–2025) in MongoDB Atlas using cosine similarity across your Sem I–IV core prerequisite vector (`UCS301`, `UCS415`, `UMA021`, `UMA401`, `UCS321`, `UCS310`, `UCS414`).
+              Matched against 3,500 synthetic development senior profiles modeled after TIET CSE grading distributions and 2026 elective sequences using cosine similarity over your Sem I–IV core vector.
             </p>
           </div>
 
@@ -99,6 +105,28 @@ export const PeerCohortExplorer: React.FC = () => {
           </div>
         </div>
       </section>
+
+      {/* Academic Data Transparency Banner */}
+      <div className="rounded-xl p-3.5 text-xs bg-slate-100/90 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-700 dark:text-slate-300 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shadow-xs">
+        <div className="flex items-start gap-2.5">
+          <Sparkles className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" />
+          <div>
+            <span className="font-bold text-slate-900 dark:text-white">Alumni Peer Cohort Provenance:</span>{' '}
+            {isMlLive ? (
+              <span>
+                Retrieved via 50-NN Cosine Distance & SVD matrix factorization from a 3,500-student development cohort designed for academic testing. Student data privacy regulations protect private academic transcripts from unauthorized display.
+              </span>
+            ) : (
+              <span>
+                Client-side heuristic cohort fallback active while the Python ML service is cold-starting or offline.
+              </span>
+            )}
+          </div>
+        </div>
+        <span className="inline-flex shrink-0 items-center gap-1.5 px-2.5 py-1 rounded text-[11px] font-mono bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300">
+          Cohort Source: <strong className="text-slate-900 dark:text-white">{peerCohortSourceMetadata?.source || (isMlLive ? 'ml_service' : 'local_fallback')}</strong>
+        </span>
+      </div>
 
       {/* Charts Grid: Senior Basket Selection Distribution + Placement Outcome PieChart */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
