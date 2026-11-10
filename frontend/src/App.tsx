@@ -10,12 +10,29 @@ import {
   SideBySideComparator,
   TopInstitutionalHeader,
 } from './components';
+import {
+  AuthPage,
+  InteractiveSkillAssessmentTab,
+  StudentProfileAndGradesEditorTab,
+  TeacherDashboard,
+} from './pages';
 import { getFrontendEnv } from './config/env';
 
 const env = getFrontendEnv();
 
 const MainWorkspace: React.FC = () => {
-  const { activeTab, cloudHealth } = useApp();
+  const { activeTab, cloudHealth, isAuthenticated, showAuthModal, setShowAuthModal } = useApp();
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen flex flex-col justify-between bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors">
+        <TopInstitutionalHeader />
+        <main className="flex-1 max-w-7xl w-full mx-auto px-4 lg:px-8 py-6">
+          <AuthPage />
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col justify-between bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors">
@@ -34,10 +51,17 @@ const MainWorkspace: React.FC = () => {
             {activeTab === 'roadmap' && <ElectiveRoadmapAndLocker />}
             {activeTab === 'comparator' && <SideBySideComparator />}
             {activeTab === 'peers' && <PeerCohortExplorer />}
+            {activeTab === 'skill_assessment' && <InteractiveSkillAssessmentTab />}
+            {activeTab === 'profile_editor' && <StudentProfileAndGradesEditorTab />}
+            {activeTab === 'teacher_workspace' && <TeacherDashboard />}
             {activeTab === 'dean_command' && <DeanCommandCenter />}
           </motion.div>
         </AnimatePresence>
       </main>
+
+      {showAuthModal && (
+        <AuthPage isModal onClose={() => setShowAuthModal(false)} />
+      )}
 
       <AiAdvisorDrawer />
 

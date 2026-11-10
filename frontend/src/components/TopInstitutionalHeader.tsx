@@ -3,17 +3,22 @@ import {
   Activity,
   Award,
   BarChart3,
+  BookOpen,
   Bot,
   Compass,
   Cpu,
   Database,
+  Edit3,
   GraduationCap,
   Lock,
+  LogOut,
   Moon,
+  Phone,
   RefreshCw,
   ShieldCheck,
   Sparkles,
   Sun,
+  UserPlus,
   Users,
   Info,
   X,
@@ -34,6 +39,8 @@ export const TopInstitutionalHeader: React.FC = () => {
     updateCgpa,
     cloudHealth,
     refreshCloudHealth,
+    setShowAuthModal,
+    logoutUser,
   } = useApp();
 
   const roleBadgeLabel =
@@ -45,38 +52,77 @@ export const TopInstitutionalHeader: React.FC = () => {
 
   const [showProvenanceModal, setShowProvenanceModal] = React.useState<boolean>(false);
 
+  const verifiedSkillBadge =
+    currentUser.skillAssessment?.evaluatedSkillLevel &&
+    currentUser.skillAssessment.totalScore > 0
+      ? `${currentUser.skillAssessment.evaluatedSkillLevel} (${currentUser.skillAssessment.totalScore}%)`
+      : currentUser.codingProfileScore >= 85
+        ? 'Advanced Verified'
+        : 'Proficient Verified';
+
   const navItems: {
     id: ActiveNavigationTab;
     label: string;
     shortLabel: string;
     icon: React.ReactNode;
     badge?: string;
+    roles?: ('student' | 'faculty_advisor' | 'dean_admin')[];
   }[] = [
     {
       id: 'studio',
-      label: 'Hybrid Recommendation Studio',
+      label: 'AI Recommendation Studio',
       shortLabel: 'ML Studio',
       icon: <Sparkles className="w-4 h-4" />,
       badge: '12 EF Baskets',
+      roles: ['student', 'faculty_advisor', 'dean_admin'],
     },
     {
       id: 'roadmap',
-      label: 'Sem V–VII Roadmap & Preference Locker',
+      label: 'Semesters V–VIII Roadmap Builder',
       shortLabel: 'Roadmap & Lock',
       icon: <Lock className="w-4 h-4" />,
       badge: currentUser.preferenceLockedAt ? 'Locked' : 'Action Req',
+      roles: ['student', 'faculty_advisor', 'dean_admin'],
     },
     {
       id: 'comparator',
-      label: '6-Axis Elective & Basket Comparator',
+      label: '6-Axis Radar Comparator',
       shortLabel: '6-Axis Comparator',
       icon: <Compass className="w-4 h-4" />,
+      roles: ['student', 'faculty_advisor', 'dean_admin'],
     },
     {
       id: 'peers',
       label: 'Peer Cohort (k-NN) & Placement Insights',
       shortLabel: 'Peer Cohort (50)',
       icon: <Users className="w-4 h-4" />,
+      roles: ['student', 'faculty_advisor', 'dean_admin'],
+    },
+    {
+      id: 'skill_assessment',
+      label: 'Interactive Skill Assessment Test',
+      shortLabel: 'Skill Test (10Q)',
+      icon: <Cpu className="w-4 h-4" />,
+      badge:
+        currentUser.skillAssessment && currentUser.skillAssessment.totalScore > 0
+          ? `${currentUser.skillAssessment.totalScore}%`
+          : '10Q Quiz',
+      roles: ['student', 'faculty_advisor', 'dean_admin'],
+    },
+    {
+      id: 'profile_editor',
+      label: 'My Profile & Grades Editor',
+      shortLabel: 'Profile & Grades',
+      icon: <Edit3 className="w-4 h-4" />,
+      roles: ['student', 'faculty_advisor', 'dean_admin'],
+    },
+    {
+      id: 'teacher_workspace',
+      label: 'Teacher & Faculty Advisor Workspace',
+      shortLabel: 'Teacher Portal',
+      icon: <BookOpen className="w-4 h-4" />,
+      badge: 'Faculty',
+      roles: ['faculty_advisor', 'dean_admin'],
     },
     {
       id: 'dean_command',
@@ -84,6 +130,7 @@ export const TopInstitutionalHeader: React.FC = () => {
       shortLabel: 'Dean Portal',
       icon: <BarChart3 className="w-4 h-4" />,
       badge: 'B2B Admin',
+      roles: ['faculty_advisor', 'dean_admin', 'student'],
     },
   ];
 
@@ -187,22 +234,28 @@ export const TopInstitutionalHeader: React.FC = () => {
             {/* Current Active User Card */}
             <div className="flex items-center gap-3 px-3 py-1.5 rounded-xl bg-slate-100/90 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700">
               <div className="flex flex-col">
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-1.5 flex-wrap">
                   <span className="text-xs font-bold text-slate-900 dark:text-white">
                     {currentUser.name}
                   </span>
                   <span className="px-1.5 py-0.5 text-[10px] font-semibold rounded bg-[#8B1E24] text-white">
                     {roleBadgeLabel}
                   </span>
+                  <span className="px-1.5 py-0.5 text-[10px] font-bold rounded bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
+                    ✓ {verifiedSkillBadge}
+                  </span>
                 </div>
-                <div className="flex items-center gap-2 text-[11px] text-slate-600 dark:text-slate-300 font-mono">
+                <div className="flex items-center gap-2 text-[11px] text-slate-600 dark:text-slate-300 font-mono flex-wrap">
                   <span>
                     {currentUser.rollNumber
-                      ? `Roll: ${currentUser.rollNumber}`
+                      ? `Roll: ${currentUser.rollNumber} • Sem ${currentUser.currentSemester}`
                       : `ID: ${currentUser.employeeId}`}
                   </span>
                   <span>•</span>
-                  <span>{currentUser.email}</span>
+                  <span className="inline-flex items-center gap-1">
+                    <Phone className="w-3 h-3" />
+                    {currentUser.contactNumber || '+91-9876543210'}
+                  </span>
                 </div>
               </div>
 
@@ -265,6 +318,25 @@ export const TopInstitutionalHeader: React.FC = () => {
               <Bot className="w-4 h-4" />
               <span>AI Academic Advisor</span>
               <span className="px-1.5 py-0.5 rounded bg-white/20 text-[10px]">Live</span>
+            </button>
+
+            {/* Sign In / Sign Up & Logout Buttons */}
+            <button
+              onClick={() => setShowAuthModal(true)}
+              title="Open Institutional Login / Signup Portal"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-[#8B1E24] text-slate-800 dark:text-slate-200 text-xs font-bold transition"
+            >
+              <UserPlus className="w-3.5 h-3.5 text-[#8B1E24] dark:text-rose-400" />
+              <span className="hidden sm:inline">Sign In / Sign Up</span>
+            </button>
+
+            <button
+              onClick={logoutUser}
+              title="Logout of current session"
+              className="inline-flex items-center gap-1.5 px-2.5 py-2 rounded-xl border border-rose-200 dark:border-rose-800/60 bg-rose-50/70 dark:bg-rose-950/30 hover:bg-rose-100 dark:hover:bg-rose-900/50 text-rose-700 dark:text-rose-300 text-xs font-bold transition"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span className="hidden xl:inline">Logout</span>
             </button>
 
             {/* Desktop Dark/Light Mode Toggle */}

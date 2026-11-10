@@ -1,6 +1,20 @@
-export { User, IUser, ISgpaEntry, IPreferenceWeights, IPrerequisiteOverride } from './User';
+export {
+  User,
+  IUser,
+  ISgpaEntry,
+  IPreferenceWeights,
+  IPrerequisiteOverride,
+  ISkillAssessment,
+  IQuizResponseItem,
+  IDomainScores,
+  SkillLevelType,
+  IPersonalInfo,
+  IAcademicData,
+  IAdvisorMenteeStatus,
+} from './User';
 export { StudentProfile, IStudentProfile } from './StudentProfile';
-export { Course, ICourse, IndustryPartnerType, CourseCategoryType } from './Course';
+export { TeacherProfile, ITeacherProfile } from './TeacherProfile';
+export { Course, ICourse, IndustryPartnerType, CourseCategoryType, IAssignedInstructor } from './Course';
 export { Basket, IBasket, IElectiveSequenceMap } from './Basket';
 export {
   CounselingRound,

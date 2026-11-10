@@ -5,9 +5,11 @@ import { EnvConfig } from '../config/env';
 import {
   AdminController,
   AdvisorController,
+  AssessmentController,
   AuthController,
   CurriculumController,
   StudentController,
+  TeacherController,
 } from '../controllers';
 import { requireAuth, requireRole } from '../middlewares';
 import { MLGatewayService } from '../services';
@@ -30,6 +32,8 @@ export function createApiRouter(env: EnvConfig): Router {
   const curriculumController = new CurriculumController();
   const adminController = new AdminController(mlGateway);
   const advisorController = new AdvisorController();
+  const assessmentController = new AssessmentController(mlGateway);
+  const teacherController = new TeacherController();
 
   const authGuard = requireAuth(env.JWT_ACCESS_SECRET);
 
@@ -78,10 +82,16 @@ export function createApiRouter(env: EnvConfig): Router {
   // ---------------------------------------------------------------------------
   // 3. Student Portal & Hybrid ML Recommendation Routes
   // ---------------------------------------------------------------------------
+  router.get('/student/profile', authGuard, studentController.getMyProfile);
+  router.put('/student/profile', authGuard, studentController.updateMyProfile);
   router.get('/students/me', authGuard, studentController.getMyProfile);
   router.put('/students/me/profile', authGuard, studentController.updateMyProfile);
   router.post('/students/me/preferences', authGuard, studentController.saveAndLockPreferences);
   router.put('/students/me/preferences', authGuard, studentController.saveAndLockPreferences);
+
+  // Adaptive Skill Assessment Test Routes
+  router.get('/assessment/questions', assessmentController.getQuestions);
+  router.post('/assessment/submit', authGuard, assessmentController.submitAssessment);
 
   router.post(
     '/students/me/recommend-baskets',
@@ -123,8 +133,32 @@ export function createApiRouter(env: EnvConfig): Router {
   router.use('/allocation', createAllocationRouter(env));
 
   // ---------------------------------------------------------------------------
-  // 4. Faculty Advisor Routes (Advisee Roster & Documented Prerequisite Waivers)
+  // 4. Faculty Advisor & Teacher Course Management Routes
   // ---------------------------------------------------------------------------
+  router.post(
+    '/teacher/courses',
+    authGuard,
+    requireRole(['faculty_advisor', 'dean_admin']),
+    teacherController.createCourse
+  );
+  router.put(
+    '/teacher/courses/:courseCode',
+    authGuard,
+    requireRole(['faculty_advisor', 'dean_admin']),
+    teacherController.updateCourse
+  );
+  router.get(
+    '/teacher/my-students',
+    authGuard,
+    requireRole(['faculty_advisor', 'dean_admin']),
+    teacherController.getMyStudents
+  );
+  router.post(
+    '/teacher/review-student',
+    authGuard,
+    requireRole(['faculty_advisor', 'dean_admin']),
+    teacherController.reviewStudentPreference
+  );
   router.get(
     '/advisor/students',
     authGuard,

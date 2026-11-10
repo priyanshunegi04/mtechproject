@@ -82,6 +82,20 @@ export class MLGatewayService {
     }
   }
 
+  public async invalidateStudentCache(user: IUser): Promise<void> {
+    const redis = getRedisClient();
+    if (!redis) return;
+    try {
+      const prefix = `tiet:ml:baskets:${user.rollNumber || user._id}:*`;
+      const keys = await redis.keys(prefix);
+      if (keys && keys.length > 0) {
+        await redis.del(...keys);
+      }
+    } catch (_err) {
+      // Ignore cache deletion errors
+    }
+  }
+
   public async recommendBaskets(
     user: IUser,
     customWeights?: { alpha?: number; beta?: number; gamma?: number; delta?: number }

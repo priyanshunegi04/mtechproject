@@ -30,7 +30,11 @@ import {
   executeDatabaseSeatAllocation,
   lockOfficialPreferencesCloud,
   queryAiAcademicAdvisor,
+  reviewMenteePreferenceCloud,
+  saveTeacherCourseCloud,
+  setAuthToken,
   switchShowcasePersonaCloud,
+  updateStudentProfileCloud,
 } from '../services/apiClient';
 import {
   adaptLiveBasketsToRecommendations,
@@ -50,6 +54,9 @@ export type ActiveNavigationTab =
   | 'roadmap'
   | 'comparator'
   | 'peers'
+  | 'skill_assessment'
+  | 'profile_editor'
+  | 'teacher_workspace'
   | 'dean_command';
 
 export interface AllocationSummaryState {
@@ -75,8 +82,40 @@ interface AppContextValue {
 
   personas: UserProfile[];
   currentUser: UserProfile;
+  isAuthenticated: boolean;
+  showAuthModal: boolean;
+  setShowAuthModal: (show: boolean) => void;
+  loginWithCredentials: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  registerNewUser: (payload: {
+    name: string;
+    email: string;
+    password: string;
+    contactNumber: string;
+    role: 'student' | 'faculty_advisor';
+    rollNumber?: string;
+    batchYear?: number;
+    currentSemester?: number;
+    cgpa?: number;
+    employeeId?: string;
+    department?: string;
+    designation?: string;
+    primarySpecializationBasket?: string;
+  }) => Promise<{ success: boolean; error?: string }>;
+  logoutUser: () => void;
   switchPersona: (personaKey: string) => Promise<void>;
   updateCgpa: (cgpa: number) => void;
+  updateCurrentUserProfile: (
+    updates: Partial<UserProfile> & { coreGrades?: Record<string, number> }
+  ) => Promise<void>;
+  saveOrUpdateCourse: (
+    courseItem: Partial<ElectiveCourseCatalogItem> & { syllabusTopics?: string[] },
+    isUpdate?: boolean
+  ) => Promise<void>;
+  reviewStudentMentee: (
+    rollNumber: string,
+    status: 'Approved' | 'Revision Recommended' | 'Pending',
+    advisorNotes: string
+  ) => Promise<void>;
 
   cloudHealth: CloudHealthStatus;
   refreshCloudHealth: () => Promise<void>;
@@ -152,6 +191,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [personas, setPersonas] = useState<UserProfile[]>(SHOWCASE_PERSONAS);
   const [activePersonaKey, setActivePersonaKey] = useState<string>('student_aarav');
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true);
+  const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
 
   const currentUser = useMemo(
     () => personas.find((p) => p.personaKey === activePersonaKey) || personas[0],
@@ -159,7 +200,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   );
 
   const [baskets, setBaskets] = useState<ElectiveFocusBasketItem[]>(INITIAL_BASKETS);
-  const [courses] = useState<ElectiveCourseCatalogItem[]>(INITIAL_ELECTIVE_COURSES);
+  const [courses, setCourses] = useState<ElectiveCourseCatalogItem[]>(INITIAL_ELECTIVE_COURSES);
   const [auditLogs, setAuditLogs] = useState<AuditLogEntry[]>(INITIAL_AUDIT_LOGS);
 
   const [preferenceWeights, setPreferenceWeights] = useState<PreferenceWeights>(
@@ -276,13 +317,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setLiveRankedBaskets(null);
     setLivePeerCohort(null);
     setActivePersonaKey(personaKey);
+    setIsAuthenticated(true);
+    setShowAuthModal(false);
     setPreferenceWeights(target.preferenceWeights);
     setSelectedBasketPrefs(target.rankedBasketPreferences);
     setSelectedGenericPrefs(target.rankedGenericPreferences);
 
-    if (target.role === 'dean_admin' || target.role === 'faculty_advisor') {
+    if (target.role === 'faculty_advisor') {
+      setActiveTab('teacher_workspace');
+    } else if (target.role === 'dean_admin') {
       setActiveTab('dean_command');
-    } else if (activeTab === 'dean_command') {
+    } else if (activeTab === 'dean_command' || activeTab === 'teacher_workspace') {
       setActiveTab('studio');
     }
 
@@ -306,6 +351,277 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         p.personaKey === currentUser.personaKey ? { ...p, cgpa: clamped } : p
       )
     );
+  };
+
+  const loginWithCredentials = async (
+    email: string,
+    password: string
+  ): Promise<{ success: boolean; error?: string }> => {
+    const cleanEmail = email.trim().toLowerCase();
+    if (!cleanEmail.endsWith('@thapar.edu')) {
+      return { success: false, error: 'Institutional email must belong to @thapar.edu domain.' };
+    }
+    try {
+      const res = await cloudHttp.post('/auth/login', { email: cleanEmail, password });
+      if (res.data?.accessToken) {
+        setAuthToken(res.data.accessToken);
+      }
+      if (res.data?.user) {
+        const srvUser = res.data.user;
+        const pKey = srvUser.personaKey || `user_${srvUser.id || Date.now()}`;
+        const mapped: UserProfile = {
+          ...SHOWCASE_PERSONAS[0],
+          ...srvUser,
+          personaKey: pKey,
+          label: srvUser.name,
+          subtitle:
+            srvUser.role === 'student'
+              ? `Roll ${srvUser.rollNumber || '102403001'} • CGPA ${Number(srvUser.cgpa ?? 8.0).toFixed(2)}`
+              : `${srvUser.designation || 'Faculty Advisor'} (${srvUser.department || 'CSED'})`,
+        };
+        setPersonas((prev) => {
+          const exists = prev.some((p) => p.email.toLowerCase() === cleanEmail || p.personaKey === pKey);
+          if (exists) {
+            return prev.map((p) =>
+              p.email.toLowerCase() === cleanEmail || p.personaKey === pKey ? mapped : p
+            );
+          }
+          return [mapped, ...prev];
+        });
+        setActivePersonaKey(pKey);
+        setIsAuthenticated(true);
+        setShowAuthModal(false);
+        setActiveTab(
+          mapped.role === 'faculty_advisor'
+            ? 'teacher_workspace'
+            : mapped.role === 'dean_admin'
+              ? 'dean_command'
+              : 'studio'
+        );
+        return { success: true };
+      }
+    } catch {
+      // Check local personas if backend is unreachable
+    }
+
+    const existing = personas.find((p) => p.email.toLowerCase() === cleanEmail);
+    if (existing) {
+      await switchPersona(existing.personaKey);
+      return { success: true };
+    }
+    return {
+      success: false,
+      error: 'Account not found. Please Sign Up or use Instant Demo Login.',
+    };
+  };
+
+  const registerNewUser = async (payload: {
+    name: string;
+    email: string;
+    password: string;
+    contactNumber: string;
+    role: 'student' | 'faculty_advisor';
+    rollNumber?: string;
+    batchYear?: number;
+    currentSemester?: number;
+    cgpa?: number;
+    employeeId?: string;
+    department?: string;
+    designation?: string;
+    primarySpecializationBasket?: string;
+  }): Promise<{ success: boolean; error?: string }> => {
+    const cleanEmail = payload.email.trim().toLowerCase();
+    if (!cleanEmail.endsWith('@thapar.edu')) {
+      return { success: false, error: 'Institutional email must end with @thapar.edu' };
+    }
+
+    try {
+      const res = await cloudHttp.post('/auth/register', payload);
+      if (res.data?.accessToken) {
+        setAuthToken(res.data.accessToken);
+      }
+    } catch {
+      // Continue with instant client-side registration if offline
+    }
+
+    const pKey = `custom_${Date.now()}`;
+    const newProfile: UserProfile = {
+      ...SHOWCASE_PERSONAS[0],
+      id: `USR_${Date.now()}`,
+      personaKey: pKey,
+      name: payload.name.trim(),
+      email: cleanEmail,
+      contactNumber: payload.contactNumber || '+91-9876543210',
+      role: payload.role,
+      rollNumber: payload.role === 'student' ? payload.rollNumber || '102403199' : null,
+      employeeId: payload.role === 'faculty_advisor' ? payload.employeeId || 'EMP_CSED_205' : null,
+      department: payload.department || 'CSED',
+      designation: payload.designation || 'Associate Professor',
+      primarySpecializationBasket: payload.primarySpecializationBasket || 'EF_BASKET_05',
+      batchYear: payload.batchYear || 2024,
+      currentSemester: payload.currentSemester || 4,
+      cgpa: payload.cgpa ?? 8.25,
+      label: payload.name.trim(),
+      subtitle:
+        payload.role === 'student'
+          ? `Roll ${payload.rollNumber || '102403199'} • Sem ${payload.currentSemester || 4}`
+          : `${payload.designation || 'Faculty'} • ${payload.department || 'CSED'}`,
+      skills: ['Python', 'C++', 'Data Structures', 'SQL'],
+      areasOfInterest: ['Data Science', 'Artificial Intelligence', 'Web & Cloud'],
+    };
+
+    setPersonas((prev) => [newProfile, ...prev]);
+    setActivePersonaKey(pKey);
+    setIsAuthenticated(true);
+    setShowAuthModal(false);
+    setActiveTab(payload.role === 'faculty_advisor' ? 'teacher_workspace' : 'studio');
+    appendAuditLog('USER_REGISTERED', {
+      email: cleanEmail,
+      role: payload.role,
+      rollOrEmpId: newProfile.rollNumber || newProfile.employeeId,
+    });
+    return { success: true };
+  };
+
+  const logoutUser = () => {
+    setAuthToken(null);
+    setIsAuthenticated(false);
+    setShowAuthModal(true);
+  };
+
+  const updateCurrentUserProfile = async (
+    updates: Partial<UserProfile> & { coreGrades?: Record<string, number> }
+  ) => {
+    // Invalidate live ML cache so hybrid recommender immediately recalculates
+    setLiveRankedBaskets(null);
+    setLiveRankedCourses(null);
+
+    await updateStudentProfileCloud(updates);
+
+    setPersonas((prev) =>
+      prev.map((p) => {
+        if (p.personaKey !== currentUser.personaKey) return p;
+        return {
+          ...p,
+          ...updates,
+          coreGrades: updates.coreGrades ? { ...p.coreGrades, ...updates.coreGrades } : p.coreGrades,
+        };
+      })
+    );
+
+    appendAuditLog('STUDENT_PROFILE_AND_GRADES_UPDATED', {
+      rollNumber: currentUser.rollNumber,
+      updatedFields: Object.keys(updates),
+    });
+  };
+
+  const saveOrUpdateCourse = async (
+    courseItem: Partial<ElectiveCourseCatalogItem> & { syllabusTopics?: string[] },
+    isUpdate = false
+  ) => {
+    await saveTeacherCourseCloud(courseItem, isUpdate);
+
+    const code = (courseItem.courseCode || 'UCS599').trim().toUpperCase();
+    setCourses((prev) => {
+      const exists = prev.some((c) => c.courseCode.toUpperCase() === code);
+      if (exists) {
+        return prev.map((c) =>
+          c.courseCode.toUpperCase() === code
+            ? {
+                ...c,
+                ...courseItem,
+                courseCode: code,
+                syllabusKeywords:
+                  courseItem.syllabusTopics || courseItem.syllabusKeywords || c.syllabusKeywords,
+              }
+            : c
+        );
+      }
+      const newCourse: ElectiveCourseCatalogItem = {
+        courseCode: code,
+        title: courseItem.title || 'New TIET Elective Course',
+        category:
+          courseItem.electiveSlot === 'GE-SEM5'
+            ? 'GENERIC_ELECTIVE'
+            : 'PROFESSIONAL_ELECTIVE',
+        basketId: courseItem.basketId || 'EF_BASKET_05',
+        electiveSlot: (courseItem.electiveSlot as any) || 'PE-I',
+        semester: courseItem.semester || 5,
+        ltp: courseItem.ltp || '2-0-2',
+        lectureHours: 2,
+        tutorialHours: 0,
+        practicalHours: 2,
+        credits: courseItem.credits || 3.0,
+        seatCapacity: courseItem.seatCapacity || 120,
+        enrolledCount: 0,
+        waitlistCount: 0,
+        cutoffCgpaLastYear: 7.5,
+        industryPartner: courseItem.industryPartner || 'TIET',
+        prerequisites: courseItem.prerequisites || ['UCS301'],
+        labTechStack: courseItem.labTechStack || ['Python'],
+        syllabusTopics: courseItem.syllabusTopics || [],
+        syllabusKeywords: courseItem.syllabusTopics || courseItem.syllabusKeywords || [],
+        clos: courseItem.clos || [
+          'CO1: Analyze theoretical foundations and algorithmic complexity.',
+          'CO2: Design and implement scalable systems in laboratory sessions.',
+        ],
+        difficultyIndex: courseItem.difficultyIndex || 3.2,
+        weeklySelfEffortHours: 6.5,
+        assignedInstructor: courseItem.assignedInstructor || {
+          name: currentUser.name,
+          employeeId: currentUser.employeeId || 'EMP_CSED_104',
+          email: currentUser.email,
+        },
+        evaluationScheme: { mstWeight: 28, estWeight: 42, sessionalWeight: 30 },
+        historicalGradeDistribution: [
+          { grade: 'A', percentage: 18 },
+          { grade: 'A-', percentage: 26 },
+          { grade: 'B', percentage: 30 },
+          { grade: 'B-', percentage: 18 },
+          { grade: 'C', percentage: 8 },
+        ],
+      };
+      return [newCourse, ...prev];
+    });
+
+    appendAuditLog(isUpdate ? 'TEACHER_COURSE_UPDATED' : 'TEACHER_COURSE_ADDED', {
+      courseCode: code,
+      title: courseItem.title,
+      basketId: courseItem.basketId,
+      seatCapacity: courseItem.seatCapacity,
+    });
+  };
+
+  const reviewStudentMentee = async (
+    rollNumber: string,
+    status: 'Approved' | 'Revision Recommended' | 'Pending',
+    advisorNotes: string
+  ) => {
+    await reviewMenteePreferenceCloud(rollNumber, status, advisorNotes);
+
+    setPersonas((prev) =>
+      prev.map((p) =>
+        p.rollNumber === rollNumber
+          ? {
+              ...p,
+              advisorReview: {
+                status,
+                advisorNotes,
+                reviewedByEmail: currentUser.email,
+                reviewedByName: currentUser.name,
+                reviewedAt: new Date().toISOString(),
+              },
+            }
+          : p
+      )
+    );
+
+    appendAuditLog('FACULTY_STUDENT_PREFERENCE_REVIEWED', {
+      rollNumber,
+      status,
+      advisorNotes,
+      reviewedBy: currentUser.email,
+    });
   };
 
   const updatePreferenceWeight = (key: keyof PreferenceWeights, value: number) => {
@@ -939,8 +1255,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setIsAdvisorOpen,
         personas,
         currentUser,
+        isAuthenticated,
+        showAuthModal,
+        setShowAuthModal,
+        loginWithCredentials,
+        registerNewUser,
+        logoutUser,
         switchPersona,
         updateCgpa,
+        updateCurrentUserProfile,
+        saveOrUpdateCourse,
+        reviewStudentMentee,
         cloudHealth,
         refreshCloudHealth,
         baskets,

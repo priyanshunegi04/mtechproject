@@ -1,3 +1,3 @@
-// Frontend Pages & Role Dashboards Registry
-export {};
-
+export * from './AuthPage';
+export * from './StudentDashboard';
+export * from './TeacherDashboard';

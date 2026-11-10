@@ -6,8 +6,32 @@ import { MLGatewayService, recordAuditLog } from '../services';
 import { serializeUser } from './authController';
 
 const updateProfileSchema = z.object({
-  skills: z.array(z.string()).max(25).optional(),
-  targetCareerRoles: z.array(z.string()).max(10).optional(),
+  name: z.string().min(2).max(120).optional(),
+  contactNumber: z.string().max(30).optional(),
+  batchYear: z.coerce.number().int().min(2018).max(2032).optional(),
+  currentSemester: z.coerce.number().int().min(1).max(8).optional(),
+  department: z.string().max(80).optional(),
+  cgpa: z.coerce.number().min(0).max(10).optional(),
+  coreGrades: z.record(z.string(), z.coerce.number().min(0).max(10)).optional(),
+  personalInfo: z
+    .object({
+      name: z.string().optional(),
+      contactNumber: z.string().optional(),
+      batchYear: z.coerce.number().int().min(2018).max(2032).optional(),
+      currentSemester: z.coerce.number().int().min(1).max(8).optional(),
+      rollNumber: z.string().optional(),
+      department: z.string().optional(),
+    })
+    .optional(),
+  academicData: z
+    .object({
+      cgpa: z.coerce.number().min(0).max(10).optional(),
+      coreGrades: z.record(z.string(), z.coerce.number().min(0).max(10)).optional(),
+    })
+    .optional(),
+  skills: z.array(z.string()).max(40).optional(),
+  areasOfInterest: z.array(z.string()).max(25).optional(),
+  targetCareerRoles: z.array(z.string()).max(15).optional(),
   statementOfPurpose: z.string().max(2500).optional(),
   codingProfileScore: z.number().min(0).max(100).optional(),
   mathAptitudeScore: z.number().min(0).max(100).optional(),
@@ -79,7 +103,48 @@ export class StudentController {
         throw new AppError('Student profile not found', 404);
       }
 
+      if (data.name !== undefined) user.name = data.name;
+      if (data.contactNumber !== undefined) user.contactNumber = data.contactNumber;
+      if (data.batchYear !== undefined) user.batchYear = data.batchYear;
+      if (data.currentSemester !== undefined) user.currentSemester = data.currentSemester;
+      if (data.department !== undefined) user.department = data.department;
+      if (data.cgpa !== undefined) user.cgpa = data.cgpa;
+
+      if (data.personalInfo) {
+        if (data.personalInfo.name !== undefined) user.name = data.personalInfo.name;
+        if (data.personalInfo.contactNumber !== undefined) user.contactNumber = data.personalInfo.contactNumber;
+        if (data.personalInfo.batchYear !== undefined) user.batchYear = data.personalInfo.batchYear;
+        if (data.personalInfo.currentSemester !== undefined) user.currentSemester = data.personalInfo.currentSemester;
+        if (data.personalInfo.rollNumber !== undefined) user.rollNumber = data.personalInfo.rollNumber;
+        if (data.personalInfo.department !== undefined) user.department = data.personalInfo.department;
+      }
+
+      const incomingCoreGrades = data.coreGrades || data.academicData?.coreGrades;
+      if (data.academicData?.cgpa !== undefined) {
+        user.cgpa = data.academicData.cgpa;
+      }
+      if (incomingCoreGrades && typeof incomingCoreGrades === 'object') {
+        const nextMap = new Map<string, number>();
+        if (user.coreGrades instanceof Map) {
+          for (const [k, v] of user.coreGrades.entries()) {
+            nextMap.set(k, Number(v));
+          }
+        } else if (user.coreGrades && typeof user.coreGrades === 'object') {
+          for (const [k, v] of Object.entries(user.coreGrades)) {
+            nextMap.set(k, Number(v));
+          }
+        }
+        for (const [code, gp] of Object.entries(incomingCoreGrades)) {
+          const cleanCode = code.trim().toUpperCase();
+          if (cleanCode) {
+            nextMap.set(cleanCode, Math.max(0, Math.min(10, Number(gp))));
+          }
+        }
+        user.coreGrades = nextMap;
+      }
+
       if (data.skills !== undefined) user.skills = data.skills;
+      if (data.areasOfInterest !== undefined) user.areasOfInterest = data.areasOfInterest;
       if (data.targetCareerRoles !== undefined) user.targetCareerRoles = data.targetCareerRoles;
       if (data.statementOfPurpose !== undefined) user.statementOfPurpose = data.statementOfPurpose;
       if (data.codingProfileScore !== undefined) user.codingProfileScore = data.codingProfileScore;
@@ -94,6 +159,7 @@ export class StudentController {
       }
 
       await user.save();
+      await this.mlGateway.invalidateStudentCache(user);
 
       await recordAuditLog({
         actorId: String(user._id),
@@ -101,12 +167,14 @@ export class StudentController {
         actorRole: user.role,
         action: 'STUDENT_PROFILE_UPDATED',
         req,
-        metadata: { updatedFields: Object.keys(data) },
+        metadata: { updatedFields: Object.keys(data), cacheInvalidated: true },
       });
 
       res.status(200).json({
         success: true,
+        cacheInvalidated: true,
         student: serializeUser(user),
+        user: serializeUser(user),
       });
     } catch (error) {
       next(error);

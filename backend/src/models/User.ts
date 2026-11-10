@@ -22,12 +22,66 @@ export interface IPrerequisiteOverride {
   approvedAt: Date;
 }
 
+export interface IQuizResponseItem {
+  questionId: string;
+  selectedOption: number;
+  isCorrect: boolean;
+  domain: string;
+}
+
+export interface IDomainScores {
+  'Data Structures & Algorithms': number;
+  'Math & Linear Algebra': number;
+  'Systems & OS/Networks': number;
+  'AI & Machine Learning': number;
+  'Web & Databases': number;
+  [key: string]: number;
+}
+
+export type SkillLevelType = 'Novice' | 'Intermediate' | 'Proficient' | 'Advanced';
+
+export interface ISkillAssessment {
+  lastTakenAt?: Date | null;
+  totalScore: number;
+  domainScores: IDomainScores;
+  evaluatedSkillLevel: SkillLevelType;
+  quizResponses: IQuizResponseItem[];
+}
+
+export interface IPersonalInfo {
+  name?: string;
+  email?: string;
+  contactNumber?: string;
+  batchYear?: number;
+  currentSemester?: number;
+  rollNumber?: string;
+  employeeId?: string;
+  department?: string;
+}
+
+export interface IAcademicData {
+  cgpa?: number;
+  coreGrades?: Map<string, number> | Record<string, number>;
+}
+
+export interface IAdvisorMenteeStatus {
+  status: 'Pending' | 'Approved' | 'Revision Recommended';
+  advisorNotes?: string;
+  reviewedByEmail?: string;
+  reviewedByName?: string;
+  reviewedAt?: Date | null;
+}
+
 export type AllocationStatusType = 'pending' | 'allocated' | 'waitlisted';
 
 export interface IUser extends Document {
   name: string;
   email: string;
   passwordHash: string;
+  contactNumber?: string;
+  department: string;
+  designation?: string;
+  primarySpecializationBasket?: string;
   role: InstitutionalRole;
   rollNumber?: string;
   employeeId?: string;
@@ -37,9 +91,14 @@ export interface IUser extends Document {
   cgpa: number;
   sgpaHistory: ISgpaEntry[];
   coreGrades: Map<string, number> | Record<string, number>;
+  personalInfo?: IPersonalInfo;
+  academicData?: IAcademicData;
   codingProfileScore: number;
   mathAptitudeScore: number;
   skills: string[];
+  areasOfInterest: string[];
+  skillAssessment?: ISkillAssessment;
+  advisorReview?: IAdvisorMenteeStatus;
   targetCareerRoles: string[];
   statementOfPurpose: string;
   preferenceWeights: IPreferenceWeights;
@@ -88,6 +147,58 @@ const prerequisiteOverrideSchema = new Schema<IPrerequisiteOverride>(
   { _id: false }
 );
 
+const quizResponseItemSchema = new Schema<IQuizResponseItem>(
+  {
+    questionId: { type: String, required: true },
+    selectedOption: { type: Number, required: true },
+    isCorrect: { type: Boolean, required: true },
+    domain: { type: String, required: true },
+  },
+  { _id: false }
+);
+
+const skillAssessmentSchema = new Schema<ISkillAssessment>(
+  {
+    lastTakenAt: { type: Date, default: null },
+    totalScore: { type: Number, default: 0, min: 0, max: 100 },
+    domainScores: {
+      type: Schema.Types.Mixed,
+      default: () => ({
+        'Data Structures & Algorithms': 0,
+        'Math & Linear Algebra': 0,
+        'Systems & OS/Networks': 0,
+        'AI & Machine Learning': 0,
+        'Web & Databases': 0,
+      }),
+    },
+    evaluatedSkillLevel: {
+      type: String,
+      enum: ['Novice', 'Intermediate', 'Proficient', 'Advanced'],
+      default: 'Novice',
+    },
+    quizResponses: {
+      type: [quizResponseItemSchema],
+      default: [],
+    },
+  },
+  { _id: false }
+);
+
+const advisorMenteeStatusSchema = new Schema<IAdvisorMenteeStatus>(
+  {
+    status: {
+      type: String,
+      enum: ['Pending', 'Approved', 'Revision Recommended'],
+      default: 'Pending',
+    },
+    advisorNotes: { type: String, default: '' },
+    reviewedByEmail: { type: String, default: '' },
+    reviewedByName: { type: String, default: '' },
+    reviewedAt: { type: Date, default: null },
+  },
+  { _id: false }
+);
+
 const userSchema = new Schema<IUser>(
   {
     name: {
@@ -113,6 +224,26 @@ const userSchema = new Schema<IUser>(
       type: String,
       required: true,
       select: false,
+    },
+    contactNumber: {
+      type: String,
+      default: '+91-9876543210',
+      trim: true,
+    },
+    department: {
+      type: String,
+      default: 'CSED',
+      trim: true,
+    },
+    designation: {
+      type: String,
+      default: 'Associate Professor',
+      trim: true,
+    },
+    primarySpecializationBasket: {
+      type: String,
+      default: 'EF_BASKET_05',
+      trim: true,
     },
     role: {
       type: String,
@@ -178,6 +309,14 @@ const userSchema = new Schema<IUser>(
           ['UMA401', 8],
         ]),
     },
+    personalInfo: {
+      type: Schema.Types.Mixed,
+      default: {},
+    },
+    academicData: {
+      type: Schema.Types.Mixed,
+      default: {},
+    },
     codingProfileScore: {
       type: Number,
       default: 76.0,
@@ -193,6 +332,36 @@ const userSchema = new Schema<IUser>(
     skills: {
       type: [String],
       default: ['C++', 'Python', 'Data Structures', 'SQL'],
+    },
+    areasOfInterest: {
+      type: [String],
+      default: ['Data Science', 'Artificial Intelligence', 'Web & Cloud'],
+    },
+    skillAssessment: {
+      type: skillAssessmentSchema,
+      default: () => ({
+        lastTakenAt: null,
+        totalScore: 0,
+        domainScores: {
+          'Data Structures & Algorithms': 0,
+          'Math & Linear Algebra': 0,
+          'Systems & OS/Networks': 0,
+          'AI & Machine Learning': 0,
+          'Web & Databases': 0,
+        },
+        evaluatedSkillLevel: 'Novice',
+        quizResponses: [],
+      }),
+    },
+    advisorReview: {
+      type: advisorMenteeStatusSchema,
+      default: () => ({
+        status: 'Pending',
+        advisorNotes: '',
+        reviewedByEmail: '',
+        reviewedByName: '',
+        reviewedAt: null,
+      }),
     },
     targetCareerRoles: {
       type: [String],

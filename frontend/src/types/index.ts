@@ -34,6 +34,53 @@ export interface PrerequisiteOverride {
   approvedAt: string;
 }
 
+export interface QuizResponseItem {
+  questionId: string;
+  selectedOption: number;
+  isCorrect: boolean;
+  domain: string;
+}
+
+export interface DomainScoresMap {
+  'Data Structures & Algorithms': number;
+  'Math & Linear Algebra': number;
+  'Systems & OS/Networks': number;
+  'AI & Machine Learning': number;
+  'Web & Databases': number;
+  [key: string]: number;
+}
+
+export type SkillLevel = 'Novice' | 'Intermediate' | 'Proficient' | 'Advanced';
+
+export interface SkillAssessmentRecord {
+  lastTakenAt?: string | null;
+  totalScore: number;
+  domainScores: DomainScoresMap;
+  evaluatedSkillLevel: SkillLevel;
+  quizResponses: QuizResponseItem[];
+}
+
+export interface AdvisorMenteeReview {
+  status: 'Pending' | 'Approved' | 'Revision Recommended';
+  advisorNotes?: string;
+  reviewedByEmail?: string;
+  reviewedByName?: string;
+  reviewedAt?: string | null;
+}
+
+export interface DiagnosticQuestionItem {
+  index: number;
+  id: string;
+  domain: string;
+  domainLabel: string;
+  difficulty: 'Medium' | 'Hard';
+  courseRef: string;
+  question: string;
+  options: string[];
+  correctOptionIndex?: number;
+  explanation?: string;
+}
+
 export interface UserProfile {
   id: string;
   personaKey: string;
@@ -41,6 +88,10 @@ export interface UserProfile {
   subtitle: string;
   name: string;
   email: string;
+  contactNumber?: string;
+  department?: string;
+  designation?: string;
+  primarySpecializationBasket?: string;
   role: InstitutionalRole;
   rollNumber?: string | null;
   employeeId?: string | null;
@@ -53,6 +104,9 @@ export interface UserProfile {
   codingProfileScore: number;
   mathAptitudeScore: number;
   skills: string[];
+  areasOfInterest?: string[];
+  skillAssessment?: SkillAssessmentRecord;
+  advisorReview?: AdvisorMenteeReview;
   targetCareerRoles: string[];
   statementOfPurpose: string;
   preferenceWeights: PreferenceWeights;
@@ -97,10 +151,16 @@ export interface ElectiveCourseCatalogItem {
   industryPartner: IndustryPartner;
   prerequisites: string[];
   labTechStack: string[];
+  syllabusTopics?: string[];
   syllabusKeywords: string[];
   clos: string[];
   difficultyIndex: number;
   weeklySelfEffortHours: number;
+  assignedInstructor?: {
+    name: string;
+    employeeId: string;
+    email?: string;
+  };
   evaluationScheme: {
     mstWeight: number;
     estWeight: number;

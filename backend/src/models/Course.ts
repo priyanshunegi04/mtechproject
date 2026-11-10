@@ -14,6 +14,12 @@ export interface IEvaluationScheme {
   sessionalWeight: number;
 }
 
+export interface IAssignedInstructor {
+  name: string;
+  employeeId: string;
+  email?: string;
+}
+
 export interface ICourse extends Document {
   courseCode: string;
   title: string;
@@ -35,10 +41,12 @@ export interface ICourse extends Document {
   evaluationScheme: IEvaluationScheme;
   prerequisites: string[];
   labTechStack: string[];
+  syllabusTopics: string[];
   syllabusKeywords: string[];
   clos: string[];
   difficultyIndex: number;
   weeklySelfEffortHours: number;
+  assignedInstructor?: IAssignedInstructor;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -152,6 +160,10 @@ const courseSchema = new Schema<ICourse>(
       type: [String],
       default: [],
     },
+    syllabusTopics: {
+      type: [String],
+      default: [],
+    },
     syllabusKeywords: {
       type: [String],
       default: [],
@@ -169,6 +181,14 @@ const courseSchema = new Schema<ICourse>(
     weeklySelfEffortHours: {
       type: Number,
       default: 6.0,
+    },
+    assignedInstructor: {
+      type: {
+        name: { type: String, default: 'CSED Faculty' },
+        employeeId: { type: String, default: 'EMP_CSED_101' },
+        email: { type: String, default: '' },
+      },
+      default: () => ({ name: 'CSED Faculty', employeeId: 'EMP_CSED_101', email: '' }),
     },
     isActive: {
       type: Boolean,
