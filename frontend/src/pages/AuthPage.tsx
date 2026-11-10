@@ -15,9 +15,11 @@ import {
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
+import { useAuth } from '../context/AuthContext';
 
 export const LoginPage: React.FC = () => {
-  const { loginWithCredentials, darkMode, toggleDarkMode } = useApp();
+  const { darkMode, toggleDarkMode } = useApp();
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const [roleTab, setRoleTab] = useState<'student' | 'faculty_advisor'>('student');
@@ -46,7 +48,7 @@ export const LoginPage: React.FC = () => {
     }
 
     setIsSubmitting(true);
-    const res = await loginWithCredentials(email, password, roleTab);
+    const res = await login(email, password, roleTab);
     setIsSubmitting(false);
 
     if (!res.success) {
@@ -140,20 +142,20 @@ export const LoginPage: React.FC = () => {
             <div>
               <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
                 {roleTab === 'student'
-                  ? 'Student Institutional Email (@thapar.edu)'
-                  : 'Faculty / Advisor Email (@thapar.edu)'}
+                  ? 'Student Email (@thapar.edu) or Roll Number'
+                  : 'Faculty Email (@thapar.edu) or Employee ID'}
               </label>
               <div className="relative">
                 <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                 <input
-                  type="email"
+                  type="text"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder={
                     roleTab === 'student'
-                      ? 'student_be24@thapar.edu'
-                      : 'faculty@thapar.edu'
+                      ? 'student_be24@thapar.edu or 102403012'
+                      : 'faculty@thapar.edu or FAC-CSED-104'
                   }
                   className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#8B1E24]"
                 />
@@ -211,22 +213,23 @@ export const LoginPage: React.FC = () => {
 
 const CORE_SUBJECT_DEFAULTS: { code: string; title: string; defaultGp: number }[] = [
   { code: 'UES103', title: 'Programming for Problem Solving', defaultGp: 9 },
-  { code: 'UMA022', title: 'Calculus for Engineers', defaultGp: 8 },
-  { code: 'UMA023', title: 'Linear Algebra & Diff Eq', defaultGp: 8 },
-  { code: 'UCS301', title: 'Data Structures', defaultGp: 9 },
-  { code: 'UCS303', title: 'Operating Systems', defaultGp: 8 },
+  { code: 'UMA022', title: 'Calculus for Engineers', defaultGp: 9 },
+  { code: 'UMA023', title: 'Linear Algebra & Diff Eq', defaultGp: 9 },
+  { code: 'UCS301', title: 'Data Structures', defaultGp: 10 },
+  { code: 'UCS303', title: 'Operating Systems', defaultGp: 9 },
   { code: 'UTA018', title: 'Object Oriented Programming', defaultGp: 9 },
-  { code: 'UCS405', title: 'Discrete Math Structures', defaultGp: 8 },
-  { code: 'UMA021', title: 'Numerical Linear Algebra', defaultGp: 8 },
-  { code: 'UCS415', title: 'Design & Analysis of Algorithms', defaultGp: 9 },
+  { code: 'UCS405', title: 'Discrete Math Structures', defaultGp: 9 },
+  { code: 'UMA021', title: 'Numerical Linear Algebra', defaultGp: 10 },
+  { code: 'UCS415', title: 'Design & Analysis of Algorithms', defaultGp: 10 },
   { code: 'UCS310', title: 'Database Management Systems', defaultGp: 9 },
   { code: 'UCS414', title: 'Computer Networks', defaultGp: 8 },
-  { code: 'UCS321', title: 'AI for Engineers', defaultGp: 9 },
-  { code: 'UMA401', title: 'Probability & Statistics', defaultGp: 8 },
+  { code: 'UCS321', title: 'AI for Engineers', defaultGp: 10 },
+  { code: 'UMA401', title: 'Probability & Statistics', defaultGp: 9 },
 ];
 
 export const SignupPage: React.FC = () => {
-  const { registerNewUser, baskets, darkMode, toggleDarkMode } = useApp();
+  const { baskets, darkMode, toggleDarkMode } = useApp();
+  const { signup } = useAuth();
   const navigate = useNavigate();
 
   const [role, setRole] = useState<'student' | 'faculty_advisor'>('student');
@@ -239,7 +242,7 @@ export const SignupPage: React.FC = () => {
   const [rollNumber, setRollNumber] = useState<string>('102403012');
   const [batchYear, setBatchYear] = useState<number>(2024);
   const [currentSemester, setCurrentSemester] = useState<number>(4);
-  const [cgpa, setCgpa] = useState<number>(8.45);
+  const [cgpa, setCgpa] = useState<number>(9.12);
   const [coreGrades, setCoreGrades] = useState<Record<string, number>>(() => {
     const map: Record<string, number> = {};
     CORE_SUBJECT_DEFAULTS.forEach((s) => {
@@ -249,9 +252,13 @@ export const SignupPage: React.FC = () => {
   });
 
   // Faculty fields
-  const [employeeId, setEmployeeId] = useState<string>('EMP_CSED_212');
+  const [employeeId, setEmployeeId] = useState<string>('FAC-CSED-104');
   const [department, setDepartment] = useState<string>('CSED');
   const [designation, setDesignation] = useState<string>('Associate Professor');
+  const [officeRoom, setOfficeRoom] = useState<string>('CSED Block-B Room 304');
+  const [specializationArea, setSpecializationArea] = useState<string>(
+    'Artificial Intelligence & Machine Learning'
+  );
   const [primarySpecializationBasket, setPrimarySpecializationBasket] =
     useState<string>('EF_BASKET_05');
 
@@ -277,8 +284,11 @@ export const SignupPage: React.FC = () => {
       return;
     }
 
+    const chosenBasketObj = baskets.find((b) => b.basketId === primarySpecializationBasket);
+    const basketNum = chosenBasketObj?.basketNumber || 5;
+
     setIsSubmitting(true);
-    const res = await registerNewUser({
+    const res = await signup({
       name: fullName.trim(),
       email: email.trim().toLowerCase(),
       password,
@@ -294,6 +304,11 @@ export const SignupPage: React.FC = () => {
       designation: role === 'faculty_advisor' ? designation.trim() : undefined,
       primarySpecializationBasket:
         role === 'faculty_advisor' ? primarySpecializationBasket : undefined,
+      assignedBasketId: role === 'faculty_advisor' ? basketNum : undefined,
+      assignedBasketName:
+        role === 'faculty_advisor' ? chosenBasketObj?.name || 'AIML' : undefined,
+      officeRoom: role === 'faculty_advisor' ? officeRoom.trim() : undefined,
+      specializationArea: role === 'faculty_advisor' ? specializationArea.trim() : undefined,
     });
     setIsSubmitting(false);
 
@@ -623,6 +638,30 @@ export const SignupPage: React.FC = () => {
                       </option>
                     ))}
                   </select>
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">
+                    Office Room
+                  </label>
+                  <input
+                    type="text"
+                    value={officeRoom}
+                    onChange={(e) => setOfficeRoom(e.target.value)}
+                    placeholder="CSED Block-B Room 304"
+                    className="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">
+                    Specialization Area
+                  </label>
+                  <input
+                    type="text"
+                    value={specializationArea}
+                    onChange={(e) => setSpecializationArea(e.target.value)}
+                    placeholder="Artificial Intelligence & Machine Learning"
+                    className="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs"
+                  />
                 </div>
               </div>
             )}

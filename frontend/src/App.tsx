@@ -7,8 +7,9 @@ import {
   Routes,
   useNavigate,
 } from 'react-router-dom';
-import { ShieldAlert } from 'lucide-react';
+import { ShieldAlert, Loader2 } from 'lucide-react';
 import { AppProvider, useApp } from './context/AppContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { AiAdvisorDrawer, TopInstitutionalHeader } from './components';
 import {
   LoginPage,
@@ -93,8 +94,18 @@ const StudentForbiddenRedirect: React.FC = () => {
   );
 };
 
+const HydrationSpinner: React.FC = () => (
+  <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300">
+    <div className="flex flex-col items-center gap-3">
+      <Loader2 className="w-8 h-8 animate-spin text-[#8B1E24]" />
+      <p className="text-xs font-semibold">Hydrating session profile from MongoDB Atlas...</p>
+    </div>
+  </div>
+);
+
 const ProtectedStudentRoute: React.FC = () => {
   const { isAuthenticated, currentUser, setActiveTab, activeTab } = useApp();
+  const { isLoading } = useAuth();
 
   useEffect(() => {
     if (
@@ -105,6 +116,10 @@ const ProtectedStudentRoute: React.FC = () => {
       setActiveTab('studio');
     }
   }, [isAuthenticated, currentUser.role, activeTab, setActiveTab]);
+
+  if (isLoading) {
+    return <HydrationSpinner />;
+  }
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
@@ -123,6 +138,7 @@ const ProtectedStudentRoute: React.FC = () => {
 
 const ProtectedFacultyRoute: React.FC = () => {
   const { isAuthenticated, currentUser, setActiveTab, activeTab } = useApp();
+  const { isLoading } = useAuth();
 
   useEffect(() => {
     if (
@@ -133,6 +149,10 @@ const ProtectedFacultyRoute: React.FC = () => {
       setActiveTab('teacher_workspace');
     }
   }, [isAuthenticated, currentUser.role, activeTab, setActiveTab]);
+
+  if (isLoading) {
+    return <HydrationSpinner />;
+  }
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
@@ -150,17 +170,22 @@ const ProtectedFacultyRoute: React.FC = () => {
 };
 
 const LogoutRoute: React.FC = () => {
-  const { logoutUser } = useApp();
+  const { logout } = useAuth();
 
   useEffect(() => {
-    logoutUser();
-  }, [logoutUser]);
+    logout();
+  }, [logout]);
 
   return <Navigate to="/login" replace />;
 };
 
 const RootRedirectRoute: React.FC = () => {
   const { isAuthenticated, currentUser } = useApp();
+  const { isLoading } = useAuth();
+
+  if (isLoading) {
+    return <HydrationSpinner />;
+  }
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
@@ -192,9 +217,11 @@ export const AppRoutes: React.FC = () => {
 export const App: React.FC = () => {
   return (
     <AppProvider>
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
+      </AuthProvider>
     </AppProvider>
   );
 };

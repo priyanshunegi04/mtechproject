@@ -80,10 +80,11 @@ export function createApiRouter(env: EnvConfig): Router {
   router.get('/counseling/active-round', curriculumController.getActiveCounselingRound);
 
   // ---------------------------------------------------------------------------
-  // 3. Student Portal & Hybrid ML Recommendation Routes
+  // 3. Student & Faculty Profile Persistence Routes
   // ---------------------------------------------------------------------------
   router.get('/student/profile', authGuard, studentController.getMyProfile);
   router.put('/student/profile', authGuard, studentController.updateMyProfile);
+  router.put('/faculty/profile', authGuard, authController.updateFacultyProfile);
   router.get('/students/me', authGuard, studentController.getMyProfile);
   router.put('/students/me/profile', authGuard, studentController.updateMyProfile);
   router.post('/students/me/preferences', authGuard, studentController.saveAndLockPreferences);

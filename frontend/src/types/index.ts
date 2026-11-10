@@ -92,6 +92,10 @@ export interface UserProfile {
   department?: string;
   designation?: string;
   primarySpecializationBasket?: string;
+  assignedBasketId?: number;
+  assignedBasketName?: string;
+  officeRoom?: string;
+  specializationArea?: string;
   role: InstitutionalRole;
   rollNumber?: string | null;
   employeeId?: string | null;
@@ -105,6 +109,8 @@ export interface UserProfile {
   mathAptitudeScore: number;
   skills: string[];
   areasOfInterest?: string[];
+  targetRoles?: string[];
+  bio?: string;
   skillAssessment?: SkillAssessmentRecord;
   advisorReview?: AdvisorMenteeReview;
   targetCareerRoles: string[];

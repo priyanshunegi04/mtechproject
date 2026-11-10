@@ -14,6 +14,7 @@ import {
   Users,
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { useAuth } from '../context/AuthContext';
 import { DeanCommandCenter } from '../components';
 import { ElectiveCourseCatalogItem, IndustryPartner } from '../types';
 
@@ -28,10 +29,56 @@ export const TeacherDashboard: React.FC = () => {
     reviewStudentMentee,
     grantPrerequisiteOverride,
   } = useApp();
+  const { user, updateProfile } = useAuth();
+  const activeFaculty = user || currentUser;
 
   const [selectedBasketFilter, setSelectedBasketFilter] = useState<string>(
-    currentUser.primarySpecializationBasket || 'ALL'
+    activeFaculty.primarySpecializationBasket || 'ALL'
   );
+
+  // Faculty Profile Editor State
+  const [showFacultyProfileEditor, setShowFacultyProfileEditor] = useState<boolean>(false);
+  const [facultyName, setFacultyName] = useState<string>(activeFaculty.name);
+  const [facultyDesignation, setFacultyDesignation] = useState<string>(
+    activeFaculty.designation || 'Associate Professor'
+  );
+  const [facultyOfficeRoom, setFacultyOfficeRoom] = useState<string>(
+    activeFaculty.officeRoom || 'CSED-304'
+  );
+  const [facultySpecializationArea, setFacultySpecializationArea] = useState<string>(
+    activeFaculty.specializationArea || 'Artificial Intelligence & Deep Learning'
+  );
+  const [facultyContact, setFacultyContact] = useState<string>(
+    activeFaculty.contactNumber || '+91-9876500104'
+  );
+  const [facultyBasketCode, setFacultyBasketCode] = useState<string>(
+    activeFaculty.primarySpecializationBasket || 'EF_BASKET_05'
+  );
+  const [facultyProfileBanner, setFacultyProfileBanner] = useState<string | null>(null);
+
+  const handleSaveFacultyProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const numericId =
+      Number(String(facultyBasketCode).replace(/\D/g, '')) ||
+      activeFaculty.assignedBasketId ||
+      5;
+    const matchedBasket = baskets.find((b) => b.basketId === facultyBasketCode);
+    await updateProfile({
+      name: facultyName.trim(),
+      designation: facultyDesignation.trim(),
+      officeRoom: facultyOfficeRoom.trim(),
+      specializationArea: facultySpecializationArea.trim(),
+      contactNumber: facultyContact.trim(),
+      primarySpecializationBasket: facultyBasketCode,
+      assignedBasketId: numericId,
+      assignedBasketName: matchedBasket?.name || activeFaculty.assignedBasketName || 'AI & ML',
+    });
+    setFacultyProfileBanner(
+      'Instructor profile synced to MongoDB Atlas (PUT /api/faculty/profile)!'
+    );
+    setShowFacultyProfileEditor(false);
+    setTimeout(() => setFacultyProfileBanner(null), 3500);
+  };
 
   // Course & Syllabus Form State
   const [isEditingExisting, setIsEditingExisting] = useState<boolean>(false);
@@ -157,39 +204,161 @@ export const TeacherDashboard: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Top Faculty Header */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-        <div>
-          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-[#8B1E24]/10 text-[#8B1E24] dark:bg-rose-500/20 dark:text-rose-300 text-xs font-bold mb-1.5">
-            <GraduationCap className="w-3.5 h-3.5" />
-            Teacher &amp; Faculty Advisor Workspace • CSED TIET
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-4">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          <div className="space-y-1">
+            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-[#8B1E24]/10 text-[#8B1E24] dark:bg-rose-500/20 dark:text-rose-300 text-xs font-bold mb-1">
+              <GraduationCap className="w-3.5 h-3.5" />
+              Teacher &amp; Faculty Advisor Workspace • {activeFaculty.department || 'CSED'} TIET
+            </div>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+              {activeFaculty.name} ({activeFaculty.employeeId || 'FAC-CSED-104'}) •{' '}
+              {activeFaculty.designation || 'Associate Professor'}
+            </h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Assigned Basket:{' '}
+              <strong>
+                Basket #{activeFaculty.assignedBasketId || 5} —{' '}
+                {activeFaculty.assignedBasketName ||
+                  activeFaculty.primarySpecializationBasket ||
+                  'EF_BASKET_05 (AI & ML)'}
+              </strong>{' '}
+              • Office Room: <strong>{activeFaculty.officeRoom || 'CSED-304'}</strong> •
+              Specialization:{' '}
+              <strong>
+                {activeFaculty.specializationArea || 'Artificial Intelligence & Deep Learning'}
+              </strong>
+            </p>
           </div>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white">
-            Course &amp; Syllabus Management + Student Mentee Assessment Insights
-          </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            Active Instructor: <strong>{currentUser.name}</strong> ({currentUser.employeeId || 'EMP_CSED_104'}) • Primary Specialization:{' '}
-            <strong>{currentUser.primarySpecializationBasket || 'EF_BASKET_05'}</strong>
-          </p>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setShowFacultyProfileEditor((prev) => !prev)}
+              className="px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 hover:border-[#8B1E24] text-xs font-bold flex items-center gap-1.5"
+            >
+              <Edit3 className="w-3.5 h-3.5 text-[#8B1E24]" />
+              {showFacultyProfileEditor ? 'Close Profile Editor' : 'Edit Faculty Profile'}
+            </button>
+
+            <Filter className="w-4 h-4 text-slate-400 ml-1" />
+            <label className="text-xs font-bold text-slate-600 dark:text-slate-300">
+              Filter Basket:
+            </label>
+            <select
+              value={selectedBasketFilter}
+              onChange={(e) => setSelectedBasketFilter(e.target.value)}
+              className="px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs font-semibold"
+            >
+              <option value="ALL">All 12 Elective Focus Baskets</option>
+              {baskets.map((b) => (
+                <option key={b.basketId} value={b.basketId}>
+                  {b.basketId}: {b.name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <Filter className="w-4 h-4 text-slate-400" />
-          <label className="text-xs font-bold text-slate-600 dark:text-slate-300">
-            Filter Basket:
-          </label>
-          <select
-            value={selectedBasketFilter}
-            onChange={(e) => setSelectedBasketFilter(e.target.value)}
-            className="px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs font-semibold"
+        {facultyProfileBanner && (
+          <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-700 text-emerald-800 dark:text-emerald-200 text-xs font-semibold flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 shrink-0" />
+            <span>{facultyProfileBanner}</span>
+          </div>
+        )}
+
+        {showFacultyProfileEditor && (
+          <form
+            onSubmit={handleSaveFacultyProfile}
+            className="pt-4 border-t border-slate-200 dark:border-slate-800 grid grid-cols-1 sm:grid-cols-3 gap-3"
           >
-            <option value="ALL">All 12 Elective Focus Baskets</option>
-            {baskets.map((b) => (
-              <option key={b.basketId} value={b.basketId}>
-                {b.basketId}: {b.name}
-              </option>
-            ))}
-          </select>
-        </div>
+            <div>
+              <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">
+                Instructor Name
+              </label>
+              <input
+                type="text"
+                value={facultyName}
+                onChange={(e) => setFacultyName(e.target.value)}
+                className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">
+                Designation
+              </label>
+              <input
+                type="text"
+                value={facultyDesignation}
+                onChange={(e) => setFacultyDesignation(e.target.value)}
+                className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">
+                Office Room
+              </label>
+              <input
+                type="text"
+                value={facultyOfficeRoom}
+                onChange={(e) => setFacultyOfficeRoom(e.target.value)}
+                className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs font-mono"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">
+                Specialization Area
+              </label>
+              <input
+                type="text"
+                value={facultySpecializationArea}
+                onChange={(e) => setFacultySpecializationArea(e.target.value)}
+                className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">
+                Assigned Elective Basket
+              </label>
+              <select
+                value={facultyBasketCode}
+                onChange={(e) => setFacultyBasketCode(e.target.value)}
+                className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs font-semibold"
+              >
+                {baskets.map((b) => (
+                  <option key={b.basketId} value={b.basketId}>
+                    {b.basketId}: {b.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex items-end gap-2">
+              <div className="flex-1">
+                <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">
+                  Contact Number
+                </label>
+                <input
+                  type="text"
+                  value={facultyContact}
+                  onChange={(e) => setFacultyContact(e.target.value)}
+                  className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs font-mono"
+                />
+              </div>
+              <button
+                type="submit"
+                className="px-4 py-2 rounded-xl bg-[#8B1E24] hover:bg-[#70161B] text-white text-xs font-bold flex items-center gap-1.5"
+              >
+                <Save className="w-3.5 h-3.5" />
+                Save
+              </button>
+            </div>
+          </form>
+        )}
       </div>
 
       {activeTab === 'dean_command' && currentUser.role === 'dean_admin' ? (

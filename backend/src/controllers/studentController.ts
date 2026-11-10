@@ -31,7 +31,9 @@ const updateProfileSchema = z.object({
     .optional(),
   skills: z.array(z.string()).max(40).optional(),
   areasOfInterest: z.array(z.string()).max(25).optional(),
+  targetRoles: z.array(z.string()).max(15).optional(),
   targetCareerRoles: z.array(z.string()).max(15).optional(),
+  bio: z.string().max(2500).optional(),
   statementOfPurpose: z.string().max(2500).optional(),
   codingProfileScore: z.number().min(0).max(100).optional(),
   mathAptitudeScore: z.number().min(0).max(100).optional(),
@@ -147,8 +149,22 @@ export class StudentController {
 
       if (data.skills !== undefined) user.skills = data.skills;
       if (data.areasOfInterest !== undefined) user.areasOfInterest = data.areasOfInterest;
-      if (data.targetCareerRoles !== undefined) user.targetCareerRoles = data.targetCareerRoles;
-      if (data.statementOfPurpose !== undefined) user.statementOfPurpose = data.statementOfPurpose;
+      if (data.targetRoles !== undefined) {
+        user.targetRoles = data.targetRoles;
+        user.targetCareerRoles = data.targetRoles;
+      }
+      if (data.targetCareerRoles !== undefined) {
+        user.targetCareerRoles = data.targetCareerRoles;
+        user.targetRoles = data.targetCareerRoles;
+      }
+      if (data.bio !== undefined) {
+        user.bio = data.bio;
+        user.statementOfPurpose = data.bio;
+      }
+      if (data.statementOfPurpose !== undefined) {
+        user.statementOfPurpose = data.statementOfPurpose;
+        user.bio = data.statementOfPurpose;
+      }
       if (data.codingProfileScore !== undefined) user.codingProfileScore = data.codingProfileScore;
       if (data.mathAptitudeScore !== undefined) user.mathAptitudeScore = data.mathAptitudeScore;
       if (data.preferenceWeights !== undefined) {

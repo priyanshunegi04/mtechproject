@@ -24,6 +24,7 @@ import {
   Tooltip,
 } from 'recharts';
 import { useApp } from '../context/AppContext';
+import { useAuth } from '../context/AuthContext';
 import {
   CLIENT_DIAGNOSTIC_QUESTION_BANK,
   fetchDiagnosticQuestionsCloud,
@@ -487,22 +488,32 @@ export const InteractiveSkillAssessmentTab: React.FC = () => {
 };
 
 export const StudentProfileAndGradesEditorTab: React.FC = () => {
-  const { currentUser, updateCurrentUserProfile } = useApp();
+  const { currentUser } = useApp();
+  const { user, updateProfile } = useAuth();
+  const activeStudent = user || currentUser;
 
-  const [name, setName] = useState<string>(currentUser.name);
+  const [name, setName] = useState<string>(activeStudent.name);
   const [contactNumber, setContactNumber] = useState<string>(
-    currentUser.contactNumber || '+91-9876543210'
+    activeStudent.contactNumber || '+91-9876543210'
   );
-  const [currentSemester, setCurrentSemester] = useState<number>(currentUser.currentSemester || 4);
-  const [batchYear, setBatchYear] = useState<number>(currentUser.batchYear || 2024);
-  const [cgpa, setCgpa] = useState<number>(currentUser.cgpa);
+  const [currentSemester, setCurrentSemester] = useState<number>(activeStudent.currentSemester || 4);
+  const [batchYear, setBatchYear] = useState<number>(activeStudent.batchYear || 2024);
+  const [cgpa, setCgpa] = useState<number>(activeStudent.cgpa);
+  const [bio, setBio] = useState<string>(
+    activeStudent.bio ||
+      activeStudent.statementOfPurpose ||
+      'B.E. Computer Science & Engineering student at Thapar Institute of Engineering & Technology (TIET) specializing in data-driven elective planning.'
+  );
+  const [targetRolesInput, setTargetRolesInput] = useState<string>(
+    (activeStudent.targetRoles || activeStudent.targetCareerRoles || ['Software Development Engineer']).join(', ')
+  );
   const [coreGrades, setCoreGrades] = useState<Record<string, number>>({
-    ...currentUser.coreGrades,
+    ...activeStudent.coreGrades,
   });
-  const [skills, setSkills] = useState<string[]>(currentUser.skills || []);
+  const [skills, setSkills] = useState<string[]>(activeStudent.skills || []);
   const [newSkillInput, setNewSkillInput] = useState<string>('');
   const [areasOfInterest, setAreasOfInterest] = useState<string[]>(
-    currentUser.areasOfInterest || ['Data Science', 'Artificial Intelligence & ML']
+    activeStudent.areasOfInterest || ['Data Science', 'Artificial Intelligence & ML']
   );
 
   // Custom subject entry
@@ -511,17 +522,25 @@ export const StudentProfileAndGradesEditorTab: React.FC = () => {
   const [savedNotice, setSavedNotice] = useState<boolean>(false);
 
   useEffect(() => {
-    setName(currentUser.name);
-    setContactNumber(currentUser.contactNumber || '+91-9876543210');
-    setCurrentSemester(currentUser.currentSemester || 4);
-    setBatchYear(currentUser.batchYear || 2024);
-    setCgpa(currentUser.cgpa);
-    setCoreGrades({ ...currentUser.coreGrades });
-    setSkills(currentUser.skills || []);
-    setAreasOfInterest(
-      currentUser.areasOfInterest || ['Data Science', 'Artificial Intelligence & ML']
+    setName(activeStudent.name);
+    setContactNumber(activeStudent.contactNumber || '+91-9876543210');
+    setCurrentSemester(activeStudent.currentSemester || 4);
+    setBatchYear(activeStudent.batchYear || 2024);
+    setCgpa(activeStudent.cgpa);
+    setBio(
+      activeStudent.bio ||
+        activeStudent.statementOfPurpose ||
+        'B.E. Computer Science & Engineering student at Thapar Institute of Engineering & Technology (TIET) specializing in data-driven elective planning.'
     );
-  }, [currentUser]);
+    setTargetRolesInput(
+      (activeStudent.targetRoles || activeStudent.targetCareerRoles || ['Software Development Engineer']).join(', ')
+    );
+    setCoreGrades({ ...activeStudent.coreGrades });
+    setSkills(activeStudent.skills || []);
+    setAreasOfInterest(
+      activeStudent.areasOfInterest || ['Data Science', 'Artificial Intelligence & ML']
+    );
+  }, [activeStudent]);
 
   const handleGradeChange = (code: string, gp: number) => {
     setCoreGrades((prev) => ({
@@ -567,12 +586,20 @@ export const StudentProfileAndGradesEditorTab: React.FC = () => {
 
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    await updateCurrentUserProfile({
+    const parsedTargetRoles = targetRolesInput
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
+    await updateProfile({
       name: name.trim(),
       contactNumber: contactNumber.trim(),
       currentSemester,
       batchYear,
       cgpa,
+      bio: bio.trim(),
+      statementOfPurpose: bio.trim(),
+      targetRoles: parsedTargetRoles,
+      targetCareerRoles: parsedTargetRoles,
       coreGrades,
       skills,
       areasOfInterest,
@@ -677,6 +704,31 @@ export const StudentProfileAndGradesEditorTab: React.FC = () => {
                   value={cgpa}
                   onChange={(e) => setCgpa(parseFloat(e.target.value) || 0)}
                   className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs font-mono font-bold text-[#8B1E24] dark:text-rose-400"
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">
+                  Target Career Roles (Comma-Separated)
+                </label>
+                <input
+                  type="text"
+                  value={targetRolesInput}
+                  onChange={(e) => setTargetRolesInput(e.target.value)}
+                  placeholder="AI Engineer, Quantitative Researcher, Full-Stack Architect"
+                  className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs"
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">
+                  Academic Bio / Statement of Purpose
+                </label>
+                <textarea
+                  rows={2}
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value)}
+                  className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs"
                 />
               </div>
             </div>
@@ -875,8 +927,16 @@ export const StudentProfileAndGradesEditorTab: React.FC = () => {
 
 export const StudentDashboard: React.FC = () => {
   const { activeTab, setActiveTab, currentUser } = useApp();
+  const { user } = useAuth();
+  const activeStudent = user || currentUser;
 
-  const coreEntries = Object.entries(currentUser.coreGrades || {});
+  const coreEntries = Object.entries(activeStudent.coreGrades || {});
+  const displayRoles =
+    activeStudent.targetRoles && activeStudent.targetRoles.length > 0
+      ? activeStudent.targetRoles
+      : activeStudent.targetCareerRoles && activeStudent.targetCareerRoles.length > 0
+        ? activeStudent.targetCareerRoles
+        : ['Software Development Engineer'];
 
   return (
     <div className="space-y-6">
@@ -886,18 +946,19 @@ export const StudentDashboard: React.FC = () => {
           <div className="space-y-1.5">
             <div className="flex items-center gap-2 flex-wrap">
               <h2 className="text-xl font-bold text-slate-900 dark:text-white">
-                Welcome, {currentUser.name} ({currentUser.rollNumber || '102403042'})
+                Welcome, {activeStudent.name} ({activeStudent.rollNumber || '102403042'})
               </h2>
               <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#8B1E24]/10 text-[#8B1E24] dark:bg-rose-500/20 dark:text-rose-300 border border-[#8B1E24]/20">
-                Semester {currentUser.currentSemester} • Batch {currentUser.batchYear}
+                Semester {activeStudent.currentSemester} • Batch {activeStudent.batchYear}
               </span>
               <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
-                Contact: {currentUser.contactNumber || '+91-9876543210'}
+                Contact: {activeStudent.contactNumber || '+91-9876543210'}
               </span>
             </div>
 
             <p className="text-xs text-slate-600 dark:text-slate-300 max-w-3xl">
-              {currentUser.statementOfPurpose ||
+              {activeStudent.bio ||
+                activeStudent.statementOfPurpose ||
                 'B.E. Computer Science & Engineering student at Thapar Institute of Engineering & Technology (TIET) specializing in data-driven elective planning.'}
             </p>
 
@@ -905,7 +966,7 @@ export const StudentDashboard: React.FC = () => {
               <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mr-1">
                 Target Roles:
               </span>
-              {(currentUser.targetCareerRoles || ['Software Development Engineer']).map((role) => (
+              {displayRoles.map((role) => (
                 <span
                   key={role}
                   className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-[11px] font-semibold border border-slate-200 dark:border-slate-700"
@@ -922,7 +983,7 @@ export const StudentDashboard: React.FC = () => {
                 Cumulative CGPA
               </div>
               <div className="text-2xl font-extrabold font-mono">
-                {currentUser.cgpa.toFixed(2)}
+                {activeStudent.cgpa.toFixed(2)}
               </div>
             </div>
 
@@ -944,7 +1005,7 @@ export const StudentDashboard: React.FC = () => {
               Personal Semesters I–IV Core Prerequisite Grades Vector ({coreEntries.length} Subjects)
             </span>
             <span className="text-[10px] text-slate-400 font-mono">
-              Strictly isolated to {currentUser.email}
+              Strictly isolated to {activeStudent.email}
             </span>
           </div>
           <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-13 gap-1.5">

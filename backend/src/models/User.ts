@@ -82,6 +82,10 @@ export interface IUser extends Document {
   department: string;
   designation?: string;
   primarySpecializationBasket?: string;
+  assignedBasketId?: number;
+  assignedBasketName?: string;
+  officeRoom?: string;
+  specializationArea?: string;
   role: InstitutionalRole;
   rollNumber?: string;
   employeeId?: string;
@@ -97,6 +101,8 @@ export interface IUser extends Document {
   mathAptitudeScore: number;
   skills: string[];
   areasOfInterest: string[];
+  targetRoles?: string[];
+  bio?: string;
   skillAssessment?: ISkillAssessment;
   advisorReview?: IAdvisorMenteeStatus;
   targetCareerRoles: string[];
@@ -245,6 +251,27 @@ const userSchema = new Schema<IUser>(
       default: 'EF_BASKET_05',
       trim: true,
     },
+    assignedBasketId: {
+      type: Number,
+      default: 5,
+      min: 1,
+      max: 12,
+    },
+    assignedBasketName: {
+      type: String,
+      default: 'Artificial Intelligence and Machine Learning (AIML)',
+      trim: true,
+    },
+    officeRoom: {
+      type: String,
+      default: 'CSED Block-B Room 304',
+      trim: true,
+    },
+    specializationArea: {
+      type: String,
+      default: 'Artificial Intelligence & Machine Learning',
+      trim: true,
+    },
     role: {
       type: String,
       enum: ['student', 'faculty_advisor', 'dean_admin'],
@@ -261,6 +288,7 @@ const userSchema = new Schema<IUser>(
       type: String,
       trim: true,
       sparse: true,
+      unique: true,
     },
     branch: {
       type: String,
@@ -294,19 +322,19 @@ const userSchema = new Schema<IUser>(
       of: Number,
       default: () =>
         new Map<string, number>([
-          ['UES103', 8],
-          ['UMA022', 8],
-          ['UMA023', 8],
-          ['UCS301', 8],
-          ['UCS303', 8],
-          ['UTA018', 8],
-          ['UCS405', 8],
-          ['UMA021', 8],
-          ['UCS415', 8],
-          ['UCS310', 8],
+          ['UES103', 9],
+          ['UMA022', 9],
+          ['UMA023', 9],
+          ['UCS301', 10],
+          ['UCS303', 9],
+          ['UTA018', 9],
+          ['UCS405', 9],
+          ['UMA021', 10],
+          ['UCS415', 10],
+          ['UCS310', 9],
           ['UCS414', 8],
-          ['UCS321', 8],
-          ['UMA401', 8],
+          ['UCS321', 10],
+          ['UMA401', 9],
         ]),
     },
     personalInfo: {
@@ -331,11 +359,20 @@ const userSchema = new Schema<IUser>(
     },
     skills: {
       type: [String],
-      default: ['C++', 'Python', 'Data Structures', 'SQL'],
+      default: ['Python', 'Machine Learning', 'Data Structures', 'SQL'],
     },
     areasOfInterest: {
       type: [String],
-      default: ['Data Science', 'Artificial Intelligence', 'Web & Cloud'],
+      default: ['Conversational AI (NVIDIA)', 'Data Science'],
+    },
+    targetRoles: {
+      type: [String],
+      default: ['Generative AI & LLM Engineer', 'Data Scientist'],
+    },
+    bio: {
+      type: String,
+      default: 'B.E. Computer Science & Engineering student at Thapar Institute of Engineering & Technology (TIET) specializing in data-driven elective planning.',
+      maxlength: 2500,
     },
     skillAssessment: {
       type: skillAssessmentSchema,

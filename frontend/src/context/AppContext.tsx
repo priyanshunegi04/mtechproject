@@ -85,13 +85,14 @@ interface AppContextValue {
   personas: UserProfile[];
   currentUser: UserProfile;
   isAuthenticated: boolean;
+  isAuthHydrating: boolean;
   showAuthModal: boolean;
   setShowAuthModal: (show: boolean) => void;
   loginWithCredentials: (
-    email: string,
+    identifier: string,
     password: string,
     expectedRole?: 'student' | 'faculty_advisor'
-  ) => Promise<{ success: boolean; role?: InstitutionalRole; error?: string }>;
+  ) => Promise<{ success: boolean; role?: InstitutionalRole; user?: UserProfile; error?: string }>;
   registerNewUser: (payload: {
     name: string;
     email: string;
@@ -103,11 +104,19 @@ interface AppContextValue {
     currentSemester?: number;
     cgpa?: number;
     coreGrades?: Record<string, number>;
+    skills?: string[];
+    areasOfInterest?: string[];
+    targetRoles?: string[];
+    bio?: string;
     employeeId?: string;
     department?: string;
     designation?: string;
     primarySpecializationBasket?: string;
-  }) => Promise<{ success: boolean; role?: InstitutionalRole; error?: string }>;
+    assignedBasketId?: number;
+    assignedBasketName?: string;
+    officeRoom?: string;
+    specializationArea?: string;
+  }) => Promise<{ success: boolean; role?: InstitutionalRole; user?: UserProfile; error?: string }>;
   logoutUser: () => void;
   switchPersona: (personaKey: string) => Promise<void>;
   updateCgpa: (cgpa: number) => void;
@@ -231,10 +240,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
-      return Boolean(window.localStorage.getItem('tiet_access_token'));
+      return Boolean(
+        window.localStorage.getItem('token') ||
+          window.localStorage.getItem('tiet_access_token')
+      );
     }
     return false;
   });
+  const [isAuthHydrating, setIsAuthHydrating] = useState<boolean>(true);
   const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
 
   const currentUser = useMemo(
@@ -333,6 +346,83 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return () => clearInterval(timer);
   }, []);
 
+  // Automatic Profile Hydration on Mount/Refresh via GET /api/auth/me
+  useEffect(() => {
+    let isMounted = true;
+    const hydrateFromAtlas = async () => {
+      if (typeof window === 'undefined') {
+        if (isMounted) setIsAuthHydrating(false);
+        return;
+      }
+      const storedToken =
+        window.localStorage.getItem('token') ||
+        window.localStorage.getItem('tiet_access_token');
+
+      if (!storedToken) {
+        if (isMounted) {
+          setIsAuthenticated(false);
+          setIsAuthHydrating(false);
+        }
+        return;
+      }
+
+      setAuthToken(storedToken);
+
+      try {
+        const res = await cloudHttp.get('/auth/me');
+        if (res.data?.user && isMounted) {
+          const srvUser = res.data.user;
+          const pKey = srvUser.personaKey || `user_${srvUser.id || Date.now()}`;
+          const hydrated: UserProfile = {
+            ...SHOWCASE_PERSONAS[0],
+            ...srvUser,
+            personaKey: pKey,
+            label: srvUser.name,
+            subtitle:
+              srvUser.role === 'student'
+                ? `Roll ${srvUser.rollNumber || '102403012'} • CGPA ${Number(srvUser.cgpa ?? 8.0).toFixed(2)}`
+                : `${srvUser.designation || 'Faculty Advisor'} (${srvUser.department || 'CSED'})`,
+          };
+          setPersonas((prev) => {
+            const exists = prev.some(
+              (p) => p.email.toLowerCase() === hydrated.email.toLowerCase() || p.personaKey === pKey
+            );
+            return exists
+              ? prev.map((p) =>
+                  p.email.toLowerCase() === hydrated.email.toLowerCase() || p.personaKey === pKey
+                    ? hydrated
+                    : p
+                )
+              : [hydrated, ...prev];
+          });
+          setActivePersonaKey(pKey);
+          setIsAuthenticated(true);
+          window.localStorage.setItem('tiet_authenticated_user', JSON.stringify(hydrated));
+        }
+      } catch (err: any) {
+        const status = err?.response?.status;
+        if ((status === 401 || status === 403) && !storedToken.startsWith('local-jwt-')) {
+          setAuthToken(null);
+          window.localStorage.removeItem('token');
+          window.localStorage.removeItem('tiet_access_token');
+          window.localStorage.removeItem('tiet_authenticated_user');
+          if (isMounted) {
+            setIsAuthenticated(false);
+          }
+        }
+      } finally {
+        if (isMounted) {
+          setIsAuthHydrating(false);
+        }
+      }
+    };
+
+    hydrateFromAtlas();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   const toggleDarkMode = () => setDarkMode((prev) => !prev);
 
   const appendAuditLog = (
@@ -397,13 +487,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const loginWithCredentials = async (
-    email: string,
+    identifier: string,
     password: string,
     expectedRole?: 'student' | 'faculty_advisor'
-  ): Promise<{ success: boolean; role?: InstitutionalRole; error?: string }> => {
-    const cleanEmail = email.trim().toLowerCase();
+  ): Promise<{ success: boolean; role?: InstitutionalRole; user?: UserProfile; error?: string }> => {
+    const cleanIdentifier = identifier.trim();
+    const lowerIdentifier = cleanIdentifier.toLowerCase();
     try {
-      const res = await cloudHttp.post('/auth/login', { email: cleanEmail, password });
+      const res = await cloudHttp.post('/auth/login', {
+        identifier: cleanIdentifier,
+        email: cleanIdentifier.includes('@') ? lowerIdentifier : undefined,
+        password,
+      });
       if (res.data?.accessToken) {
         setAuthToken(res.data.accessToken);
       }
@@ -417,16 +512,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           label: srvUser.name,
           subtitle:
             srvUser.role === 'student'
-              ? `Roll ${srvUser.rollNumber || '102403001'} • CGPA ${Number(srvUser.cgpa ?? 8.0).toFixed(2)}`
+              ? `Roll ${srvUser.rollNumber || '102403012'} • CGPA ${Number(srvUser.cgpa ?? 8.0).toFixed(2)}`
               : `${srvUser.designation || 'Faculty Advisor'} (${srvUser.department || 'CSED'})`,
         };
         setPersonas((prev) => {
           const exists = prev.some(
-            (p) => p.email.toLowerCase() === cleanEmail || p.personaKey === pKey
+            (p) => p.email.toLowerCase() === mapped.email.toLowerCase() || p.personaKey === pKey
           );
           if (exists) {
             return prev.map((p) =>
-              p.email.toLowerCase() === cleanEmail || p.personaKey === pKey ? mapped : p
+              p.email.toLowerCase() === mapped.email.toLowerCase() || p.personaKey === pKey
+                ? mapped
+                : p
             );
           }
           return [mapped, ...prev];
@@ -444,30 +541,35 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
               ? 'dean_command'
               : 'studio'
         );
-        return { success: true, role: mapped.role };
+        return { success: true, role: mapped.role, user: mapped };
       }
-    } catch {
+    } catch (err: any) {
+      if (err?.response?.status === 401) {
+        return {
+          success: false,
+          error: err.response?.data?.error || 'Invalid email, roll number, or password.',
+        };
+      }
       // Fallback to local registered / seeded institutional accounts if backend is offline
     }
 
-    const existing = personas.find((p) => p.email.toLowerCase() === cleanEmail);
+    const existing = personas.find(
+      (p) =>
+        p.email.toLowerCase() === lowerIdentifier ||
+        p.rollNumber === cleanIdentifier ||
+        p.employeeId === cleanIdentifier
+    );
     if (existing) {
-      if (
-        expectedRole === 'student' &&
-        existing.role !== 'student'
-      ) {
+      if (expectedRole === 'student' && existing.role !== 'student') {
         return {
           success: false,
-          error: 'This email belongs to a Faculty/Admin account. Switch to the Faculty / Teacher Login tab.',
+          error: 'This account belongs to Faculty/Admin. Switch to the Faculty / Teacher Login tab.',
         };
       }
-      if (
-        expectedRole === 'faculty_advisor' &&
-        existing.role === 'student'
-      ) {
+      if (expectedRole === 'faculty_advisor' && existing.role === 'student') {
         return {
           success: false,
-          error: 'This email belongs to a Student account. Switch to the Student Login tab.',
+          error: 'This account belongs to a Student. Switch to the Student Login tab.',
         };
       }
       setAuthToken(`local-jwt-${existing.personaKey}-${Date.now()}`);
@@ -475,12 +577,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         window.localStorage.setItem('tiet_authenticated_user', JSON.stringify(existing));
       }
       await switchPersona(existing.personaKey);
-      return { success: true, role: existing.role };
+      return { success: true, role: existing.role, user: existing };
     }
 
     return {
       success: false,
-      error: 'Invalid institutional email or password. Please verify your @thapar.edu credentials or Sign Up.',
+      error: 'Account not found in MongoDB Atlas. Please check your credentials or Sign Up.',
     };
   };
 
@@ -495,57 +597,102 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     currentSemester?: number;
     cgpa?: number;
     coreGrades?: Record<string, number>;
+    skills?: string[];
+    areasOfInterest?: string[];
+    targetRoles?: string[];
+    bio?: string;
     employeeId?: string;
     department?: string;
     designation?: string;
     primarySpecializationBasket?: string;
-  }): Promise<{ success: boolean; role?: InstitutionalRole; error?: string }> => {
+    assignedBasketId?: number;
+    assignedBasketName?: string;
+    officeRoom?: string;
+    specializationArea?: string;
+  }): Promise<{ success: boolean; role?: InstitutionalRole; user?: UserProfile; error?: string }> => {
     const cleanEmail = payload.email.trim().toLowerCase();
     if (!cleanEmail.endsWith('@thapar.edu')) {
       return { success: false, error: 'Institutional email must end with @thapar.edu' };
     }
 
     let tokenIssued = `local-jwt-${Date.now()}`;
+    let serverUser: Partial<UserProfile> | null = null;
     try {
       const res = await cloudHttp.post('/auth/register', payload);
       if (res.data?.accessToken) {
         tokenIssued = res.data.accessToken;
       }
-    } catch {
+      if (res.data?.user) {
+        serverUser = res.data.user;
+      }
+    } catch (err: any) {
+      if (err?.response?.status === 409) {
+        return {
+          success: false,
+          error: err.response?.data?.error || 'Email or Roll Number / Employee ID already registered.',
+        };
+      }
       // Continue with client registration if cloud backend is unreachable
     }
     setAuthToken(tokenIssued);
 
-    const pKey = `custom_${Date.now()}`;
+    const pKey = serverUser?.personaKey || `custom_${Date.now()}`;
     const defaultCoreGrades = {
-      ...SHOWCASE_PERSONAS[0].coreGrades,
+      UES103: 9,
+      UMA022: 9,
+      UMA023: 9,
+      UCS301: 10,
+      UCS303: 9,
+      UTA018: 9,
+      UCS405: 9,
+      UMA021: 10,
+      UCS415: 10,
+      UCS310: 9,
+      UCS414: 8,
+      UCS321: 10,
+      UMA401: 9,
       ...(payload.coreGrades || {}),
     };
 
     const newProfile: UserProfile = {
       ...SHOWCASE_PERSONAS[0],
-      id: `USR_${Date.now()}`,
+      ...(serverUser || {}),
+      id: serverUser?.id || `USR_${Date.now()}`,
       personaKey: pKey,
       name: payload.name.trim(),
       email: cleanEmail,
       contactNumber: payload.contactNumber || '+91-9876543210',
       role: payload.role,
-      rollNumber: payload.role === 'student' ? payload.rollNumber || '102403199' : null,
-      employeeId: payload.role === 'faculty_advisor' ? payload.employeeId || 'EMP_CSED_205' : null,
+      rollNumber: payload.role === 'student' ? payload.rollNumber || '102403012' : null,
+      employeeId: payload.role === 'faculty_advisor' ? payload.employeeId || 'FAC-CSED-104' : null,
       department: payload.department || 'CSED',
       designation: payload.designation || 'Associate Professor',
       primarySpecializationBasket: payload.primarySpecializationBasket || 'EF_BASKET_05',
+      assignedBasketId: payload.assignedBasketId || 5,
+      assignedBasketName:
+        payload.assignedBasketName || 'Artificial Intelligence and Machine Learning (AIML)',
+      officeRoom: payload.officeRoom || 'CSED Block-B Room 304',
+      specializationArea:
+        payload.specializationArea || 'Artificial Intelligence & Machine Learning',
       batchYear: payload.batchYear || 2024,
       currentSemester: payload.currentSemester || 4,
-      cgpa: payload.cgpa ?? 8.25,
+      cgpa: payload.cgpa ?? 9.12,
       coreGrades: defaultCoreGrades,
       label: payload.name.trim(),
       subtitle:
         payload.role === 'student'
-          ? `Roll ${payload.rollNumber || '102403199'} • Sem ${payload.currentSemester || 4}`
+          ? `Roll ${payload.rollNumber || '102403012'} • Sem ${payload.currentSemester || 4}`
           : `${payload.designation || 'Faculty'} • ${payload.department || 'CSED'}`,
-      skills: ['Python', 'C++', 'Data Structures', 'SQL'],
-      areasOfInterest: ['Data Science', 'Artificial Intelligence', 'Web & Cloud'],
+      skills: payload.skills || ['Python', 'Machine Learning', 'Data Structures'],
+      areasOfInterest: payload.areasOfInterest || ['Conversational AI (NVIDIA)', 'Data Science'],
+      targetRoles: payload.targetRoles || ['Generative AI & LLM Engineer', 'Data Scientist'],
+      targetCareerRoles: payload.targetRoles || ['Generative AI & LLM Engineer', 'Data Scientist'],
+      bio:
+        payload.bio ||
+        'B.E. Computer Science & Engineering student at Thapar Institute of Engineering & Technology (TIET) specializing in data-driven elective planning.',
+      statementOfPurpose:
+        payload.bio ||
+        'B.E. Computer Science & Engineering student at Thapar Institute of Engineering & Technology (TIET) specializing in data-driven elective planning.',
     };
 
     setPersonas((prev) => [newProfile, ...prev]);
@@ -561,12 +708,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       role: payload.role,
       rollOrEmpId: newProfile.rollNumber || newProfile.employeeId,
     });
-    return { success: true, role: payload.role };
+    return { success: true, role: payload.role, user: newProfile };
   };
 
   const logoutUser = () => {
     setAuthToken(null);
     if (typeof window !== 'undefined') {
+      window.localStorage.removeItem('token');
       window.localStorage.removeItem('tiet_access_token');
       window.localStorage.removeItem('tiet_refresh_token');
       window.localStorage.removeItem('tiet_authenticated_user');
@@ -582,7 +730,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setLiveRankedBaskets(null);
     setLiveRankedCourses(null);
 
-    await updateStudentProfileCloud(updates);
+    await updateStudentProfileCloud(updates, currentUser.role);
 
     setPersonas((prev) =>
       prev.map((p) => {
@@ -1346,6 +1494,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         personas,
         currentUser,
         isAuthenticated,
+        isAuthHydrating,
         showAuthModal,
         setShowAuthModal,
         loginWithCredentials,

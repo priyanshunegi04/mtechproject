@@ -792,10 +792,15 @@ export async function submitDiagnosticAssessmentCloud(
 }
 
 export async function updateStudentProfileCloud(
-  updates: Partial<UserProfile> & { coreGrades?: Record<string, number> }
+  updates: Partial<UserProfile> & { coreGrades?: Record<string, number> },
+  role: 'student' | 'faculty_advisor' | 'dean_admin' = 'student'
 ): Promise<UserProfile | null> {
   try {
-    const res = await cloudHttp.put('/student/profile', updates);
+    const endpoint =
+      role === 'faculty_advisor' || role === 'dean_admin'
+        ? '/faculty/profile'
+        : '/student/profile';
+    const res = await cloudHttp.put(endpoint, updates);
     return res.data?.student || res.data?.user || null;
   } catch {
     return null;
