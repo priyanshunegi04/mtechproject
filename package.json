@@ -26,6 +26,9 @@
     "node": ">=20.0.0",
     "npm": ">=10.0.0"
   },
+  "overrides": {
+    "follow-redirects": "^1.16.3"
+  },
   "author": "ThaparElectiveAI Engineering",
   "license": "UNLICENSED"
 }
